@@ -1,0 +1,7 @@
+program nombre;
+
+VARS
+int : x;
+
+main()
+write("hello world")
