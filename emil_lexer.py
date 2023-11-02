@@ -53,10 +53,11 @@ class EmilLexer(Lexer):
   RSQUARE = r'\]'
   LCURLY = r'\{'
   RCURLY = r'\}'
+  VARS = r'VARS'
 
   ID['main'] = MAIN
   ID['program'] = PROGRAM
-  ID['vars'] = VARS
+  #ID['VARS'] = VARS
   ID['int'] = INT
   ID['char'] = CHAR
   ID['float'] = FLOAT

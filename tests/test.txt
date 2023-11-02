@@ -1,7 +1,7 @@
-program nombre
+program nombre;
 
 VARS
 int : x;
 
 main()
-x + y
+    x = 1 + 2;

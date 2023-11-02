@@ -12,7 +12,7 @@ class EmilParser(Parser):
     def program(self, p):
         return 0
     
-    @_('VARS multivd multid')
+    @_('VARS multivd multid', 'empty')
     def varsdecl(self, p):
         return 0
 
@@ -32,7 +32,7 @@ class EmilParser(Parser):
     def arr(self, p):
         return 0
     
-    @_('FUNC tipofunc ID LPAREN param RPAREN varsdecl LCURLY stmnt RCURLY')
+    @_('FUNC tipofunc ID LPAREN param RPAREN varsdecl LCURLY stmnt RCURLY', 'empty')
     def funcdecl(self, p):
         return 0
     
@@ -48,7 +48,7 @@ class EmilParser(Parser):
     def multiparam(self, p):
         return 0
     
-    @_('MAIN LPAREN RPAREN')
+    @_('MAIN LPAREN RPAREN stmnt')
     def main(self, p):
         return 0
     
