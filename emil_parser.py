@@ -125,9 +125,28 @@ class EmilParser(Parser):
         self.stackOperadores.append(p[-1])
         #print(p[-1])
 
-    @_('factor', 'factor MULT term', 'factor DIV term')
+    @_('factor term2', 'factor term2 MULT term1 term', 'factor term2 DIV term1 term')
     def term(self, p):
         pass
+
+    @_('')
+    def term1(self, p):
+        self.stackOperadores.append(p[-1])
+
+    @_('')
+    def term2(self, p):
+        if(len(self.stackOperadores) == 0):
+            return
+        operadorTop = self.stackOperadores[-1]
+        if(operadorTop == '*' or operadorTop == '/'):
+            print(self.stackOperandos)
+            rightOp = self.stackOperandos.pop()
+            leftOp = self.stackOperandos.pop()
+            op = self.stackOperadores.pop()
+            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+
+            self.stackOperandos.append(f't{self.tempCont}')
+            self.tempCont += 1
 
     @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM fact1', 'CTE_FLT fact1', 'CTE_STR fact1', 'TRUE fact1', 'FALSE fact1')
     def factor(self, p):
