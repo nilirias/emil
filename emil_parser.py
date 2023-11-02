@@ -7,10 +7,15 @@ import sys
 class EmilParser(Parser):
     tokens = EmilLexer.tokens
     quadList = []
+    stackOperadores = []
+    stackOperandos = []
+    tempCont = 0
 
     @_('PROGRAM ID SEMICLN varsdecl funcdecl main')
     def program(self, p):
-        return 0
+        for quad in self.quadList:
+            print(quad)
+        return 69
     
     @_('VARS multivd multid', 'empty')
     def varsdecl(self, p):
@@ -96,17 +101,41 @@ class EmilParser(Parser):
     def rel(self, p):
         pass
 
-    @_('term', 'term SUM exp', 'term SUB exp')
+    @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
     def exp(self, p):
         pass
+
+    @_('')
+    def exp2(self, p):
+        if(len(self.stackOperadores) == 0):
+            return
+        operadorTop = self.stackOperadores[-1]
+        if(operadorTop == '+' or operadorTop == '-'):
+            print(self.stackOperandos)
+            rightOp = self.stackOperandos.pop()
+            leftOp = self.stackOperandos.pop()
+            op = self.stackOperadores.pop()
+            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+
+            self.stackOperandos.append(f't{self.tempCont}')
+            self.tempCont += 1
+
+    @_('')
+    def exp1(self, p):
+        self.stackOperadores.append(p[-1])
+        #print(p[-1])
 
     @_('factor', 'factor MULT term', 'factor DIV term')
     def term(self, p):
         pass
 
-    @_('ID arr', 'ID LPAREN logic multiexp RPAREN', 'CTE_NUM', 'CTE_FLT', 'CTE_STR', 'TRUE', 'FALSE')
+    @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM fact1', 'CTE_FLT fact1', 'CTE_STR fact1', 'TRUE fact1', 'FALSE fact1')
     def factor(self, p):
         pass
+
+    @_('')
+    def fact1(self, p):
+        self.stackOperandos.append(p[-1])
 
     @_('COMMA logic multiexp', 'empty')
     def multiexp(self, p):
