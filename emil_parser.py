@@ -1,10 +1,12 @@
 from sly import Parser
 from sly.yacc import _decorator as _
 from emil_lexer import EmilLexer
+from quads import Quadruple
 import sys
 
 class EmilParser(Parser):
     tokens = EmilLexer.tokens
+    quadList = []
 
     @_('PROGRAM ID SEMICLN varsdecl funcdecl main')
     def program(self, p):
@@ -22,7 +24,7 @@ class EmilParser(Parser):
     def multid(self, p):
         return 0
     
-    @_('INT', 'FLOAT', 'CHAR')
+    @_('INT', 'FLOAT', 'CHAR', 'BOOL')
     def tipo(self, p):
         return p[0]
     
@@ -50,11 +52,11 @@ class EmilParser(Parser):
     def main(self, p):
         return 0
     
-    @_('ass_stmnt', 'func_stmnt', 'ret_stmnt', 'read_stmnt', 'write_stmnt')
+    @_('ass_stmnt stmnt', 'func_stmnt stmnt', 'ret_stmnt stmnt', 'read_stmnt stmnt', 'write_stmnt stmnt', 'if_stmnt stmnt', 'while_stmnt stmnt', 'empty')
     def stmnt(self, p):
         return 0
     
-    @_('ID arr ASS exp SEMICLN', 'ID arr ASS func_stmnt SEMICLN')
+    @_('ID arr ASS logic SEMICLN', 'ID arr ASS func_stmnt SEMICLN')
     def ass_stmnt(self, p):
         return 0
     
@@ -62,7 +64,7 @@ class EmilParser(Parser):
     def func_stmnt(self, p):
         return 0
     
-    @_('exp multiarg', 'empty')
+    @_('logic multiarg', 'empty')
     def arg(self, p):
         return 0
     
@@ -70,7 +72,7 @@ class EmilParser(Parser):
     def multiarg(self, p):
         return 0
     
-    @_('RETURN LPAREN exp RPAREN SEMICLN')
+    @_('RETURN LPAREN logic RPAREN SEMICLN')
     def ret_stmnt(self, p):
         return 0
     
@@ -82,6 +84,18 @@ class EmilParser(Parser):
     def write_stmnt(self, p):
         return 0
     
+    @_('rel', 'rel AND logic', 'rel OR logic')
+    def logic(self, p):
+        pass
+    
+    @_('MORE_THAN', 'LESS_THAN', 'MORE_OR_EQ_THAN', 'LESS_OR_EQ_THAN', 'DIFFERENT_TO', 'EQUAL_TO')
+    def relop(self, p):
+        pass
+    
+    @_('exp', 'exp relop exp')
+    def rel(self, p):
+        pass
+
     @_('term', 'term SUM exp', 'term SUB exp')
     def exp(self, p):
         pass
@@ -90,18 +104,29 @@ class EmilParser(Parser):
     def term(self, p):
         pass
 
-    @_('ID arr', 'ID LPAREN exp multiexp RPAREN', 'CTE_NUM', 'CTE_FLT', 'CTE_STR')
+    @_('ID arr', 'ID LPAREN logic multiexp RPAREN', 'CTE_NUM', 'CTE_FLT', 'CTE_STR', 'TRUE', 'FALSE')
     def factor(self, p):
         pass
 
-    @_('COMMA exp multiexp', 'empty')
+    @_('COMMA logic multiexp', 'empty')
     def multiexp(self, p):
         pass
-    
+
+    @_('IF LPAREN logic RPAREN else_stmnt END')
+    def if_stmnt(self, p):
+        pass
+
+    @_('ELSE stmnt', 'empty')
+    def else_stmnt(self, p): 
+        pass
+
+    @_('WHILE LPAREN logic RPAREN stmnt END')
+    def while_stmnt(self, p):
+        pass
+
     @_('')
     def empty(self, p):
         pass
-    
     
 if __name__ == '__main__':
     lexer = EmilLexer()
@@ -111,11 +136,11 @@ if __name__ == '__main__':
     if(len(sys.argv) > 1):
         filename = sys.argv[1]
 
-    # with open(filename) as fp:
-    #     try:
-    #         result = parser.parse(lexer.tokenize(fp.read()))
-    #         print(result)
-    #     except EOFError:
-    #         pass
-    #     except Exception as err:
-    #         print(err)
+    with open(filename) as fp:
+        try:
+            result = parser.parse(lexer.tokenize(fp.read()))
+            print(result)
+        except EOFError:
+            pass
+        except Exception as err:
+            print(err)
