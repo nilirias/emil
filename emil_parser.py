@@ -2,6 +2,7 @@ from sly import Parser
 from sly.yacc import _decorator as _
 from emil_lexer import EmilLexer
 from quads import Quadruple
+from emil_semanticcube import rel_ops, eq_ops
 import sys
 
 class EmilParser(Parser):
@@ -10,6 +11,7 @@ class EmilParser(Parser):
     stackOperadores = []
     stackOperandos = []
     tempCont = 0
+    debugfile = 'debug.txt'
 
     @_('PROGRAM ID SEMICLN varsdecl funcdecl main')
     def program(self, p):
@@ -91,15 +93,35 @@ class EmilParser(Parser):
     
     @_('rel', 'rel AND logic', 'rel OR logic')
     def logic(self, p):
+        print('eeeeeeeeeeeeeeeeee')
         pass
     
     @_('MORE_THAN', 'LESS_THAN', 'MORE_OR_EQ_THAN', 'LESS_OR_EQ_THAN', 'DIFFERENT_TO', 'EQUAL_TO')
     def relop(self, p):
-        pass
+        return p[0]
     
-    @_('exp', 'exp relop exp')
+    @_('exp rel2', 'exp rel2 relop rel1 rel')
     def rel(self, p):
+        print('uuuuuuuuuuuuuuuuuuu')
         pass
+
+    @_('')
+    def rel1(self, p):
+        self.stackOperadores.append(p[-1])
+
+    @_('')
+    def rel2(self, p):
+        if(len(self.stackOperadores) == 0):
+            return
+        operadorTop = self.stackOperadores[-1]
+        if(operadorTop in rel_ops or operadorTop in eq_ops):
+            rightOp = self.stackOperandos.pop()
+            leftOp = self.stackOperandos.pop()
+            op = self.stackOperadores.pop()
+            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+
+            self.stackOperandos.append(f't{self.tempCont}')
+            self.tempCont += 1
 
     @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
     def exp(self, p):
