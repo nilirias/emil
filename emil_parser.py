@@ -1,8 +1,10 @@
 from sly import Parser
 from sly.yacc import _decorator as _
 from emil_lexer import EmilLexer
+from emil_funcdir import FuncDir
+from emil_vardir import VarDir
 from quads import Quadruple
-from emil_semanticcube import rel_ops, eq_ops
+from emil_semanticcube import rel_ops, eq_ops, log_ops
 import sys
 
 class EmilParser(Parser):
@@ -10,24 +12,55 @@ class EmilParser(Parser):
     quadList = []
     stackOperadores = []
     stackOperandos = []
+    stackTypes = []
     tempCont = 0
     debugfile = 'debug.txt'
+    directorioProcedimientos = None
+    scopeName = None
+    currType = None
+    currVar = None
 
-    @_('PROGRAM ID SEMICLN varsdecl funcdecl main')
+    @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main')
     def program(self, p):
         for quad in self.quadList:
             print(quad)
+        print(self.directorioProcedimientos, self.directorioProcedimientos.get_vardir(self.scopeName))
         return 69
     
-    @_('VARS multivd multid', 'empty')
+    @_('')
+    def prog1(self, p):
+        self.directorioProcedimientos = FuncDir()
+
+    @_('')
+    def prog2(self, p):
+        self.directorioProcedimientos.add_func(name = p[-1])
+        self.scopeName = p[-1]
+    
+    @_('VARS prog3 multivd multid', 'empty')
     def varsdecl(self, p):
         return 0
+    
+    @_('')
+    def prog3(self, p):
+        varDirProg = VarDir()
+        self.directorioProcedimientos.set_vardir(self.scopeName, varDirProg)
 
-    @_('tipo COLON ID arr multid SEMICLN multivd', 'empty')
+    @_('tipo prog4 COLON ID prog5 arr multid SEMICLN multivd', 'empty')
     def multivd(self, p):
         return 0
+    
+    @_('')
+    def prog4(self, p):
+        self.currType = p[-1]
+        
+    @_('')
+    def prog5(self, p):
+        self.currVar = self.directorioProcedimientos.get_vardir(self.scopeName)
+        if (self.currVar.get_var(p[-1]) != None):
+            raise Exception("ERROR - Variable already declared")
+        self.currVar.add_var(p[-1], 0, self.currType)
 
-    @_('COMMA ID arr multid', 'empty')
+    @_('COMMA ID prog5 arr multid', 'empty')
     def multid(self, p):
         return 0
     
@@ -91,10 +124,27 @@ class EmilParser(Parser):
     def write_stmnt(self, p):
         return 0
     
-    @_('rel', 'rel AND logic', 'rel OR logic')
+    @_('rel log2', 'rel log2 AND log1 logic', 'rel log2 OR log1 logic')
     def logic(self, p):
-        print('eeeeeeeeeeeeeeeeee')
         pass
+
+    @_('')
+    def log1(self, p):
+        self.stackOperadores.append(p[-1])
+
+    @_('')
+    def log2(self, p):
+        if(len(self.stackOperadores) == 0):
+            return
+        operadorTop = self.stackOperadores[-1]
+        if(operadorTop in log_ops):
+            rightOp = self.stackOperandos.pop()
+            leftOp = self.stackOperandos.pop()
+            op = self.stackOperadores.pop()
+            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+
+            self.stackOperandos.append(f't{self.tempCont}')
+            self.tempCont += 1
     
     @_('MORE_THAN', 'LESS_THAN', 'MORE_OR_EQ_THAN', 'LESS_OR_EQ_THAN', 'DIFFERENT_TO', 'EQUAL_TO')
     def relop(self, p):
@@ -102,7 +152,6 @@ class EmilParser(Parser):
     
     @_('exp rel2', 'exp rel2 relop rel1 rel')
     def rel(self, p):
-        print('uuuuuuuuuuuuuuuuuuu')
         pass
 
     @_('')
@@ -133,7 +182,6 @@ class EmilParser(Parser):
             return
         operadorTop = self.stackOperadores[-1]
         if(operadorTop == '+' or operadorTop == '-'):
-            print(self.stackOperandos)
             rightOp = self.stackOperandos.pop()
             leftOp = self.stackOperandos.pop()
             op = self.stackOperadores.pop()
@@ -161,7 +209,6 @@ class EmilParser(Parser):
             return
         operadorTop = self.stackOperadores[-1]
         if(operadorTop == '*' or operadorTop == '/'):
-            print(self.stackOperandos)
             rightOp = self.stackOperandos.pop()
             leftOp = self.stackOperandos.pop()
             op = self.stackOperadores.pop()

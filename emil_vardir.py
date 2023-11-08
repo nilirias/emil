@@ -1,7 +1,6 @@
 import json
 
 class VarDir:
-
     def __init__(self):
         self.vars = []
 
@@ -10,11 +9,12 @@ class VarDir:
             self.vars.append(VarDirEntry(name, addr, type))
 
     def get_var(self, name):
-        return [var for var in self.vars if var.name == name][0]
+        x = [var for var in self.vars if var.name == name]
+        return x[0] if len(x) > 0 else None
 
     def var_count(self):
         return len(self.vars)
-
+    
     def check_if_var_exists(self, name):
         return len([var.addr for var in self.vars if var.name == name]) > 0
 
@@ -34,6 +34,9 @@ class VarDirEntry:
 
     def get_addr(self):
         return self.addr
+    
+    def get_type(self):
+        return self.type
 
     def __str__(self):
         return json.dumps({
