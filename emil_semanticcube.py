@@ -4,23 +4,42 @@ log_ops = ['and', 'or']
 eq_ops = ['<>', '==']
 
 def checkArt(type1, type2, operator):
-    if (operator == '+' or operator == '-' or operator == '*' or operator == '/') and type1 == 'number' and type2 == 'number':
-        return 'number'
-    if type1 == 'word' and type2 == 'word' and operator == '+':
-        return 'word'
-    if type1 == 'word' and type2 == 'number' and operator == '+':
-      return 'word'
+    if type1 == 'int' and type2 == 'int':
+        return 'int'
+    if type1 == 'int' and type2 == 'float':
+        return 'float'
+    if type1 == 'float' and type2 == 'int':
+        return 'float'
+    if type1 == 'float' and type2 == 'float':
+        return 'float'
+
+    if type1 == 'char' and type2 == 'char' and operator == '+':
+        return 'char'
+    if type1 == 'char' and type2 == 'int' and operator == '+':
+      return 'char'
     raise TypeError(f'{operator} cannot operate between {type1} and {type2}')
 
 def checkRel(type1, type2, operator):
-  if type1 == 'number' and type2 == 'number':
+  if type1 == 'int' and type2 == 'int':
+    return 'bool'
+  if type1 == 'int' and type2 == 'float':
+    return 'bool'
+  if type1 == 'float' and type2 == 'int':
+    return 'bool'
+  if type1 == 'int' and type2 == 'int':
     return 'bool'
   raise TypeError(f'{operator} cannot operate between {type1} and {type2}')
 
 def checkLog(type1, type2, operator):
   if type1 == 'bool' and type2 == 'bool':
     return 'bool'
-  if type1 == 'number' and type2 == 'number':
+  if type1 == 'int' and type2 == 'int':
+    return 'bool'
+  if type1 == 'int' and type2 == 'float':
+    return 'bool'
+  if type1 == 'float' and type2 == 'float':
+    return 'bool'
+  if type1 == 'float' and type2 == 'int':
     return 'bool'
 
 def checkEq(type1, type2, operator):

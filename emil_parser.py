@@ -4,7 +4,7 @@ from emil_lexer import EmilLexer
 from emil_funcdir import FuncDir
 from emil_vardir import VarDir
 from quads import Quadruple
-from emil_semanticcube import rel_ops, eq_ops, log_ops
+from emil_semanticcube import rel_ops, eq_ops, log_ops, checkOperator
 import sys
 
 class EmilParser(Parser):
@@ -141,6 +141,10 @@ class EmilParser(Parser):
             rightOp = self.stackOperandos.pop()
             leftOp = self.stackOperandos.pop()
             op = self.stackOperadores.pop()
+
+            rightOpType = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(rightOp).get_type()
+            print(rightOp)
+            print(rightOpType)
             self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
 
             self.stackOperandos.append(f't{self.tempCont}')
@@ -185,6 +189,7 @@ class EmilParser(Parser):
             rightOp = self.stackOperandos.pop()
             leftOp = self.stackOperandos.pop()
             op = self.stackOperadores.pop()
+        
             self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
 
             self.stackOperandos.append(f't{self.tempCont}')
@@ -224,6 +229,7 @@ class EmilParser(Parser):
     @_('')
     def fact1(self, p):
         self.stackOperandos.append(p[-1])
+
 
     @_('COMMA logic multiexp', 'empty')
     def multiexp(self, p):
