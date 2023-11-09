@@ -3,6 +3,7 @@ from sly.yacc import _decorator as _
 from emil_lexer import EmilLexer
 from emil_funcdir import FuncDir
 from emil_vardir import VarDir
+from emil_cte import CteDir
 from quads import Quadruple
 from emil_semanticcube import rel_ops, eq_ops, log_ops, checkOperator
 import sys
@@ -19,12 +20,43 @@ class EmilParser(Parser):
     scopeName = None
     currType = None
     currVar = None
+    programName = None
+    cteDir = CteDir()
+
+    def genQuad(self):
+        rightOp = self.stackOperandos.pop()
+        rightType = self.stackTypes.pop()
+        leftOp = self.stackOperandos.pop()
+        leftType = self.stackTypes.pop()
+        op = self.stackOperadores.pop()
+
+        checkOp = checkOperator(rightType, leftType, op);
+
+        self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+        self.stackOperandos.append(f't{self.tempCont}')
+        self.stackTypes.append(checkOp)
+
+        print(checkOp)
+        self.tempCont += 1
+
+    def checkVarExists(self, x):
+        aux = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(x)
+        #Check de variables locales
+        if(aux != None):
+            return aux
+        #Check de variables locales
+        aux = self.directorioProcedimientos.get_vardir(self.programName).get_var(x)
+        if(aux != None):
+            return aux
+        else:
+            raise Exception("ERROR - Variable no declarada")
 
     @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main')
     def program(self, p):
         for quad in self.quadList:
             print(quad)
         print(self.directorioProcedimientos, self.directorioProcedimientos.get_vardir(self.scopeName))
+        print(self.cteDir)
         return 69
     
     @_('')
@@ -35,6 +67,7 @@ class EmilParser(Parser):
     def prog2(self, p):
         self.directorioProcedimientos.add_func(name = p[-1])
         self.scopeName = p[-1]
+        self.programName = p[-1]
     
     @_('VARS prog3 multivd multid', 'empty')
     def varsdecl(self, p):
@@ -96,10 +129,15 @@ class EmilParser(Parser):
     def stmnt(self, p):
         return 0
     
-    @_('ID arr ASS logic SEMICLN', 'ID arr ASS func_stmnt SEMICLN')
+    @_('ID ass1 arr ASS logic SEMICLN', 'ID arr ASS func_stmnt SEMICLN')
     def ass_stmnt(self, p):
         return 0
     
+    @_('')
+    def ass1(self, p):
+        aux = self.checkVarExists(p[-1]).name
+        self.stackOperandos.append(aux)
+        
     @_('ID LPAREN arg RPAREN SEMICLN')
     def func_stmnt(self, p):
         return 0
@@ -116,13 +154,32 @@ class EmilParser(Parser):
     def ret_stmnt(self, p):
         return 0
     
-    @_('READ LPAREN ID multid RPAREN SEMICLN')
+    @_('READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN')
     def read_stmnt(self, p):
         return 0
     
-    @_('WRITE LPAREN ID multid RPAREN SEMICLN')
+    @_('WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN')
     def write_stmnt(self, p):
         return 0
+    
+    @_('')
+    def linear1(self, p):
+        self.stackOperadores.append(p[-1])
+
+    @_('')
+    def linear2(self, p):
+        pass
+
+    @_('')
+    def linear3(self, p):
+        if(len(self.stackOperadores) == 0):
+            return
+        operador = self.stackOperadores[-1]
+        if(operador == "write" or operador == "read"):
+            operador = self.stackOperadores.pop()
+            self.quadList.append(Quadruple(None, self.quadList[-1].res, operador, f't{self.tempCont}'))
+            self.stackOperandos.append(f't{self.tempCont}')
+            self.tempCont += 1
     
     @_('rel log2', 'rel log2 AND log1 logic', 'rel log2 OR log1 logic')
     def logic(self, p):
@@ -138,17 +195,7 @@ class EmilParser(Parser):
             return
         operadorTop = self.stackOperadores[-1]
         if(operadorTop in log_ops):
-            rightOp = self.stackOperandos.pop()
-            leftOp = self.stackOperandos.pop()
-            op = self.stackOperadores.pop()
-
-            rightOpType = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(rightOp).get_type()
-            print(rightOp)
-            print(rightOpType)
-            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
-
-            self.stackOperandos.append(f't{self.tempCont}')
-            self.tempCont += 1
+            self.genQuad();
     
     @_('MORE_THAN', 'LESS_THAN', 'MORE_OR_EQ_THAN', 'LESS_OR_EQ_THAN', 'DIFFERENT_TO', 'EQUAL_TO')
     def relop(self, p):
@@ -168,13 +215,7 @@ class EmilParser(Parser):
             return
         operadorTop = self.stackOperadores[-1]
         if(operadorTop in rel_ops or operadorTop in eq_ops):
-            rightOp = self.stackOperandos.pop()
-            leftOp = self.stackOperandos.pop()
-            op = self.stackOperadores.pop()
-            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
-
-            self.stackOperandos.append(f't{self.tempCont}')
-            self.tempCont += 1
+            self.genQuad();
 
     @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
     def exp(self, p):
@@ -186,19 +227,11 @@ class EmilParser(Parser):
             return
         operadorTop = self.stackOperadores[-1]
         if(operadorTop == '+' or operadorTop == '-'):
-            rightOp = self.stackOperandos.pop()
-            leftOp = self.stackOperandos.pop()
-            op = self.stackOperadores.pop()
-        
-            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
-
-            self.stackOperandos.append(f't{self.tempCont}')
-            self.tempCont += 1
+            self.genQuad();
 
     @_('')
     def exp1(self, p):
         self.stackOperadores.append(p[-1])
-        #print(p[-1])
 
     @_('factor term2', 'factor term2 MULT term1 term', 'factor term2 DIV term1 term')
     def term(self, p):
@@ -214,22 +247,45 @@ class EmilParser(Parser):
             return
         operadorTop = self.stackOperadores[-1]
         if(operadorTop == '*' or operadorTop == '/'):
-            rightOp = self.stackOperandos.pop()
-            leftOp = self.stackOperandos.pop()
-            op = self.stackOperadores.pop()
-            self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+            self.genQuad();
 
-            self.stackOperandos.append(f't{self.tempCont}')
-            self.tempCont += 1
-
-    @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM fact1', 'CTE_FLT fact1', 'CTE_STR fact1', 'TRUE fact1', 'FALSE fact1')
+    @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM ctes1', 'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4')
     def factor(self, p):
         pass
 
     @_('')
-    def fact1(self, p):
+    def ctes1(self, p):
         self.stackOperandos.append(p[-1])
+        self.cteDir.add_cte(p[-1], 0, 'int')
+        self.stackTypes.append('int')
+        return p[-1]
 
+    @_('')
+    def ctes2(self, p):
+        self.stackOperandos.append(p[-1])
+        self.cteDir.add_cte(p[-1], 0, 'float')
+        self.stackTypes.append('float')
+        return p[-1]
+
+    @_('')
+    def ctes3(self, p):
+        self.stackOperandos.append(p[-1])
+        self.cteDir.add_cte(p[-1], 0, 'char')
+        self.stackTypes.append('char')
+        return p[-1]
+
+    @_('')
+    def ctes4(self, p):
+        self.stackOperandos.append(p[-1])
+        self.cteDir.add_cte(p[-1], 0, 'bool')
+        self.stackTypes.append('bool')
+        return p[-1]
+
+    @_('')
+    def fact1(self, p):
+        aux = self.checkVarExists(p[-1])
+        self.stackOperandos.append(p[-1])
+        self.stackTypes.append(aux.get_type())
 
     @_('COMMA logic multiexp', 'empty')
     def multiexp(self, p):

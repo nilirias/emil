@@ -29,7 +29,7 @@ class EmilLexer(Lexer):
   ignore = ' \t'
   ignore_comment = r'#.*'
 
-  CTE_NUM = r'-?\d+(\.\d+)*'
+  CTE_NUM = r'-?\d+'
   CTE_FLT = r'[+-]?([0-9]*[.])?[0-9]+'
   CTE_STR = r'\"[^\"\n]*\"'
   ID = r'[a-z][a-z0-9_]*'

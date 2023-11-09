@@ -5,4 +5,4 @@ int : x;
 float : y, z;
 
 main()
-    x = 2 + 1;
+    x = 1 + y;
