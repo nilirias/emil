@@ -5,4 +5,11 @@ int : x;
 float : y, z;
 
 main()
-    x = 1 + y;
+    y = 2;
+    x = 1 * 2 * 3;
+    if (y > 1)
+      x = 1 + 2 * 3 - 4;
+    else
+      x = 2;
+    end
+
