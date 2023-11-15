@@ -61,8 +61,10 @@ class EmilParser(Parser):
 
   @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main')
   def program(self, p):
-    for quad in self.quadList:
-      print(quad)
+    
+    for idx, quad in enumerate(self.quadList, 1):
+      print(idx, quad)
+    
     print(self.directorioProcedimientos,
           self.directorioProcedimientos.get_vardir(self.scopeName))
     print(self.cteDir)
@@ -331,6 +333,7 @@ class EmilParser(Parser):
       raise Exception("ERROR - Type mismatch")
     else:
       result = self.stackOperandos.pop()
+      print('iiiiiiiiiiii', result)
       self.quadList.append(Quadruple(result, '', 'GOTOF', ''))
       self.stackJumps.append(self.quadCont)
       self.quadCont += 1
@@ -338,9 +341,7 @@ class EmilParser(Parser):
   @_('')
   def if2(self, p):
     end = self.stackJumps.pop()
-    result = self.quadList[end-1].lo
-    self.quadList.pop(end-1)
-    self.quadList.insert(end-1,(Quadruple(result, '', 'GOTOF', self.quadCont-1)))
+    self.quadList[end - 1].res = self.quadCont
 
   @_('ELSE else1 stmnt', 'empty')
   def else_stmnt(self, p):
@@ -348,10 +349,17 @@ class EmilParser(Parser):
 
   @_('')
   def else1(self, p):
-    print('aaaaaaaa', self.quadCont)
-    #self.stackJumps.append(self.quadCont - 1)
+    self.quadList.append(Quadruple('', '', 'GOTO', ''))
+    falso = self.stackJumps.pop()
+    print('fffffffff', falso, self.quadCont)
+    self.stackJumps.append(self.quadCont)
+    self.quadCont += 1
+    self.quadList[falso - 1].res = self.quadCont
+    print(self.quadList[falso - 1].res)
+    # print('aaaaaaaa', self.quadCont) 
+    # self.stackJumps.append(self.quadCont - 1)
     
-    #self.quadList.append(Quadruple('','','GOTO', falso))
+    # self.quadList.append(Quadruple('','','GOTO', falso))
     
 
   @_('WHILE LPAREN logic RPAREN stmnt END')
