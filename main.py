@@ -330,10 +330,9 @@ class EmilParser(Parser):
   def if1(self, p):
     exp_type = self.stackTypes.pop()
     if (exp_type != 'bool'):
-      raise Exception("ERROR - Type mismatch")
+      raise Exception("ERROR - Not a boolean expression")
     else:
       result = self.stackOperandos.pop()
-      print('iiiiiiiiiiii', result)
       self.quadList.append(Quadruple(result, '', 'GOTOF', ''))
       self.stackJumps.append(self.quadCont)
       self.quadCont += 1
@@ -351,20 +350,36 @@ class EmilParser(Parser):
   def else1(self, p):
     self.quadList.append(Quadruple('', '', 'GOTO', ''))
     falso = self.stackJumps.pop()
-    print('fffffffff', falso, self.quadCont)
     self.stackJumps.append(self.quadCont)
     self.quadCont += 1
     self.quadList[falso - 1].res = self.quadCont
-    print(self.quadList[falso - 1].res)
-    # print('aaaaaaaa', self.quadCont) 
-    # self.stackJumps.append(self.quadCont - 1)
-    
-    # self.quadList.append(Quadruple('','','GOTO', falso))
-    
 
-  @_('WHILE LPAREN logic RPAREN stmnt END')
+  @_('WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END')
   def while_stmnt(self, p):
     pass
+
+  @_('')
+  def while1(self, p):
+    self.stackJumps.append(self.quadCont)
+
+  @_('')
+  def while2(self, p):
+    exp_type = self.stackTypes.pop()
+    if (exp_type != 'bool'):
+      raise Exception("ERROR - Not a boolean expression")
+    else:
+      result = self.stackOperandos.pop()
+      self.quadList.append(Quadruple(result, '', 'GOTOF', ''))
+      self.stackJumps.append(self.quadCont)
+      self.quadCont += 1
+
+  @_('')
+  def while3(self, p):
+    end = self.stackJumps.pop()
+    retorno = self.stackJumps.pop()
+    self.quadList.append(Quadruple(retorno, '', 'GOTO', ''))
+    self.quadCont += 1
+    self.quadList[end - 1].res = self.quadCont
 
   @_('')
   def empty(self, p):

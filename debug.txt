@@ -97,8 +97,11 @@ Rule 93    if2 -> <empty>
 Rule 94    else_stmnt -> empty
 Rule 95    else_stmnt -> ELSE else1 stmnt
 Rule 96    else1 -> <empty>
-Rule 97    while_stmnt -> WHILE LPAREN logic RPAREN stmnt END
-Rule 98    empty -> <empty>
+Rule 97    while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
+Rule 98    while1 -> <empty>
+Rule 99    while2 -> <empty>
+Rule 100   while3 -> <empty>
+Rule 101   empty -> <empty>
 
 Terminals, with rules where they appear:
 
@@ -205,6 +208,9 @@ term2                : 72 73 74
 tipo                 : 8 21 24
 tipofunc             : 20
 varsdecl             : 1 20
+while1               : 97
+while2               : 97
+while3               : 97
 while_stmnt          : 29
 write_stmnt          : 31
 
@@ -255,10 +261,10 @@ state 6
     (1) program -> PROGRAM prog1 ID prog2 SEMICLN . varsdecl funcdecl main
     (4) varsdecl -> . empty
     (5) varsdecl -> . VARS prog3 multivd multid
-    (98) empty -> .
+    (101) empty -> .
     VARS            shift and go to state 9
-    FUNC            reduce using rule 98 (empty -> .)
-    MAIN            reduce using rule 98 (empty -> .)
+    FUNC            reduce using rule 101 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
 
     varsdecl                       shift and go to state 7
     empty                          shift and go to state 8
@@ -268,9 +274,9 @@ state 7
     (1) program -> PROGRAM prog1 ID prog2 SEMICLN varsdecl . funcdecl main
     (19) funcdecl -> . empty
     (20) funcdecl -> . FUNC tipofunc ID LPAREN param RPAREN varsdecl LCURLY stmnt RCURLY
-    (98) empty -> .
+    (101) empty -> .
     FUNC            shift and go to state 12
-    MAIN            reduce using rule 98 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
 
     funcdecl                       shift and go to state 10
     empty                          shift and go to state 11
@@ -335,15 +341,15 @@ state 13
     (5) varsdecl -> VARS prog3 . multivd multid
     (7) multivd -> . empty
     (8) multivd -> . tipo prog4 COLON ID prog5 arr multid SEMICLN multivd
-    (98) empty -> .
+    (101) empty -> .
     (13) tipo -> . BOOL
     (14) tipo -> . CHAR
     (15) tipo -> . FLOAT
     (16) tipo -> . INT
-    COMMA           reduce using rule 98 (empty -> .)
-    FUNC            reduce using rule 98 (empty -> .)
-    MAIN            reduce using rule 98 (empty -> .)
-    LCURLY          reduce using rule 98 (empty -> .)
+    COMMA           reduce using rule 101 (empty -> .)
+    FUNC            reduce using rule 101 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
+    LCURLY          reduce using rule 101 (empty -> .)
     BOOL            shift and go to state 19
     CHAR            shift and go to state 20
     FLOAT           shift and go to state 21
@@ -416,11 +422,11 @@ state 23
     (5) varsdecl -> VARS prog3 multivd . multid
     (11) multid -> . empty
     (12) multid -> . COMMA ID prog5 arr multid
-    (98) empty -> .
+    (101) empty -> .
     COMMA           shift and go to state 30
-    FUNC            reduce using rule 98 (empty -> .)
-    MAIN            reduce using rule 98 (empty -> .)
-    LCURLY          reduce using rule 98 (empty -> .)
+    FUNC            reduce using rule 101 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
+    LCURLY          reduce using rule 101 (empty -> .)
 
     multid                         shift and go to state 28
     empty                          shift and go to state 29
@@ -494,8 +500,8 @@ state 32
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -503,7 +509,7 @@ state 32
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -526,12 +532,12 @@ state 33
     (20) funcdecl -> FUNC tipofunc ID LPAREN . param RPAREN varsdecl LCURLY stmnt RCURLY
     (23) param -> . empty
     (24) param -> . tipo COLON ID multiparam
-    (98) empty -> .
+    (101) empty -> .
     (13) tipo -> . BOOL
     (14) tipo -> . CHAR
     (15) tipo -> . FLOAT
     (16) tipo -> . INT
-    RPAREN          reduce using rule 98 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
     BOOL            shift and go to state 19
     CHAR            shift and go to state 20
     FLOAT           shift and go to state 21
@@ -570,9 +576,9 @@ state 37
 
     (28) stmnt -> empty .
     $end            reduce using rule 28 (stmnt -> empty .)
-    END             reduce using rule 28 (stmnt -> empty .)
     RCURLY          reduce using rule 28 (stmnt -> empty .)
     ELSE            reduce using rule 28 (stmnt -> empty .)
+    END             reduce using rule 28 (stmnt -> empty .)
 
 
 state 38
@@ -586,8 +592,8 @@ state 38
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -595,10 +601,10 @@ state 38
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -627,8 +633,8 @@ state 39
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -636,10 +642,10 @@ state 39
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -668,8 +674,8 @@ state 40
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -677,10 +683,10 @@ state 40
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -709,8 +715,8 @@ state 41
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -718,10 +724,10 @@ state 41
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -750,8 +756,8 @@ state 42
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -759,10 +765,10 @@ state 42
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -791,8 +797,8 @@ state 43
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -800,10 +806,10 @@ state 43
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -832,8 +838,8 @@ state 44
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -841,10 +847,10 @@ state 44
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    $end            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    RCURLY          reduce using rule 98 (empty -> .)
-    ELSE            reduce using rule 98 (empty -> .)
+    $end            reduce using rule 101 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -864,9 +870,11 @@ state 44
 
 state 45
 
-    (97) while_stmnt -> WHILE . LPAREN logic RPAREN stmnt END
-    LPAREN          shift and go to state 63
+    (97) while_stmnt -> WHILE . while1 LPAREN logic while2 RPAREN stmnt while3 END
+    (98) while1 -> .
+    LPAREN          reduce using rule 98 (while1 -> .)
 
+    while1                         shift and go to state 63
 
 state 46
 
@@ -904,7 +912,7 @@ state 50
     (17) arr -> . empty
     (18) arr -> . LSQUARE exp RSQUARE
     (38) ass1 -> .
-    (98) empty -> .
+    (101) empty -> .
   ! shift/reduce conflict for LSQUARE resolved as shift
   ! reduce/reduce conflict for ASS resolved using rule 38 (ass1 -> .)
     LPAREN          shift and go to state 68
@@ -938,13 +946,13 @@ state 54
     (12) multid -> COMMA ID prog5 . arr multid
     (17) arr -> . empty
     (18) arr -> . LSQUARE exp RSQUARE
-    (98) empty -> .
+    (101) empty -> .
     LSQUARE         shift and go to state 72
-    COMMA           reduce using rule 98 (empty -> .)
-    FUNC            reduce using rule 98 (empty -> .)
-    MAIN            reduce using rule 98 (empty -> .)
-    LCURLY          reduce using rule 98 (empty -> .)
-    SEMICLN         reduce using rule 98 (empty -> .)
+    COMMA           reduce using rule 101 (empty -> .)
+    FUNC            reduce using rule 101 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
+    LCURLY          reduce using rule 101 (empty -> .)
+    SEMICLN         reduce using rule 101 (empty -> .)
 
     arr                            shift and go to state 75
     empty                          shift and go to state 71
@@ -963,98 +971,70 @@ state 56
 
     (29) stmnt -> while_stmnt stmnt .
     $end            reduce using rule 29 (stmnt -> while_stmnt stmnt .)
-    END             reduce using rule 29 (stmnt -> while_stmnt stmnt .)
     RCURLY          reduce using rule 29 (stmnt -> while_stmnt stmnt .)
     ELSE            reduce using rule 29 (stmnt -> while_stmnt stmnt .)
+    END             reduce using rule 29 (stmnt -> while_stmnt stmnt .)
 
 
 state 57
 
     (30) stmnt -> if_stmnt stmnt .
     $end            reduce using rule 30 (stmnt -> if_stmnt stmnt .)
-    END             reduce using rule 30 (stmnt -> if_stmnt stmnt .)
     RCURLY          reduce using rule 30 (stmnt -> if_stmnt stmnt .)
     ELSE            reduce using rule 30 (stmnt -> if_stmnt stmnt .)
+    END             reduce using rule 30 (stmnt -> if_stmnt stmnt .)
 
 
 state 58
 
     (31) stmnt -> write_stmnt stmnt .
     $end            reduce using rule 31 (stmnt -> write_stmnt stmnt .)
-    END             reduce using rule 31 (stmnt -> write_stmnt stmnt .)
     RCURLY          reduce using rule 31 (stmnt -> write_stmnt stmnt .)
     ELSE            reduce using rule 31 (stmnt -> write_stmnt stmnt .)
+    END             reduce using rule 31 (stmnt -> write_stmnt stmnt .)
 
 
 state 59
 
     (32) stmnt -> read_stmnt stmnt .
     $end            reduce using rule 32 (stmnt -> read_stmnt stmnt .)
-    END             reduce using rule 32 (stmnt -> read_stmnt stmnt .)
     RCURLY          reduce using rule 32 (stmnt -> read_stmnt stmnt .)
     ELSE            reduce using rule 32 (stmnt -> read_stmnt stmnt .)
+    END             reduce using rule 32 (stmnt -> read_stmnt stmnt .)
 
 
 state 60
 
     (33) stmnt -> ret_stmnt stmnt .
     $end            reduce using rule 33 (stmnt -> ret_stmnt stmnt .)
-    END             reduce using rule 33 (stmnt -> ret_stmnt stmnt .)
     RCURLY          reduce using rule 33 (stmnt -> ret_stmnt stmnt .)
     ELSE            reduce using rule 33 (stmnt -> ret_stmnt stmnt .)
+    END             reduce using rule 33 (stmnt -> ret_stmnt stmnt .)
 
 
 state 61
 
     (34) stmnt -> func_stmnt stmnt .
     $end            reduce using rule 34 (stmnt -> func_stmnt stmnt .)
-    END             reduce using rule 34 (stmnt -> func_stmnt stmnt .)
     RCURLY          reduce using rule 34 (stmnt -> func_stmnt stmnt .)
     ELSE            reduce using rule 34 (stmnt -> func_stmnt stmnt .)
+    END             reduce using rule 34 (stmnt -> func_stmnt stmnt .)
 
 
 state 62
 
     (35) stmnt -> ass_stmnt stmnt .
     $end            reduce using rule 35 (stmnt -> ass_stmnt stmnt .)
-    END             reduce using rule 35 (stmnt -> ass_stmnt stmnt .)
     RCURLY          reduce using rule 35 (stmnt -> ass_stmnt stmnt .)
     ELSE            reduce using rule 35 (stmnt -> ass_stmnt stmnt .)
+    END             reduce using rule 35 (stmnt -> ass_stmnt stmnt .)
 
 
 state 63
 
-    (97) while_stmnt -> WHILE LPAREN . logic RPAREN stmnt END
-    (52) logic -> . rel log2 OR log1 logic
-    (53) logic -> . rel log2 AND log1 logic
-    (54) logic -> . rel log2
-    (63) rel -> . exp rel2 relop rel1 rel
-    (64) rel -> . exp rel2
-    (67) exp -> . term exp2 SUB exp1 exp
-    (68) exp -> . term exp2 SUM exp1 exp
-    (69) exp -> . term exp2
-    (72) term -> . factor term2 DIV term1 term
-    (73) term -> . factor term2 MULT term1 term
-    (74) term -> . factor term2
-    (77) factor -> . FALSE ctes4
-    (78) factor -> . TRUE ctes4
-    (79) factor -> . CTE_STR ctes3
-    (80) factor -> . CTE_FLT ctes2
-    (81) factor -> . CTE_NUM ctes1
-    (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
-    (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    (97) while_stmnt -> WHILE while1 . LPAREN logic while2 RPAREN stmnt while3 END
+    LPAREN          shift and go to state 77
 
-    logic                          shift and go to state 77
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
 
 state 64
 
@@ -1077,18 +1057,18 @@ state 64
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    logic                          shift and go to state 88
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    logic                          shift and go to state 78
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 65
 
@@ -1123,25 +1103,25 @@ state 67
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     logic                          shift and go to state 91
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 68
 
     (41) func_stmnt -> ID LPAREN . arg RPAREN SEMICLN
     (42) arg -> . empty
     (43) arg -> . logic multiarg
-    (98) empty -> .
+    (101) empty -> .
     (52) logic -> . rel log2 OR log1 logic
     (53) logic -> . rel log2 AND log1 logic
     (54) logic -> . rel log2
@@ -1160,21 +1140,21 @@ state 68
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    RPAREN          reduce using rule 98 (empty -> .)
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    RPAREN          reduce using rule 101 (empty -> .)
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     arg                            shift and go to state 92
     empty                          shift and go to state 93
     logic                          shift and go to state 94
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 69
 
@@ -1187,9 +1167,9 @@ state 70
     (37) ass_stmnt -> ID ass1 . arr ASS ass2 logic ass3 SEMICLN
     (17) arr -> . empty
     (18) arr -> . LSQUARE exp RSQUARE
-    (98) empty -> .
+    (101) empty -> .
     LSQUARE         shift and go to state 72
-    ASS             reduce using rule 98 (empty -> .)
+    ASS             reduce using rule 101 (empty -> .)
 
     arr                            shift and go to state 96
     empty                          shift and go to state 71
@@ -1235,25 +1215,25 @@ state 72
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     exp                            shift and go to state 97
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 73
 
     (20) funcdecl -> FUNC tipofunc ID LPAREN param RPAREN . varsdecl LCURLY stmnt RCURLY
     (4) varsdecl -> . empty
     (5) varsdecl -> . VARS prog3 multivd multid
-    (98) empty -> .
+    (101) empty -> .
     VARS            shift and go to state 9
-    LCURLY          reduce using rule 98 (empty -> .)
+    LCURLY          reduce using rule 101 (empty -> .)
 
     varsdecl                       shift and go to state 98
     empty                          shift and go to state 8
@@ -1269,12 +1249,12 @@ state 75
     (12) multid -> COMMA ID prog5 arr . multid
     (11) multid -> . empty
     (12) multid -> . COMMA ID prog5 arr multid
-    (98) empty -> .
+    (101) empty -> .
     COMMA           shift and go to state 30
-    FUNC            reduce using rule 98 (empty -> .)
-    MAIN            reduce using rule 98 (empty -> .)
-    LCURLY          reduce using rule 98 (empty -> .)
-    SEMICLN         reduce using rule 98 (empty -> .)
+    FUNC            reduce using rule 101 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
+    LCURLY          reduce using rule 101 (empty -> .)
+    SEMICLN         reduce using rule 101 (empty -> .)
 
     multid                         shift and go to state 100
     empty                          shift and go to state 29
@@ -1284,21 +1264,57 @@ state 76
     (8) multivd -> tipo prog4 COLON ID prog5 . arr multid SEMICLN multivd
     (17) arr -> . empty
     (18) arr -> . LSQUARE exp RSQUARE
-    (98) empty -> .
+    (101) empty -> .
     LSQUARE         shift and go to state 72
-    COMMA           reduce using rule 98 (empty -> .)
-    SEMICLN         reduce using rule 98 (empty -> .)
+    COMMA           reduce using rule 101 (empty -> .)
+    SEMICLN         reduce using rule 101 (empty -> .)
 
     arr                            shift and go to state 101
     empty                          shift and go to state 71
 
 state 77
 
-    (97) while_stmnt -> WHILE LPAREN logic . RPAREN stmnt END
-    RPAREN          shift and go to state 102
+    (97) while_stmnt -> WHILE while1 LPAREN . logic while2 RPAREN stmnt while3 END
+    (52) logic -> . rel log2 OR log1 logic
+    (53) logic -> . rel log2 AND log1 logic
+    (54) logic -> . rel log2
+    (63) rel -> . exp rel2 relop rel1 rel
+    (64) rel -> . exp rel2
+    (67) exp -> . term exp2 SUB exp1 exp
+    (68) exp -> . term exp2 SUM exp1 exp
+    (69) exp -> . term exp2
+    (72) term -> . factor term2 DIV term1 term
+    (73) term -> . factor term2 MULT term1 term
+    (74) term -> . factor term2
+    (77) factor -> . FALSE ctes4
+    (78) factor -> . TRUE ctes4
+    (79) factor -> . CTE_STR ctes3
+    (80) factor -> . CTE_FLT ctes2
+    (81) factor -> . CTE_NUM ctes1
+    (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
+    (83) factor -> . ID fact1 arr
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
+    logic                          shift and go to state 102
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 78
+
+    (91) if_stmnt -> IF LPAREN logic . if1 RPAREN stmnt else_stmnt END if2
+    (92) if1 -> .
+    RPAREN          reduce using rule 92 (if1 -> .)
+
+    if1                            shift and go to state 103
+
+state 79
 
     (52) logic -> rel . log2 OR log1 logic
     (53) logic -> rel . log2 AND log1 logic
@@ -1310,9 +1326,9 @@ state 78
     COMMA           reduce using rule 56 (log2 -> .)
     SEMICLN         reduce using rule 56 (log2 -> .)
 
-    log2                           shift and go to state 103
+    log2                           shift and go to state 104
 
-state 79
+state 80
 
     (63) rel -> exp . rel2 relop rel1 rel
     (64) rel -> exp . rel2
@@ -1329,9 +1345,9 @@ state 79
     COMMA           reduce using rule 66 (rel2 -> .)
     SEMICLN         reduce using rule 66 (rel2 -> .)
 
-    rel2                           shift and go to state 104
+    rel2                           shift and go to state 105
 
-state 80
+state 81
 
     (67) exp -> term . exp2 SUB exp1 exp
     (68) exp -> term . exp2 SUM exp1 exp
@@ -1352,9 +1368,9 @@ state 80
     RSQUARE         reduce using rule 70 (exp2 -> .)
     SEMICLN         reduce using rule 70 (exp2 -> .)
 
-    exp2                           shift and go to state 105
+    exp2                           shift and go to state 106
 
-state 81
+state 82
 
     (72) term -> factor . term2 DIV term1 term
     (73) term -> factor . term2 MULT term1 term
@@ -1377,34 +1393,11 @@ state 81
     RSQUARE         reduce using rule 76 (term2 -> .)
     SEMICLN         reduce using rule 76 (term2 -> .)
 
-    term2                          shift and go to state 106
-
-state 82
-
-    (77) factor -> FALSE . ctes4
-    (87) ctes4 -> .
-    DIV             reduce using rule 87 (ctes4 -> .)
-    MULT            reduce using rule 87 (ctes4 -> .)
-    SUB             reduce using rule 87 (ctes4 -> .)
-    SUM             reduce using rule 87 (ctes4 -> .)
-    EQUAL_TO        reduce using rule 87 (ctes4 -> .)
-    DIFFERENT_TO    reduce using rule 87 (ctes4 -> .)
-    LESS_OR_EQ_THAN reduce using rule 87 (ctes4 -> .)
-    MORE_OR_EQ_THAN reduce using rule 87 (ctes4 -> .)
-    LESS_THAN       reduce using rule 87 (ctes4 -> .)
-    MORE_THAN       reduce using rule 87 (ctes4 -> .)
-    OR              reduce using rule 87 (ctes4 -> .)
-    AND             reduce using rule 87 (ctes4 -> .)
-    RPAREN          reduce using rule 87 (ctes4 -> .)
-    COMMA           reduce using rule 87 (ctes4 -> .)
-    RSQUARE         reduce using rule 87 (ctes4 -> .)
-    SEMICLN         reduce using rule 87 (ctes4 -> .)
-
-    ctes4                          shift and go to state 107
+    term2                          shift and go to state 107
 
 state 83
 
-    (78) factor -> TRUE . ctes4
+    (77) factor -> FALSE . ctes4
     (87) ctes4 -> .
     DIV             reduce using rule 87 (ctes4 -> .)
     MULT            reduce using rule 87 (ctes4 -> .)
@@ -1427,6 +1420,29 @@ state 83
 
 state 84
 
+    (78) factor -> TRUE . ctes4
+    (87) ctes4 -> .
+    DIV             reduce using rule 87 (ctes4 -> .)
+    MULT            reduce using rule 87 (ctes4 -> .)
+    SUB             reduce using rule 87 (ctes4 -> .)
+    SUM             reduce using rule 87 (ctes4 -> .)
+    EQUAL_TO        reduce using rule 87 (ctes4 -> .)
+    DIFFERENT_TO    reduce using rule 87 (ctes4 -> .)
+    LESS_OR_EQ_THAN reduce using rule 87 (ctes4 -> .)
+    MORE_OR_EQ_THAN reduce using rule 87 (ctes4 -> .)
+    LESS_THAN       reduce using rule 87 (ctes4 -> .)
+    MORE_THAN       reduce using rule 87 (ctes4 -> .)
+    OR              reduce using rule 87 (ctes4 -> .)
+    AND             reduce using rule 87 (ctes4 -> .)
+    RPAREN          reduce using rule 87 (ctes4 -> .)
+    COMMA           reduce using rule 87 (ctes4 -> .)
+    RSQUARE         reduce using rule 87 (ctes4 -> .)
+    SEMICLN         reduce using rule 87 (ctes4 -> .)
+
+    ctes4                          shift and go to state 109
+
+state 85
+
     (79) factor -> CTE_STR . ctes3
     (86) ctes3 -> .
     DIV             reduce using rule 86 (ctes3 -> .)
@@ -1446,9 +1462,9 @@ state 84
     RSQUARE         reduce using rule 86 (ctes3 -> .)
     SEMICLN         reduce using rule 86 (ctes3 -> .)
 
-    ctes3                          shift and go to state 109
+    ctes3                          shift and go to state 110
 
-state 85
+state 86
 
     (80) factor -> CTE_FLT . ctes2
     (85) ctes2 -> .
@@ -1469,9 +1485,9 @@ state 85
     RSQUARE         reduce using rule 85 (ctes2 -> .)
     SEMICLN         reduce using rule 85 (ctes2 -> .)
 
-    ctes2                          shift and go to state 110
+    ctes2                          shift and go to state 111
 
-state 86
+state 87
 
     (81) factor -> CTE_NUM . ctes1
     (84) ctes1 -> .
@@ -1492,9 +1508,9 @@ state 86
     RSQUARE         reduce using rule 84 (ctes1 -> .)
     SEMICLN         reduce using rule 84 (ctes1 -> .)
 
-    ctes1                          shift and go to state 111
+    ctes1                          shift and go to state 112
 
-state 87
+state 88
 
     (82) factor -> ID . fact1 LPAREN logic multiexp RPAREN
     (83) factor -> ID . fact1 arr
@@ -1518,15 +1534,7 @@ state 87
     RSQUARE         reduce using rule 88 (fact1 -> .)
     SEMICLN         reduce using rule 88 (fact1 -> .)
 
-    fact1                          shift and go to state 112
-
-state 88
-
-    (91) if_stmnt -> IF LPAREN logic . if1 RPAREN stmnt else_stmnt END if2
-    (92) if1 -> .
-    RPAREN          reduce using rule 92 (if1 -> .)
-
-    if1                            shift and go to state 113
+    fact1                          shift and go to state 113
 
 state 89
 
@@ -1549,18 +1557,18 @@ state 89
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     logic                          shift and go to state 114
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 90
 
@@ -1583,18 +1591,18 @@ state 90
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     logic                          shift and go to state 115
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 91
 
@@ -1620,10 +1628,10 @@ state 94
     (43) arg -> logic . multiarg
     (44) multiarg -> . empty
     (45) multiarg -> . COMMA arg multiarg
-    (98) empty -> .
+    (101) empty -> .
   ! shift/reduce conflict for COMMA resolved as shift
     COMMA           shift and go to state 120
-    RPAREN          reduce using rule 98 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
 
     multiarg                       shift and go to state 118
     empty                          shift and go to state 119
@@ -1659,9 +1667,9 @@ state 99
     (24) param -> tipo COLON ID . multiparam
     (25) multiparam -> . empty
     (26) multiparam -> . COMMA param
-    (98) empty -> .
+    (101) empty -> .
     COMMA           shift and go to state 128
-    RPAREN          reduce using rule 98 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
 
     multiparam                     shift and go to state 126
     empty                          shift and go to state 127
@@ -1680,64 +1688,40 @@ state 101
     (8) multivd -> tipo prog4 COLON ID prog5 arr . multid SEMICLN multivd
     (11) multid -> . empty
     (12) multid -> . COMMA ID prog5 arr multid
-    (98) empty -> .
+    (101) empty -> .
     COMMA           shift and go to state 30
-    SEMICLN         reduce using rule 98 (empty -> .)
+    SEMICLN         reduce using rule 101 (empty -> .)
 
     multid                         shift and go to state 129
     empty                          shift and go to state 29
 
 state 102
 
-    (97) while_stmnt -> WHILE LPAREN logic RPAREN . stmnt END
-    (28) stmnt -> . empty
-    (29) stmnt -> . while_stmnt stmnt
-    (30) stmnt -> . if_stmnt stmnt
-    (31) stmnt -> . write_stmnt stmnt
-    (32) stmnt -> . read_stmnt stmnt
-    (33) stmnt -> . ret_stmnt stmnt
-    (34) stmnt -> . func_stmnt stmnt
-    (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
-    (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
-    (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
-    (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
-    (46) ret_stmnt -> . RETURN LPAREN logic RPAREN SEMICLN
-    (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
-    (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
-    (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    END             reduce using rule 98 (empty -> .)
-    WHILE           shift and go to state 45
-    IF              shift and go to state 46
-    WRITE           shift and go to state 47
-    READ            shift and go to state 48
-    RETURN          shift and go to state 49
-    ID              shift and go to state 50
+    (97) while_stmnt -> WHILE while1 LPAREN logic . while2 RPAREN stmnt while3 END
+    (99) while2 -> .
+    RPAREN          reduce using rule 99 (while2 -> .)
 
-    stmnt                          shift and go to state 130
-    empty                          shift and go to state 37
-    while_stmnt                    shift and go to state 38
-    if_stmnt                       shift and go to state 39
-    write_stmnt                    shift and go to state 40
-    read_stmnt                     shift and go to state 41
-    ret_stmnt                      shift and go to state 42
-    func_stmnt                     shift and go to state 43
-    ass_stmnt                      shift and go to state 44
+    while2                         shift and go to state 130
 
 state 103
+
+    (91) if_stmnt -> IF LPAREN logic if1 . RPAREN stmnt else_stmnt END if2
+    RPAREN          shift and go to state 131
+
+
+state 104
 
     (52) logic -> rel log2 . OR log1 logic
     (53) logic -> rel log2 . AND log1 logic
     (54) logic -> rel log2 .
-    OR              shift and go to state 131
-    AND             shift and go to state 132
+    OR              shift and go to state 132
+    AND             shift and go to state 133
     RPAREN          reduce using rule 54 (logic -> rel log2 .)
     COMMA           reduce using rule 54 (logic -> rel log2 .)
     SEMICLN         reduce using rule 54 (logic -> rel log2 .)
 
 
-state 104
+state 105
 
     (63) rel -> exp rel2 . relop rel1 rel
     (64) rel -> exp rel2 .
@@ -1752,22 +1736,22 @@ state 104
     RPAREN          reduce using rule 64 (rel -> exp rel2 .)
     COMMA           reduce using rule 64 (rel -> exp rel2 .)
     SEMICLN         reduce using rule 64 (rel -> exp rel2 .)
-    EQUAL_TO        shift and go to state 134
-    DIFFERENT_TO    shift and go to state 135
-    LESS_OR_EQ_THAN shift and go to state 136
-    MORE_OR_EQ_THAN shift and go to state 137
-    LESS_THAN       shift and go to state 138
-    MORE_THAN       shift and go to state 139
+    EQUAL_TO        shift and go to state 135
+    DIFFERENT_TO    shift and go to state 136
+    LESS_OR_EQ_THAN shift and go to state 137
+    MORE_OR_EQ_THAN shift and go to state 138
+    LESS_THAN       shift and go to state 139
+    MORE_THAN       shift and go to state 140
 
-    relop                          shift and go to state 133
+    relop                          shift and go to state 134
 
-state 105
+state 106
 
     (67) exp -> term exp2 . SUB exp1 exp
     (68) exp -> term exp2 . SUM exp1 exp
     (69) exp -> term exp2 .
-    SUB             shift and go to state 140
-    SUM             shift and go to state 141
+    SUB             shift and go to state 141
+    SUM             shift and go to state 142
     EQUAL_TO        reduce using rule 69 (exp -> term exp2 .)
     DIFFERENT_TO    reduce using rule 69 (exp -> term exp2 .)
     LESS_OR_EQ_THAN reduce using rule 69 (exp -> term exp2 .)
@@ -1782,13 +1766,13 @@ state 105
     SEMICLN         reduce using rule 69 (exp -> term exp2 .)
 
 
-state 106
+state 107
 
     (72) term -> factor term2 . DIV term1 term
     (73) term -> factor term2 . MULT term1 term
     (74) term -> factor term2 .
-    DIV             shift and go to state 142
-    MULT            shift and go to state 143
+    DIV             shift and go to state 143
+    MULT            shift and go to state 144
     SUB             reduce using rule 74 (term -> factor term2 .)
     SUM             reduce using rule 74 (term -> factor term2 .)
     EQUAL_TO        reduce using rule 74 (term -> factor term2 .)
@@ -1805,7 +1789,7 @@ state 106
     SEMICLN         reduce using rule 74 (term -> factor term2 .)
 
 
-state 107
+state 108
 
     (77) factor -> FALSE ctes4 .
     DIV             reduce using rule 77 (factor -> FALSE ctes4 .)
@@ -1826,7 +1810,7 @@ state 107
     SEMICLN         reduce using rule 77 (factor -> FALSE ctes4 .)
 
 
-state 108
+state 109
 
     (78) factor -> TRUE ctes4 .
     DIV             reduce using rule 78 (factor -> TRUE ctes4 .)
@@ -1847,7 +1831,7 @@ state 108
     SEMICLN         reduce using rule 78 (factor -> TRUE ctes4 .)
 
 
-state 109
+state 110
 
     (79) factor -> CTE_STR ctes3 .
     DIV             reduce using rule 79 (factor -> CTE_STR ctes3 .)
@@ -1868,7 +1852,7 @@ state 109
     SEMICLN         reduce using rule 79 (factor -> CTE_STR ctes3 .)
 
 
-state 110
+state 111
 
     (80) factor -> CTE_FLT ctes2 .
     DIV             reduce using rule 80 (factor -> CTE_FLT ctes2 .)
@@ -1889,7 +1873,7 @@ state 110
     SEMICLN         reduce using rule 80 (factor -> CTE_FLT ctes2 .)
 
 
-state 111
+state 112
 
     (81) factor -> CTE_NUM ctes1 .
     DIV             reduce using rule 81 (factor -> CTE_NUM ctes1 .)
@@ -1910,40 +1894,34 @@ state 111
     SEMICLN         reduce using rule 81 (factor -> CTE_NUM ctes1 .)
 
 
-state 112
+state 113
 
     (82) factor -> ID fact1 . LPAREN logic multiexp RPAREN
     (83) factor -> ID fact1 . arr
     (17) arr -> . empty
     (18) arr -> . LSQUARE exp RSQUARE
-    (98) empty -> .
-    LPAREN          shift and go to state 144
+    (101) empty -> .
+    LPAREN          shift and go to state 145
     LSQUARE         shift and go to state 72
-    DIV             reduce using rule 98 (empty -> .)
-    MULT            reduce using rule 98 (empty -> .)
-    SUB             reduce using rule 98 (empty -> .)
-    SUM             reduce using rule 98 (empty -> .)
-    EQUAL_TO        reduce using rule 98 (empty -> .)
-    DIFFERENT_TO    reduce using rule 98 (empty -> .)
-    LESS_OR_EQ_THAN reduce using rule 98 (empty -> .)
-    MORE_OR_EQ_THAN reduce using rule 98 (empty -> .)
-    LESS_THAN       reduce using rule 98 (empty -> .)
-    MORE_THAN       reduce using rule 98 (empty -> .)
-    OR              reduce using rule 98 (empty -> .)
-    AND             reduce using rule 98 (empty -> .)
-    RPAREN          reduce using rule 98 (empty -> .)
-    COMMA           reduce using rule 98 (empty -> .)
-    RSQUARE         reduce using rule 98 (empty -> .)
-    SEMICLN         reduce using rule 98 (empty -> .)
+    DIV             reduce using rule 101 (empty -> .)
+    MULT            reduce using rule 101 (empty -> .)
+    SUB             reduce using rule 101 (empty -> .)
+    SUM             reduce using rule 101 (empty -> .)
+    EQUAL_TO        reduce using rule 101 (empty -> .)
+    DIFFERENT_TO    reduce using rule 101 (empty -> .)
+    LESS_OR_EQ_THAN reduce using rule 101 (empty -> .)
+    MORE_OR_EQ_THAN reduce using rule 101 (empty -> .)
+    LESS_THAN       reduce using rule 101 (empty -> .)
+    MORE_THAN       reduce using rule 101 (empty -> .)
+    OR              reduce using rule 101 (empty -> .)
+    AND             reduce using rule 101 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
+    COMMA           reduce using rule 101 (empty -> .)
+    RSQUARE         reduce using rule 101 (empty -> .)
+    SEMICLN         reduce using rule 101 (empty -> .)
 
-    arr                            shift and go to state 145
+    arr                            shift and go to state 146
     empty                          shift and go to state 71
-
-state 113
-
-    (91) if_stmnt -> IF LPAREN logic if1 . RPAREN stmnt else_stmnt END if2
-    RPAREN          shift and go to state 146
-
 
 state 114
 
@@ -1992,7 +1970,7 @@ state 120
     (45) multiarg -> COMMA . arg multiarg
     (42) arg -> . empty
     (43) arg -> . logic multiarg
-    (98) empty -> .
+    (101) empty -> .
     (52) logic -> . rel log2 OR log1 logic
     (53) logic -> . rel log2 AND log1 logic
     (54) logic -> . rel log2
@@ -2011,22 +1989,22 @@ state 120
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    COMMA           reduce using rule 98 (empty -> .)
-    RPAREN          reduce using rule 98 (empty -> .)
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    COMMA           reduce using rule 101 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     arg                            shift and go to state 151
     empty                          shift and go to state 93
     logic                          shift and go to state 94
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 121
 
@@ -2089,8 +2067,8 @@ state 125
     (33) stmnt -> . ret_stmnt stmnt
     (34) stmnt -> . func_stmnt stmnt
     (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
     (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
     (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
     (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
@@ -2098,7 +2076,7 @@ state 125
     (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
     (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
     (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    RCURLY          reduce using rule 98 (empty -> .)
+    RCURLY          reduce using rule 101 (empty -> .)
     WHILE           shift and go to state 45
     IF              shift and go to state 46
     WRITE           shift and go to state 47
@@ -2133,12 +2111,12 @@ state 128
     (26) multiparam -> COMMA . param
     (23) param -> . empty
     (24) param -> . tipo COLON ID multiparam
-    (98) empty -> .
+    (101) empty -> .
     (13) tipo -> . BOOL
     (14) tipo -> . CHAR
     (15) tipo -> . FLOAT
     (16) tipo -> . INT
-    RPAREN          reduce using rule 98 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
     BOOL            shift and go to state 19
     CHAR            shift and go to state 20
     FLOAT           shift and go to state 21
@@ -2156,26 +2134,52 @@ state 129
 
 state 130
 
-    (97) while_stmnt -> WHILE LPAREN logic RPAREN stmnt . END
-    END             shift and go to state 157
+    (97) while_stmnt -> WHILE while1 LPAREN logic while2 . RPAREN stmnt while3 END
+    RPAREN          shift and go to state 157
 
 
 state 131
 
-    (52) logic -> rel log2 OR . log1 logic
-    (55) log1 -> .
-    FALSE           reduce using rule 55 (log1 -> .)
-    TRUE            reduce using rule 55 (log1 -> .)
-    CTE_STR         reduce using rule 55 (log1 -> .)
-    CTE_FLT         reduce using rule 55 (log1 -> .)
-    CTE_NUM         reduce using rule 55 (log1 -> .)
-    ID              reduce using rule 55 (log1 -> .)
+    (91) if_stmnt -> IF LPAREN logic if1 RPAREN . stmnt else_stmnt END if2
+    (28) stmnt -> . empty
+    (29) stmnt -> . while_stmnt stmnt
+    (30) stmnt -> . if_stmnt stmnt
+    (31) stmnt -> . write_stmnt stmnt
+    (32) stmnt -> . read_stmnt stmnt
+    (33) stmnt -> . ret_stmnt stmnt
+    (34) stmnt -> . func_stmnt stmnt
+    (35) stmnt -> . ass_stmnt stmnt
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
+    (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
+    (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
+    (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
+    (46) ret_stmnt -> . RETURN LPAREN logic RPAREN SEMICLN
+    (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
+    (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
+    (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
+    ELSE            reduce using rule 101 (empty -> .)
+    END             reduce using rule 101 (empty -> .)
+    WHILE           shift and go to state 45
+    IF              shift and go to state 46
+    WRITE           shift and go to state 47
+    READ            shift and go to state 48
+    RETURN          shift and go to state 49
+    ID              shift and go to state 50
 
-    log1                           shift and go to state 158
+    stmnt                          shift and go to state 158
+    empty                          shift and go to state 37
+    while_stmnt                    shift and go to state 38
+    if_stmnt                       shift and go to state 39
+    write_stmnt                    shift and go to state 40
+    read_stmnt                     shift and go to state 41
+    ret_stmnt                      shift and go to state 42
+    func_stmnt                     shift and go to state 43
+    ass_stmnt                      shift and go to state 44
 
 state 132
 
-    (53) logic -> rel log2 AND . log1 logic
+    (52) logic -> rel log2 OR . log1 logic
     (55) log1 -> .
     FALSE           reduce using rule 55 (log1 -> .)
     TRUE            reduce using rule 55 (log1 -> .)
@@ -2188,6 +2192,19 @@ state 132
 
 state 133
 
+    (53) logic -> rel log2 AND . log1 logic
+    (55) log1 -> .
+    FALSE           reduce using rule 55 (log1 -> .)
+    TRUE            reduce using rule 55 (log1 -> .)
+    CTE_STR         reduce using rule 55 (log1 -> .)
+    CTE_FLT         reduce using rule 55 (log1 -> .)
+    CTE_NUM         reduce using rule 55 (log1 -> .)
+    ID              reduce using rule 55 (log1 -> .)
+
+    log1                           shift and go to state 160
+
+state 134
+
     (63) rel -> exp rel2 relop . rel1 rel
     (65) rel1 -> .
     FALSE           reduce using rule 65 (rel1 -> .)
@@ -2197,9 +2214,9 @@ state 133
     CTE_NUM         reduce using rule 65 (rel1 -> .)
     ID              reduce using rule 65 (rel1 -> .)
 
-    rel1                           shift and go to state 160
+    rel1                           shift and go to state 161
 
-state 134
+state 135
 
     (57) relop -> EQUAL_TO .
     FALSE           reduce using rule 57 (relop -> EQUAL_TO .)
@@ -2210,7 +2227,7 @@ state 134
     ID              reduce using rule 57 (relop -> EQUAL_TO .)
 
 
-state 135
+state 136
 
     (58) relop -> DIFFERENT_TO .
     FALSE           reduce using rule 58 (relop -> DIFFERENT_TO .)
@@ -2221,7 +2238,7 @@ state 135
     ID              reduce using rule 58 (relop -> DIFFERENT_TO .)
 
 
-state 136
+state 137
 
     (59) relop -> LESS_OR_EQ_THAN .
     FALSE           reduce using rule 59 (relop -> LESS_OR_EQ_THAN .)
@@ -2232,7 +2249,7 @@ state 136
     ID              reduce using rule 59 (relop -> LESS_OR_EQ_THAN .)
 
 
-state 137
+state 138
 
     (60) relop -> MORE_OR_EQ_THAN .
     FALSE           reduce using rule 60 (relop -> MORE_OR_EQ_THAN .)
@@ -2243,7 +2260,7 @@ state 137
     ID              reduce using rule 60 (relop -> MORE_OR_EQ_THAN .)
 
 
-state 138
+state 139
 
     (61) relop -> LESS_THAN .
     FALSE           reduce using rule 61 (relop -> LESS_THAN .)
@@ -2254,7 +2271,7 @@ state 138
     ID              reduce using rule 61 (relop -> LESS_THAN .)
 
 
-state 139
+state 140
 
     (62) relop -> MORE_THAN .
     FALSE           reduce using rule 62 (relop -> MORE_THAN .)
@@ -2265,22 +2282,9 @@ state 139
     ID              reduce using rule 62 (relop -> MORE_THAN .)
 
 
-state 140
-
-    (67) exp -> term exp2 SUB . exp1 exp
-    (71) exp1 -> .
-    FALSE           reduce using rule 71 (exp1 -> .)
-    TRUE            reduce using rule 71 (exp1 -> .)
-    CTE_STR         reduce using rule 71 (exp1 -> .)
-    CTE_FLT         reduce using rule 71 (exp1 -> .)
-    CTE_NUM         reduce using rule 71 (exp1 -> .)
-    ID              reduce using rule 71 (exp1 -> .)
-
-    exp1                           shift and go to state 161
-
 state 141
 
-    (68) exp -> term exp2 SUM . exp1 exp
+    (67) exp -> term exp2 SUB . exp1 exp
     (71) exp1 -> .
     FALSE           reduce using rule 71 (exp1 -> .)
     TRUE            reduce using rule 71 (exp1 -> .)
@@ -2293,20 +2297,20 @@ state 141
 
 state 142
 
-    (72) term -> factor term2 DIV . term1 term
-    (75) term1 -> .
-    FALSE           reduce using rule 75 (term1 -> .)
-    TRUE            reduce using rule 75 (term1 -> .)
-    CTE_STR         reduce using rule 75 (term1 -> .)
-    CTE_FLT         reduce using rule 75 (term1 -> .)
-    CTE_NUM         reduce using rule 75 (term1 -> .)
-    ID              reduce using rule 75 (term1 -> .)
+    (68) exp -> term exp2 SUM . exp1 exp
+    (71) exp1 -> .
+    FALSE           reduce using rule 71 (exp1 -> .)
+    TRUE            reduce using rule 71 (exp1 -> .)
+    CTE_STR         reduce using rule 71 (exp1 -> .)
+    CTE_FLT         reduce using rule 71 (exp1 -> .)
+    CTE_NUM         reduce using rule 71 (exp1 -> .)
+    ID              reduce using rule 71 (exp1 -> .)
 
-    term1                          shift and go to state 163
+    exp1                           shift and go to state 163
 
 state 143
 
-    (73) term -> factor term2 MULT . term1 term
+    (72) term -> factor term2 DIV . term1 term
     (75) term1 -> .
     FALSE           reduce using rule 75 (term1 -> .)
     TRUE            reduce using rule 75 (term1 -> .)
@@ -2318,6 +2322,19 @@ state 143
     term1                          shift and go to state 164
 
 state 144
+
+    (73) term -> factor term2 MULT . term1 term
+    (75) term1 -> .
+    FALSE           reduce using rule 75 (term1 -> .)
+    TRUE            reduce using rule 75 (term1 -> .)
+    CTE_STR         reduce using rule 75 (term1 -> .)
+    CTE_FLT         reduce using rule 75 (term1 -> .)
+    CTE_NUM         reduce using rule 75 (term1 -> .)
+    ID              reduce using rule 75 (term1 -> .)
+
+    term1                          shift and go to state 165
+
+state 145
 
     (82) factor -> ID fact1 LPAREN . logic multiexp RPAREN
     (52) logic -> . rel log2 OR log1 logic
@@ -2338,20 +2355,20 @@ state 144
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    logic                          shift and go to state 165
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    logic                          shift and go to state 166
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
-state 145
+state 146
 
     (83) factor -> ID fact1 arr .
     DIV             reduce using rule 83 (factor -> ID fact1 arr .)
@@ -2371,45 +2388,6 @@ state 145
     RSQUARE         reduce using rule 83 (factor -> ID fact1 arr .)
     SEMICLN         reduce using rule 83 (factor -> ID fact1 arr .)
 
-
-state 146
-
-    (91) if_stmnt -> IF LPAREN logic if1 RPAREN . stmnt else_stmnt END if2
-    (28) stmnt -> . empty
-    (29) stmnt -> . while_stmnt stmnt
-    (30) stmnt -> . if_stmnt stmnt
-    (31) stmnt -> . write_stmnt stmnt
-    (32) stmnt -> . read_stmnt stmnt
-    (33) stmnt -> . ret_stmnt stmnt
-    (34) stmnt -> . func_stmnt stmnt
-    (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
-    (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
-    (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
-    (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
-    (46) ret_stmnt -> . RETURN LPAREN logic RPAREN SEMICLN
-    (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
-    (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
-    (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    ELSE            reduce using rule 98 (empty -> .)
-    END             reduce using rule 98 (empty -> .)
-    WHILE           shift and go to state 45
-    IF              shift and go to state 46
-    WRITE           shift and go to state 47
-    READ            shift and go to state 48
-    RETURN          shift and go to state 49
-    ID              shift and go to state 50
-
-    stmnt                          shift and go to state 166
-    empty                          shift and go to state 37
-    while_stmnt                    shift and go to state 38
-    if_stmnt                       shift and go to state 39
-    write_stmnt                    shift and go to state 40
-    read_stmnt                     shift and go to state 41
-    ret_stmnt                      shift and go to state 42
-    func_stmnt                     shift and go to state 43
-    ass_stmnt                      shift and go to state 44
 
 state 147
 
@@ -2433,9 +2411,9 @@ state 149
     RETURN          reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
     ID              reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
     $end            reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
-    END             reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
     RCURLY          reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
     ELSE            reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
+    END             reduce using rule 46 (ret_stmnt -> RETURN LPAREN logic RPAREN SEMICLN .)
 
 
 state 150
@@ -2448,9 +2426,9 @@ state 150
     RETURN          reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
     ID              reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
     $end            reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
-    END             reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
     RCURLY          reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
     ELSE            reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
+    END             reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
     SEMICLN         reduce using rule 41 (func_stmnt -> ID LPAREN arg RPAREN SEMICLN .)
 
 
@@ -2459,10 +2437,10 @@ state 151
     (45) multiarg -> COMMA arg . multiarg
     (44) multiarg -> . empty
     (45) multiarg -> . COMMA arg multiarg
-    (98) empty -> .
+    (101) empty -> .
   ! shift/reduce conflict for COMMA resolved as shift
     COMMA           shift and go to state 120
-    RPAREN          reduce using rule 98 (empty -> .)
+    RPAREN          reduce using rule 101 (empty -> .)
 
     multiarg                       shift and go to state 169
     empty                          shift and go to state 119
@@ -2477,9 +2455,9 @@ state 152
     RETURN          reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
     ID              reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
     $end            reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
-    END             reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
     RCURLY          reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
     ELSE            reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
+    END             reduce using rule 36 (ass_stmnt -> ID arr ASS func_stmnt SEMICLN .)
 
 
 state 153
@@ -2503,18 +2481,18 @@ state 153
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
     logic                          shift and go to state 170
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 154
 
@@ -2533,15 +2511,15 @@ state 156
     (8) multivd -> tipo prog4 COLON ID prog5 arr multid SEMICLN . multivd
     (7) multivd -> . empty
     (8) multivd -> . tipo prog4 COLON ID prog5 arr multid SEMICLN multivd
-    (98) empty -> .
+    (101) empty -> .
     (13) tipo -> . BOOL
     (14) tipo -> . CHAR
     (15) tipo -> . FLOAT
     (16) tipo -> . INT
-    COMMA           reduce using rule 98 (empty -> .)
-    FUNC            reduce using rule 98 (empty -> .)
-    MAIN            reduce using rule 98 (empty -> .)
-    LCURLY          reduce using rule 98 (empty -> .)
+    COMMA           reduce using rule 101 (empty -> .)
+    FUNC            reduce using rule 101 (empty -> .)
+    MAIN            reduce using rule 101 (empty -> .)
+    LCURLY          reduce using rule 101 (empty -> .)
     BOOL            shift and go to state 19
     CHAR            shift and go to state 20
     FLOAT           shift and go to state 21
@@ -2553,20 +2531,55 @@ state 156
 
 state 157
 
-    (97) while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .
-    WHILE           reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    IF              reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    WRITE           reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    READ            reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    RETURN          reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    ID              reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    $end            reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    END             reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    RCURLY          reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
-    ELSE            reduce using rule 97 (while_stmnt -> WHILE LPAREN logic RPAREN stmnt END .)
+    (97) while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN . stmnt while3 END
+    (28) stmnt -> . empty
+    (29) stmnt -> . while_stmnt stmnt
+    (30) stmnt -> . if_stmnt stmnt
+    (31) stmnt -> . write_stmnt stmnt
+    (32) stmnt -> . read_stmnt stmnt
+    (33) stmnt -> . ret_stmnt stmnt
+    (34) stmnt -> . func_stmnt stmnt
+    (35) stmnt -> . ass_stmnt stmnt
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
+    (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
+    (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
+    (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
+    (46) ret_stmnt -> . RETURN LPAREN logic RPAREN SEMICLN
+    (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
+    (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
+    (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
+    END             reduce using rule 101 (empty -> .)
+    WHILE           shift and go to state 45
+    IF              shift and go to state 46
+    WRITE           shift and go to state 47
+    READ            shift and go to state 48
+    RETURN          shift and go to state 49
+    ID              shift and go to state 50
 
+    stmnt                          shift and go to state 173
+    empty                          shift and go to state 37
+    while_stmnt                    shift and go to state 38
+    if_stmnt                       shift and go to state 39
+    write_stmnt                    shift and go to state 40
+    read_stmnt                     shift and go to state 41
+    ret_stmnt                      shift and go to state 42
+    func_stmnt                     shift and go to state 43
+    ass_stmnt                      shift and go to state 44
 
 state 158
+
+    (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt . else_stmnt END if2
+    (94) else_stmnt -> . empty
+    (95) else_stmnt -> . ELSE else1 stmnt
+    (101) empty -> .
+    ELSE            shift and go to state 176
+    END             reduce using rule 101 (empty -> .)
+
+    else_stmnt                     shift and go to state 174
+    empty                          shift and go to state 175
+
+state 159
 
     (52) logic -> rel log2 OR log1 . logic
     (52) logic -> . rel log2 OR log1 logic
@@ -2587,20 +2600,20 @@ state 158
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    rel                            shift and go to state 78
-    logic                          shift and go to state 173
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    logic                          shift and go to state 177
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
-state 159
+state 160
 
     (53) logic -> rel log2 AND log1 . logic
     (52) logic -> . rel log2 OR log1 logic
@@ -2621,20 +2634,20 @@ state 159
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    rel                            shift and go to state 78
-    logic                          shift and go to state 174
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    rel                            shift and go to state 79
+    logic                          shift and go to state 178
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
-state 160
+state 161
 
     (63) rel -> exp rel2 relop rel1 . rel
     (63) rel -> . exp rel2 relop rel1 rel
@@ -2652,19 +2665,19 @@ state 160
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    exp                            shift and go to state 79
-    rel                            shift and go to state 175
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
+    exp                            shift and go to state 80
+    rel                            shift and go to state 179
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
-state 161
+state 162
 
     (67) exp -> term exp2 SUB exp1 . exp
     (67) exp -> . term exp2 SUB exp1 exp
@@ -2680,18 +2693,18 @@ state 161
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    term                           shift and go to state 80
-    exp                            shift and go to state 176
-    factor                         shift and go to state 81
+    term                           shift and go to state 81
+    exp                            shift and go to state 180
+    factor                         shift and go to state 82
 
-state 162
+state 163
 
     (68) exp -> term exp2 SUM exp1 . exp
     (67) exp -> . term exp2 SUB exp1 exp
@@ -2707,18 +2720,18 @@ state 162
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    term                           shift and go to state 80
-    exp                            shift and go to state 177
-    factor                         shift and go to state 81
+    term                           shift and go to state 81
+    exp                            shift and go to state 181
+    factor                         shift and go to state 82
 
-state 163
+state 164
 
     (72) term -> factor term2 DIV term1 . term
     (72) term -> . factor term2 DIV term1 term
@@ -2731,17 +2744,17 @@ state 163
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    factor                         shift and go to state 81
-    term                           shift and go to state 178
+    factor                         shift and go to state 82
+    term                           shift and go to state 182
 
-state 164
+state 165
 
     (73) term -> factor term2 MULT term1 . term
     (72) term -> . factor term2 DIV term1 term
@@ -2754,39 +2767,27 @@ state 164
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    factor                         shift and go to state 81
-    term                           shift and go to state 179
+    factor                         shift and go to state 82
+    term                           shift and go to state 183
 
-state 165
+state 166
 
     (82) factor -> ID fact1 LPAREN logic . multiexp RPAREN
     (89) multiexp -> . empty
     (90) multiexp -> . COMMA logic multiexp
-    (98) empty -> .
-    COMMA           shift and go to state 182
-    RPAREN          reduce using rule 98 (empty -> .)
+    (101) empty -> .
+    COMMA           shift and go to state 186
+    RPAREN          reduce using rule 101 (empty -> .)
 
-    multiexp                       shift and go to state 180
-    empty                          shift and go to state 181
-
-state 166
-
-    (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt . else_stmnt END if2
-    (94) else_stmnt -> . empty
-    (95) else_stmnt -> . ELSE else1 stmnt
-    (98) empty -> .
-    ELSE            shift and go to state 185
-    END             reduce using rule 98 (empty -> .)
-
-    else_stmnt                     shift and go to state 183
-    empty                          shift and go to state 184
+    multiexp                       shift and go to state 184
+    empty                          shift and go to state 185
 
 state 167
 
@@ -2794,7 +2795,7 @@ state 167
     (51) linear3 -> .
     SEMICLN         reduce using rule 51 (linear3 -> .)
 
-    linear3                        shift and go to state 186
+    linear3                        shift and go to state 187
 
 state 168
 
@@ -2802,7 +2803,7 @@ state 168
     (51) linear3 -> .
     SEMICLN         reduce using rule 51 (linear3 -> .)
 
-    linear3                        shift and go to state 187
+    linear3                        shift and go to state 188
 
 state 169
 
@@ -2817,7 +2818,7 @@ state 170
     (40) ass3 -> .
     SEMICLN         reduce using rule 40 (ass3 -> .)
 
-    ass3                           shift and go to state 188
+    ass3                           shift and go to state 189
 
 state 171
 
@@ -2836,13 +2837,47 @@ state 172
 
 state 173
 
+    (97) while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt . while3 END
+    (100) while3 -> .
+    END             reduce using rule 100 (while3 -> .)
+
+    while3                         shift and go to state 190
+
+state 174
+
+    (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt . END if2
+    END             shift and go to state 191
+
+
+state 175
+
+    (94) else_stmnt -> empty .
+    END             reduce using rule 94 (else_stmnt -> empty .)
+
+
+state 176
+
+    (95) else_stmnt -> ELSE . else1 stmnt
+    (96) else1 -> .
+    WHILE           reduce using rule 96 (else1 -> .)
+    IF              reduce using rule 96 (else1 -> .)
+    WRITE           reduce using rule 96 (else1 -> .)
+    READ            reduce using rule 96 (else1 -> .)
+    RETURN          reduce using rule 96 (else1 -> .)
+    ID              reduce using rule 96 (else1 -> .)
+    END             reduce using rule 96 (else1 -> .)
+
+    else1                          shift and go to state 192
+
+state 177
+
     (52) logic -> rel log2 OR log1 logic .
     RPAREN          reduce using rule 52 (logic -> rel log2 OR log1 logic .)
     COMMA           reduce using rule 52 (logic -> rel log2 OR log1 logic .)
     SEMICLN         reduce using rule 52 (logic -> rel log2 OR log1 logic .)
 
 
-state 174
+state 178
 
     (53) logic -> rel log2 AND log1 logic .
     RPAREN          reduce using rule 53 (logic -> rel log2 AND log1 logic .)
@@ -2850,7 +2885,7 @@ state 174
     SEMICLN         reduce using rule 53 (logic -> rel log2 AND log1 logic .)
 
 
-state 175
+state 179
 
     (63) rel -> exp rel2 relop rel1 rel .
     OR              reduce using rule 63 (rel -> exp rel2 relop rel1 rel .)
@@ -2860,7 +2895,7 @@ state 175
     SEMICLN         reduce using rule 63 (rel -> exp rel2 relop rel1 rel .)
 
 
-state 176
+state 180
 
     (67) exp -> term exp2 SUB exp1 exp .
     EQUAL_TO        reduce using rule 67 (exp -> term exp2 SUB exp1 exp .)
@@ -2877,7 +2912,7 @@ state 176
     SEMICLN         reduce using rule 67 (exp -> term exp2 SUB exp1 exp .)
 
 
-state 177
+state 181
 
     (68) exp -> term exp2 SUM exp1 exp .
     EQUAL_TO        reduce using rule 68 (exp -> term exp2 SUM exp1 exp .)
@@ -2894,7 +2929,7 @@ state 177
     SEMICLN         reduce using rule 68 (exp -> term exp2 SUM exp1 exp .)
 
 
-state 178
+state 182
 
     (72) term -> factor term2 DIV term1 term .
     SUB             reduce using rule 72 (term -> factor term2 DIV term1 term .)
@@ -2913,7 +2948,7 @@ state 178
     SEMICLN         reduce using rule 72 (term -> factor term2 DIV term1 term .)
 
 
-state 179
+state 183
 
     (73) term -> factor term2 MULT term1 term .
     SUB             reduce using rule 73 (term -> factor term2 MULT term1 term .)
@@ -2932,19 +2967,19 @@ state 179
     SEMICLN         reduce using rule 73 (term -> factor term2 MULT term1 term .)
 
 
-state 180
+state 184
 
     (82) factor -> ID fact1 LPAREN logic multiexp . RPAREN
-    RPAREN          shift and go to state 189
+    RPAREN          shift and go to state 193
 
 
-state 181
+state 185
 
     (89) multiexp -> empty .
     RPAREN          reduce using rule 89 (multiexp -> empty .)
 
 
-state 182
+state 186
 
     (90) multiexp -> COMMA . logic multiexp
     (52) logic -> . rel log2 OR log1 logic
@@ -2965,64 +3000,99 @@ state 182
     (81) factor -> . CTE_NUM ctes1
     (82) factor -> . ID fact1 LPAREN logic multiexp RPAREN
     (83) factor -> . ID fact1 arr
-    FALSE           shift and go to state 82
-    TRUE            shift and go to state 83
-    CTE_STR         shift and go to state 84
-    CTE_FLT         shift and go to state 85
-    CTE_NUM         shift and go to state 86
-    ID              shift and go to state 87
+    FALSE           shift and go to state 83
+    TRUE            shift and go to state 84
+    CTE_STR         shift and go to state 85
+    CTE_FLT         shift and go to state 86
+    CTE_NUM         shift and go to state 87
+    ID              shift and go to state 88
 
-    logic                          shift and go to state 190
-    rel                            shift and go to state 78
-    exp                            shift and go to state 79
-    term                           shift and go to state 80
-    factor                         shift and go to state 81
-
-state 183
-
-    (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt . END if2
-    END             shift and go to state 191
-
-
-state 184
-
-    (94) else_stmnt -> empty .
-    END             reduce using rule 94 (else_stmnt -> empty .)
-
-
-state 185
-
-    (95) else_stmnt -> ELSE . else1 stmnt
-    (96) else1 -> .
-    WHILE           reduce using rule 96 (else1 -> .)
-    IF              reduce using rule 96 (else1 -> .)
-    WRITE           reduce using rule 96 (else1 -> .)
-    READ            reduce using rule 96 (else1 -> .)
-    RETURN          reduce using rule 96 (else1 -> .)
-    ID              reduce using rule 96 (else1 -> .)
-    END             reduce using rule 96 (else1 -> .)
-
-    else1                          shift and go to state 192
-
-state 186
-
-    (48) write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 . SEMICLN
-    SEMICLN         shift and go to state 193
-
+    logic                          shift and go to state 194
+    rel                            shift and go to state 79
+    exp                            shift and go to state 80
+    term                           shift and go to state 81
+    factor                         shift and go to state 82
 
 state 187
 
-    (47) read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 . SEMICLN
-    SEMICLN         shift and go to state 194
+    (48) write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 . SEMICLN
+    SEMICLN         shift and go to state 195
 
 
 state 188
 
-    (37) ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 . SEMICLN
-    SEMICLN         shift and go to state 195
+    (47) read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 . SEMICLN
+    SEMICLN         shift and go to state 196
 
 
 state 189
+
+    (37) ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 . SEMICLN
+    SEMICLN         shift and go to state 197
+
+
+state 190
+
+    (97) while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 . END
+    END             shift and go to state 198
+
+
+state 191
+
+    (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END . if2
+    (93) if2 -> .
+    WHILE           reduce using rule 93 (if2 -> .)
+    IF              reduce using rule 93 (if2 -> .)
+    WRITE           reduce using rule 93 (if2 -> .)
+    READ            reduce using rule 93 (if2 -> .)
+    RETURN          reduce using rule 93 (if2 -> .)
+    ID              reduce using rule 93 (if2 -> .)
+    $end            reduce using rule 93 (if2 -> .)
+    RCURLY          reduce using rule 93 (if2 -> .)
+    ELSE            reduce using rule 93 (if2 -> .)
+    END             reduce using rule 93 (if2 -> .)
+
+    if2                            shift and go to state 199
+
+state 192
+
+    (95) else_stmnt -> ELSE else1 . stmnt
+    (28) stmnt -> . empty
+    (29) stmnt -> . while_stmnt stmnt
+    (30) stmnt -> . if_stmnt stmnt
+    (31) stmnt -> . write_stmnt stmnt
+    (32) stmnt -> . read_stmnt stmnt
+    (33) stmnt -> . ret_stmnt stmnt
+    (34) stmnt -> . func_stmnt stmnt
+    (35) stmnt -> . ass_stmnt stmnt
+    (101) empty -> .
+    (97) while_stmnt -> . WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END
+    (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
+    (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
+    (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
+    (46) ret_stmnt -> . RETURN LPAREN logic RPAREN SEMICLN
+    (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
+    (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
+    (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
+    END             reduce using rule 101 (empty -> .)
+    WHILE           shift and go to state 45
+    IF              shift and go to state 46
+    WRITE           shift and go to state 47
+    READ            shift and go to state 48
+    RETURN          shift and go to state 49
+    ID              shift and go to state 50
+
+    stmnt                          shift and go to state 200
+    empty                          shift and go to state 37
+    while_stmnt                    shift and go to state 38
+    if_stmnt                       shift and go to state 39
+    write_stmnt                    shift and go to state 40
+    read_stmnt                     shift and go to state 41
+    ret_stmnt                      shift and go to state 42
+    func_stmnt                     shift and go to state 43
+    ass_stmnt                      shift and go to state 44
+
+state 193
 
     (82) factor -> ID fact1 LPAREN logic multiexp RPAREN .
     DIV             reduce using rule 82 (factor -> ID fact1 LPAREN logic multiexp RPAREN .)
@@ -3043,74 +3113,19 @@ state 189
     SEMICLN         reduce using rule 82 (factor -> ID fact1 LPAREN logic multiexp RPAREN .)
 
 
-state 190
+state 194
 
     (90) multiexp -> COMMA logic . multiexp
     (89) multiexp -> . empty
     (90) multiexp -> . COMMA logic multiexp
-    (98) empty -> .
-    COMMA           shift and go to state 182
-    RPAREN          reduce using rule 98 (empty -> .)
+    (101) empty -> .
+    COMMA           shift and go to state 186
+    RPAREN          reduce using rule 101 (empty -> .)
 
-    multiexp                       shift and go to state 196
-    empty                          shift and go to state 181
+    multiexp                       shift and go to state 201
+    empty                          shift and go to state 185
 
-state 191
-
-    (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END . if2
-    (93) if2 -> .
-    WHILE           reduce using rule 93 (if2 -> .)
-    IF              reduce using rule 93 (if2 -> .)
-    WRITE           reduce using rule 93 (if2 -> .)
-    READ            reduce using rule 93 (if2 -> .)
-    RETURN          reduce using rule 93 (if2 -> .)
-    ID              reduce using rule 93 (if2 -> .)
-    $end            reduce using rule 93 (if2 -> .)
-    END             reduce using rule 93 (if2 -> .)
-    RCURLY          reduce using rule 93 (if2 -> .)
-    ELSE            reduce using rule 93 (if2 -> .)
-
-    if2                            shift and go to state 197
-
-state 192
-
-    (95) else_stmnt -> ELSE else1 . stmnt
-    (28) stmnt -> . empty
-    (29) stmnt -> . while_stmnt stmnt
-    (30) stmnt -> . if_stmnt stmnt
-    (31) stmnt -> . write_stmnt stmnt
-    (32) stmnt -> . read_stmnt stmnt
-    (33) stmnt -> . ret_stmnt stmnt
-    (34) stmnt -> . func_stmnt stmnt
-    (35) stmnt -> . ass_stmnt stmnt
-    (98) empty -> .
-    (97) while_stmnt -> . WHILE LPAREN logic RPAREN stmnt END
-    (91) if_stmnt -> . IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2
-    (48) write_stmnt -> . WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
-    (47) read_stmnt -> . READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN
-    (46) ret_stmnt -> . RETURN LPAREN logic RPAREN SEMICLN
-    (41) func_stmnt -> . ID LPAREN arg RPAREN SEMICLN
-    (36) ass_stmnt -> . ID arr ASS func_stmnt SEMICLN
-    (37) ass_stmnt -> . ID ass1 arr ASS ass2 logic ass3 SEMICLN
-    END             reduce using rule 98 (empty -> .)
-    WHILE           shift and go to state 45
-    IF              shift and go to state 46
-    WRITE           shift and go to state 47
-    READ            shift and go to state 48
-    RETURN          shift and go to state 49
-    ID              shift and go to state 50
-
-    stmnt                          shift and go to state 198
-    empty                          shift and go to state 37
-    while_stmnt                    shift and go to state 38
-    if_stmnt                       shift and go to state 39
-    write_stmnt                    shift and go to state 40
-    read_stmnt                     shift and go to state 41
-    ret_stmnt                      shift and go to state 42
-    func_stmnt                     shift and go to state 43
-    ass_stmnt                      shift and go to state 44
-
-state 193
+state 195
 
     (48) write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .
     WHILE           reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
@@ -3120,12 +3135,12 @@ state 193
     RETURN          reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     ID              reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     $end            reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
-    END             reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     RCURLY          reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     ELSE            reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
+    END             reduce using rule 48 (write_stmnt -> WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
 
 
-state 194
+state 196
 
     (47) read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .
     WHILE           reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
@@ -3135,12 +3150,12 @@ state 194
     RETURN          reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     ID              reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     $end            reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
-    END             reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     RCURLY          reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
     ELSE            reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
+    END             reduce using rule 47 (read_stmnt -> READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN .)
 
 
-state 195
+state 197
 
     (37) ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .
     WHILE           reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
@@ -3150,18 +3165,27 @@ state 195
     RETURN          reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
     ID              reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
     $end            reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
-    END             reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
     RCURLY          reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
     ELSE            reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
+    END             reduce using rule 37 (ass_stmnt -> ID ass1 arr ASS ass2 logic ass3 SEMICLN .)
 
 
-state 196
+state 198
 
-    (90) multiexp -> COMMA logic multiexp .
-    RPAREN          reduce using rule 90 (multiexp -> COMMA logic multiexp .)
+    (97) while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .
+    WHILE           reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    IF              reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    WRITE           reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    READ            reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    RETURN          reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    ID              reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    $end            reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    RCURLY          reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    ELSE            reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
+    END             reduce using rule 97 (while_stmnt -> WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END .)
 
 
-state 197
+state 199
 
     (91) if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .
     WHILE           reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
@@ -3171,15 +3195,21 @@ state 197
     RETURN          reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
     ID              reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
     $end            reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
-    END             reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
     RCURLY          reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
     ELSE            reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
+    END             reduce using rule 91 (if_stmnt -> IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2 .)
 
 
-state 198
+state 200
 
     (95) else_stmnt -> ELSE else1 stmnt .
     END             reduce using rule 95 (else_stmnt -> ELSE else1 stmnt .)
+
+
+state 201
+
+    (90) multiexp -> COMMA logic multiexp .
+    RPAREN          reduce using rule 90 (multiexp -> COMMA logic multiexp .)
 
 
 Conflicts:
