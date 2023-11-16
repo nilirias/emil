@@ -7,6 +7,8 @@ class CteDir:
     def add_cte(self, value, addr, vartype):
         if all(entry.value != value for entry in self.cte):
             self.cte.append(CteDirEntry(value, addr, vartype))
+            return True
+        return False
 
     def get_entry(self, value):
         x = [i for i in self.cte if i.value == value]

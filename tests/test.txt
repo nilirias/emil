@@ -4,7 +4,14 @@ VARS
 int : x;
 float : y, z;
 
+func void myfunc(int: a, float: b, int: c){
+  
+}
+
 main()
+    x = 1 * 1.1;
     while (x > 1)
-      y = 1 * 2;
+      y = 1 * 2.1 ;
     end
+
+    x = 1 * 2;

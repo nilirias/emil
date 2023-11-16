@@ -24,24 +24,59 @@ class EmilParser(Parser):
   currType = None
   currVar = None
   programName = None
+  funcType = None
   cteDir = CteDir()
 
+  intlcl = 0
+  fltlcl = 1000
+  charlcl = 2000
+  boollcl = 3000
+
+  intglb = 4000
+  fltglb = 5000
+  charglb = 6000
+  boolglb = 7000
+
+  inttemp = 8000
+  flttemp = 9000
+  chartemp = 10000
+  booltemp = 11000
+
+  intcte = 12000
+  fltcte = 13000
+  charcte = 14000
+  boolcte = 15000
+
   def genQuad(self):
+    typeaddr = None
     rightOp = self.stackOperandos.pop()
     rightType = self.stackTypes.pop()
     leftOp = self.stackOperandos.pop()
     leftType = self.stackTypes.pop()
     op = self.stackOperadores.pop()
-  
+
     checkOp = checkOperator(rightType, leftType, op)
+    if (checkOp == 'int'):
+      typeaddr = self.inttemp
+      self.inttemp += 1
+    elif (checkOp == 'float'):
+      typeaddr = self.flttemp
+      self.flttemp += 1
+    elif (checkOp == 'char'):
+      typeaddr = self.chartemp
+      self.chartemp += 1
+    elif (checkOp == 'bool'):
+      typeaddr = self.booltemp
+      self.booltemp += 1
+    
     if (op == '='):
       self.quadList.append(Quadruple(leftOp, rightOp, op, ''))
       self.stackTypes.append(checkOp)
       self.quadCont += 1
     else:
-      self.quadList.append(Quadruple(leftOp, rightOp, op, f't{self.tempCont}'))
+      self.quadList.append(Quadruple(leftOp, rightOp, op, typeaddr))
       self.quadCont += 1
-      self.stackOperandos.append(f't{self.tempCont}')
+      self.stackOperandos.append(typeaddr)
       self.stackTypes.append(checkOp)
       self.tempCont += 1
 
@@ -61,10 +96,8 @@ class EmilParser(Parser):
 
   @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main')
   def program(self, p):
-    
     for idx, quad in enumerate(self.quadList, 1):
       print(idx, quad)
-    
     print(self.directorioProcedimientos,
           self.directorioProcedimientos.get_vardir(self.scopeName))
     print(self.cteDir)
@@ -102,7 +135,33 @@ class EmilParser(Parser):
     self.currVar = self.directorioProcedimientos.get_vardir(self.scopeName)
     if (self.currVar.get_var(p[-1]) != None):
       raise Exception("ERROR - Variable already declared")
-    self.currVar.add_var(p[-1], 0, self.currType)
+    if(self.scopeName == self.programName): #variable global
+      if (self.currType == 'int'):
+        self.currVar.add_var(p[-1], self.intglb, self.currType)
+        self.intglb += 1
+      elif(self.currType == 'float'):
+        self.currVar.add_var(p[-1], self.fltglb, self.currType)
+        self.fltglb += 1
+      elif(self.currType == 'char'):
+        self.currVar.add_var(p[-1], self.charglb, self.currType)
+        self.charglb += 1
+      elif(self.currType == 'bool'):
+        self.currVar.add_var(p[-1], self.boolglb, self.currType)
+        self.boolgbl += 1
+    else:
+      if (self.currType == 'int'):
+        self.currVar.add_var(p[-1], self.intlcl, self.currType)
+        self.intlcl += 1
+      elif(self.currType == 'float'):
+        self.currVar.add_var(p[-1], self.fltlcl, self.currType)
+        self.fltlcl += 1
+      elif(self.currType == 'char'):
+        self.currVar.add_var(p[-1], self.charlcl, self.currType)
+        self.charlcl += 1
+      elif(self.currType == 'bool'):
+        self.currVar.add_var(p[-1], self.boollcl, self.currType)
+        self.boollcl += 1
+        
 
   @_('COMMA ID prog5 arr multid', 'empty')
   def multid(self, p):
@@ -116,18 +175,59 @@ class EmilParser(Parser):
   def arr(self, p):
     return 0
 
-  @_('FUNC tipofunc ID LPAREN param RPAREN varsdecl LCURLY stmnt RCURLY',
+  @_('FUNC tipofunc func1 ID func2 LPAREN param RPAREN varsdecl LCURLY stmnt resetvarcont RCURLY',
      'empty')
   def funcdecl(self, p):
     return 0
+
+  @_('')
+  def func1(self, p):
+    self.funcType = p[-1]
+    
+  @_('')
+  def func2(self, p):
+    self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir())
+    self.scopeName = p[-1]
+    
+  @_('')
+  def resetvarcont(self, p):
+    self.intlcl = 0
+    self.fltlcl = 1000
+    self.charlcl = 2000
+    self.boollcl = 3000
+
+    self.inttemp = 8000
+    self.flttemp = 9000
+    self.chartemp = 10000
+    self.booltemp = 11000
 
   @_('VOID', 'tipo')
   def tipofunc(self, p):
     return p[0]
 
-  @_('tipo COLON ID multiparam', 'empty')
+  @_('tipo param1 COLON ID param2 multiparam', 'empty')
   def param(self, p):
     return 0
+
+  @_('')
+  def param1(self, p):
+    self.currType = p[-1]
+
+  @_('')
+  def param2(self, p):
+    self.currVar = self.directorioProcedimientos.get_vardir(self.scopeName)
+    if (self.currType == 'int'):
+      self.currVar.add_var(p[-1], self.intlcl, self.currType)
+      self.intlcl += 1
+    elif(self.currType == 'float'):
+      self.currVar.add_var(p[-1], self.fltlcl, self.currType)
+      self.fltlcl += 1
+    elif(self.currType == 'char'):
+      self.currVar.add_var(p[-1], self.charlcl, self.currType)
+      self.charlcl += 1
+    elif(self.currType == 'bool'):
+      self.currVar.add_var(p[-1], self.boollcl, self.currType)
+      self.boollcl += 1
 
   @_('COMMA param', 'empty')
   def multiparam(self, p):
@@ -151,7 +251,7 @@ class EmilParser(Parser):
   @_('')
   def ass1(self, p):
     aux = self.checkVarExists(p[-1])
-    self.stackOperandos.append(aux.name)
+    self.stackOperandos.append(aux.addr)
     self.stackTypes.append(aux.get_type())
 
   @_('')
@@ -223,7 +323,6 @@ class EmilParser(Parser):
     operadorTop = self.stackOperadores[-1]
     if (operadorTop in log_ops):
       self.genQuad()
-      
 
   @_('MORE_THAN', 'LESS_THAN', 'MORE_OR_EQ_THAN', 'LESS_OR_EQ_THAN',
      'DIFFERENT_TO', 'EQUAL_TO')
@@ -270,9 +369,11 @@ class EmilParser(Parser):
   @_('')
   def term1(self, p):
     self.stackOperadores.append(p[-1])
+    #print(p[-1])
 
   @_('')
   def term2(self, p):
+    #print('aaaaaaa', p[-1])
     if (len(self.stackOperadores) == 0):
       return
     operadorTop = self.stackOperadores[-1]
@@ -283,39 +384,61 @@ class EmilParser(Parser):
      'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4')
   def factor(self, p):
     pass
+    #print('308', p[0])
 
   @_('')
   def ctes1(self, p):
-    self.stackOperandos.append(p[-1])
-    self.cteDir.add_cte(p[-1], 0, 'int')
+    added = self.cteDir.add_cte(p[-1], self.intcte, 'int')
+    if added:
+      self.stackOperandos.append(self.intcte)
+      self.intcte += 1
+    else:
+      addr = self.cteDir.get_entry(p[-1]).addr
+      self.stackOperandos.append(addr)
+      # address = dicrectorioconstantes.get entry(p[-1]).addr
     self.stackTypes.append('int')
     return p[-1]
 
   @_('')
   def ctes2(self, p):
-    self.stackOperandos.append(p[-1])
-    self.cteDir.add_cte(p[-1], 0, 'float')
+    added = self.cteDir.add_cte(p[-1], self.fltcte, 'float')
+    if added:
+      self.stackOperandos.append(self.fltcte)
+      self.fltcte += 1
+    else:
+      addr = self.cteDir.get_entry(p[-1]).addr
+      self.stackOperandos.append(addr)
     self.stackTypes.append('float')
     return p[-1]
 
   @_('')
   def ctes3(self, p):
-    self.stackOperandos.append(p[-1])
-    self.cteDir.add_cte(p[-1], 0, 'char')
+    added = self.cteDir.add_cte(p[-1], self.charcte, 'char')
+    if added:
+      self.stackOperandos.append(self.charcte)
+      self.charcte += 1
+    else:
+      addr = self.cteDir.get_entry(p[-1]).addr
+      self.stackOperandos.append(addr)
     self.stackTypes.append('char')
     return p[-1]
 
   @_('')
   def ctes4(self, p):
-    self.stackOperandos.append(p[-1])
-    self.cteDir.add_cte(p[-1], 0, 'bool')
+    added = self.cteDir.add_cte(p[-1], self.boolcte, 'bool')
+    if added:
+      self.stackOperandos.append(self.boolcte)
+      self.boolcte += 1
+    else:
+      addr = self.cteDir.get_entry(p[-1]).addr
+      self.stackOperandos.append(addr)
     self.stackTypes.append('bool')
     return p[-1]
 
   @_('')
   def fact1(self, p):
     aux = self.checkVarExists(p[-1])
-    self.stackOperandos.append(p[-1])
+    self.stackOperandos.append(aux.get_addr())
     self.stackTypes.append(aux.get_type())
 
   @_('COMMA logic multiexp', 'empty')
@@ -384,6 +507,13 @@ class EmilParser(Parser):
   @_('')
   def empty(self, p):
     pass
+
+  # def error(self, p):
+  #   print("Whoa. You are seriously hosed.")
+  #   if not p:
+  #     print("End of File!")
+  #     return
+  #   print(p)
 
 
 if __name__ == '__main__':

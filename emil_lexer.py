@@ -3,25 +3,14 @@ from sly.yacc import _decorator as _
 import sys
 import re
 
+
 class EmilLexer(Lexer):
   tokens = {
-    ID, 
-    CTE_NUM, CTE_FLT, CTE_STR, 
-    SEMICLN, COLON, 
-    COMMA, ASS,
-    SUM, SUB, MULT, DIV,
-    EQUAL_TO, LESS_THAN, MORE_THAN, LESS_OR_EQ_THAN, MORE_OR_EQ_THAN, DIFFERENT_TO, 
-    LSQUARE, RSQUARE, 
-    LPAREN, RPAREN, 
-    LCURLY, RCURLY, 
-    MAIN,
-
-    PROGRAM, VARS, 
-    INT, CHAR, FLOAT, BOOL, READ, WRITE,
-    IF, ELSE, WHILE, END,
-    TRUE, FALSE,
-    AND, OR,
-    FUNC, VOID, RETURN
+      ID, CTE_NUM, CTE_FLT, CTE_STR, SEMICLN, COLON, COMMA, ASS, SUM, SUB,
+      MULT, DIV, EQUAL_TO, LESS_THAN, MORE_THAN, LESS_OR_EQ_THAN,
+      MORE_OR_EQ_THAN, DIFFERENT_TO, LSQUARE, RSQUARE, LPAREN, RPAREN, LCURLY,
+      RCURLY, MAIN, PROGRAM, VARS, INT, CHAR, FLOAT, BOOL, READ, WRITE, IF,
+      ELSE, WHILE, END, TRUE, FALSE, AND, OR, FUNC, VOID, RETURN
   }
 
   # reserved_words = ['program', 'vars', 'int', 'char', 'float', 'bool', 'read', 'write', 'if', 'else', 'while', 'func', 'true', 'false', 'and', 'or', 'end', 'void', 'main', 'return']
@@ -29,8 +18,8 @@ class EmilLexer(Lexer):
   ignore = ' \t'
   ignore_comment = r'#.*'
 
+  CTE_FLT = r'-?\d+\.\d+'
   CTE_NUM = r'-?\d+'
-  CTE_FLT = r'[+-]?([0-9]*[.])?[0-9]+'
   CTE_STR = r'\"[^\"\n]*\"'
   ID = r'[a-z][a-z0-9_]*'
   SEMICLN = r'\;'
@@ -81,5 +70,5 @@ class EmilLexer(Lexer):
     self.lineno += len(t.value)
 
   def error(self, t):
-        print("ERROR: Illegal character '%s' found" % t.value[0])
-        self.index += 1
+    print("ERROR: Illegal character '%s' found" % t.value[0])
+    self.index += 1
