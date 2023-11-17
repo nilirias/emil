@@ -1,8 +1,8 @@
 program asfe;
 
 VARS
-int : x;
-float : y, z;
+int : x, y, z;
+float: a, b;
 
 func void myfunc(int: a, float: b, int: c){
   

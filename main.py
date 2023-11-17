@@ -80,6 +80,7 @@ class EmilParser(Parser):
       self.stackTypes.append(checkOp)
       self.tempCont += 1
 
+    return self.quadList[-1].res
     #print(checkOp)
 
   def checkVarExists(self, x):
@@ -278,39 +279,42 @@ class EmilParser(Parser):
   def ret_stmnt(self, p):
     return 0
 
-  @_('READ linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN')
+  @_('READ io1 LPAREN logic multio io2 RPAREN io3 SEMICLN')
   def read_stmnt(self, p):
     return 0
 
-  @_('WRITE linear1 LPAREN logic linear2 RPAREN linear3 SEMICLN')
+  @_('WRITE io1 LPAREN logic io2 multio RPAREN io3 SEMICLN')
   def write_stmnt(self, p):
     return 0
-
+  
+  @_('COMMA logic io2 multio', '')
+  def multio(self, p):
+    pass
+  
   @_('')
-  def linear1(self, p):
-    self.stackOperadores.append(p[-1])
-
-  @_('')
-  def linear2(self, p):
+  def io1(self, p):
+    #self.stackOperadores.append(p[-1])
     pass
 
   @_('')
-  def linear3(self, p):
-    if (len(self.stackOperadores) == 0):
-      return
-    operador = self.stackOperadores[-1]
-    if (operador == "write" or operador == "read"):
-      operador = self.stackOperadores.pop()
-      self.quadList.append(
-          Quadruple(None, self.quadList[-1].res, operador,
-                    f't{self.tempCont}'))
-      self.quadCont += 1
-      self.stackOperandos.append(f't{self.tempCont}')
-      self.tempCont += 1
+  def io2(self, p):
+    # resultado = self.stackOperadores[-1]
+    # self.quadList.append(Quadruple('', '', resultado, p[-1]))
+    # self.quadCont += 1
+    pass
+
+  @_('')
+  def io3(self, p):
+    #self.stackOperadores.pop()
+    pass
 
   @_('rel log2', 'rel log2 AND log1 logic', 'rel log2 OR log1 logic')
   def logic(self, p):
-    pass
+    if(hasattr(p,'log1')):
+      print('log', p.log2)
+      return p.log2
+    else:
+      return p.log2
 
   @_('')
   def log1(self, p):
@@ -319,10 +323,11 @@ class EmilParser(Parser):
   @_('')
   def log2(self, p):
     if (len(self.stackOperadores) == 0):
-      return
+      return p[-1]
     operadorTop = self.stackOperadores[-1]
     if (operadorTop in log_ops):
-      self.genQuad()
+      return self.genQuad()
+    return p[-1]
 
   @_('MORE_THAN', 'LESS_THAN', 'MORE_OR_EQ_THAN', 'LESS_OR_EQ_THAN',
      'DIFFERENT_TO', 'EQUAL_TO')
@@ -331,7 +336,11 @@ class EmilParser(Parser):
 
   @_('exp rel2', 'exp rel2 relop rel1 rel')
   def rel(self, p):
-    pass
+    if(hasattr(p,'rel1')):
+      print('rel', p.rel2)
+      return p.rel2
+    else:
+      return p.rel2
 
   @_('')
   def rel1(self, p):
@@ -340,22 +349,28 @@ class EmilParser(Parser):
   @_('')
   def rel2(self, p):
     if (len(self.stackOperadores) == 0):
-      return
+      return p[-1]
     operadorTop = self.stackOperadores[-1]
     if (operadorTop in rel_ops or operadorTop in eq_ops):
-      self.genQuad()
+      return self.genQuad()
+    return p[-1]
 
   @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
   def exp(self, p):
-    pass
+    if(hasattr(p,'exp1')):
+      print('exp', p.exp2)
+      return p.exp2
+    else:
+      return p.exp2
 
   @_('')
   def exp2(self, p):
     if (len(self.stackOperadores) == 0):
-      return
+      return p[-1]
     operadorTop = self.stackOperadores[-1]
     if (operadorTop == '+' or operadorTop == '-'):
-      self.genQuad()
+      return self.genQuad()
+    return p[-1]
 
   @_('')
   def exp1(self, p):
@@ -364,7 +379,11 @@ class EmilParser(Parser):
   @_('factor term2', 'factor term2 MULT term1 term',
      'factor term2 DIV term1 term')
   def term(self, p):
-    pass
+    if(hasattr(p,'term1')):
+      print('term', p.term2)
+      return p.term2
+    else:
+      return p.term2
 
   @_('')
   def term1(self, p):
@@ -375,16 +394,16 @@ class EmilParser(Parser):
   def term2(self, p):
     #print('aaaaaaa', p[-1])
     if (len(self.stackOperadores) == 0):
-      return
+      return p[-1]
     operadorTop = self.stackOperadores[-1]
     if (operadorTop == '*' or operadorTop == '/'):
-      self.genQuad()
+      return self.genQuad()
+    return p[-1]
 
   @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM ctes1',
      'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4')
   def factor(self, p):
-    pass
-    #print('308', p[0])
+    return p[0]
 
   @_('')
   def ctes1(self, p):
