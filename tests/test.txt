@@ -1,11 +1,19 @@
-program asfe;
+program myprogram;
 
 VARS
 int : x, y, z;
-float: a, b;
 
-func void myfunc(int: a, float: b, int: c){
-  
+func void myfunc(int: a, float: b, int: c)
+{
+  VARS
+  int : h, i, j, k;
+}
+
+func int notmyfunc(int: a, float: b, int: c)
+{
+  VARS
+  int : v, n, e, i;
+  float: l, m, o;
 }
 
 main()

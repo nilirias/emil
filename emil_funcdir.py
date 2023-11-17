@@ -25,11 +25,25 @@ class FuncDir:
     def set_vardir(self, name, vardir):
         self.funcs[name].var = vardir
 
+    def set_paramcont(self, name, cont):
+        self.funcs[name].paramcount = cont
+
     def get_vardir(self, name):
         return self.funcs[name].var
+    
+    def set_varcont(self, name, contv):
+        self.funcs[name].varc = contv - self.funcs[name].paramcount
+    
+    def set_quadcont(self, name, quadstart):
+        self.funcs[name].quad = quadstart
+    
+    def print(self):
+        for func in self.funcs:
+            print(func, self.funcs[func])
 
     def __str__(self):
-        #print('vardir.__str__', json.dumps([str(i) for i in self.vars]))
+        #return json.dumps([json.loads(i) for i in self.funcs])
+        #print('aaaaaaaaaaaaaaaaaaa', json.dumps([(i, j) for (i, j) in self.funcs]))
         return json.dumps([i for i in self.funcs])
         #return json.dumps([json.loads(str(i)) for i in self.funcs])
 
@@ -49,13 +63,18 @@ class FuncDirEntry:
     def __str__(self):
         # print('vardirentry.__str__', json.dumps({'name': self.name, 'addr': self.addr}))
         #print('vardirentry.__str__', json.dumps({'name': self.name, 'ret': self.ret, 'varc': self.varc, 'params': self.params, 'vart': self.vart, 'addr': self.addr, 'var': str(self.var)}))
-        return json.dumps({
-            'ret': self.ret,
-            'varc': self.varc,
-            'paramcount': self.paramcount,
-            'params': json.dumps([json.loads(str(i)) for i in self.params]),
-            'vart': self.vart,
-            'addr': self.addr,
-            'quad': self.quad,
-            'var': json.loads(str(self.var))
-        })
+        print('ret', self.ret, 'varc', self.varc, 'paramcount', self.paramcount, 'params', self.params, 'vart',  self.vart, 'addr', self.addr, 'quads', self.quad, 'var', self.var )       
+        try: 
+            return json.dumps({
+                'ret': self.ret,
+                'varc': self.varc,
+                'paramcount': self.paramcount,
+                'params': json.dumps([json.loads(str(i)) for i in self.params]),
+                'vart': self.vart,
+                'addr': self.addr,
+                'quad': self.quad,
+                'var': json.loads(str(self.var))
+            })
+        except:
+            print('algo paso')
+            return ''

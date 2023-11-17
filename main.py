@@ -18,6 +18,8 @@ class EmilParser(Parser):
   stackJumps = []
   tempCont = 1
   quadCont = 1
+  paramCont = 0
+  varlclCont = 0
   debugfile = 'debug.txt'
   directorioProcedimientos = None
   scopeName = None
@@ -99,8 +101,7 @@ class EmilParser(Parser):
   def program(self, p):
     for idx, quad in enumerate(self.quadList, 1):
       print(idx, quad)
-    print(self.directorioProcedimientos,
-          self.directorioProcedimientos.get_vardir(self.scopeName))
+    self.directorioProcedimientos.print()
     print(self.cteDir)
     return 69
 
@@ -120,8 +121,9 @@ class EmilParser(Parser):
 
   @_('')
   def prog3(self, p):
-    varDirProg = VarDir()
-    self.directorioProcedimientos.set_vardir(self.scopeName, varDirProg)
+    if(self.directorioProcedimientos.get_vardir(self.scopeName) == None):
+      varDirProg = VarDir()
+      self.directorioProcedimientos.set_vardir(self.scopeName, varDirProg)
 
   @_('tipo prog4 COLON ID prog5 arr multid SEMICLN multivd', 'empty')
   def multivd(self, p):
@@ -149,6 +151,7 @@ class EmilParser(Parser):
       elif(self.currType == 'bool'):
         self.currVar.add_var(p[-1], self.boolglb, self.currType)
         self.boolgbl += 1
+      self.varlclCont += 1
     else:
       if (self.currType == 'int'):
         self.currVar.add_var(p[-1], self.intlcl, self.currType)
@@ -162,7 +165,7 @@ class EmilParser(Parser):
       elif(self.currType == 'bool'):
         self.currVar.add_var(p[-1], self.boollcl, self.currType)
         self.boollcl += 1
-        
+      self.varlclCont += 1  
 
   @_('COMMA ID prog5 arr multid', 'empty')
   def multid(self, p):
@@ -176,7 +179,7 @@ class EmilParser(Parser):
   def arr(self, p):
     return 0
 
-  @_('FUNC tipofunc func1 ID func2 LPAREN param RPAREN varsdecl LCURLY stmnt resetvarcont RCURLY',
+  @_('FUNC tipofunc func1 ID func2 LPAREN param RPAREN func3 LCURLY varsdecl func4 stmnt resetvarcont RCURLY funcdecl',
      'empty')
   def funcdecl(self, p):
     return 0
@@ -189,7 +192,16 @@ class EmilParser(Parser):
   def func2(self, p):
     self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir())
     self.scopeName = p[-1]
-    
+
+  @_('')
+  def func3(self,p):
+    self.directorioProcedimientos.set_paramcont(self.scopeName, self.paramCont)
+
+  @_('')
+  def func4(self, p):
+    self.directorioProcedimientos.set_varcont(self.scopeName, self.varlclCont)
+    self.directorioProcedimientos.set_quadcont(self.scopeName, self.quadCont)
+
   @_('')
   def resetvarcont(self, p):
     self.intlcl = 0
@@ -229,6 +241,7 @@ class EmilParser(Parser):
     elif(self.currType == 'bool'):
       self.currVar.add_var(p[-1], self.boollcl, self.currType)
       self.boollcl += 1
+    self.paramCont += 1
 
   @_('COMMA param', 'empty')
   def multiparam(self, p):
