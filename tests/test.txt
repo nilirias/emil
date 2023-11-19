@@ -1,19 +1,31 @@
 program myprogram;
 
 VARS
-int : x, y, z;
+int : x, y, n, i, o, p;
 
-func void myfunc(int: a, float: b, int: c)
+func void myfunc()
 {
   VARS
-  int : h, i, j, k;
+  int : h, i, j, k, l;
+  bool: z;
+  char: a;
+
+  h = 1;
+  i = 2 + h;
+  z = false;
+  a = "z";
+
+  if(z == true)
+    l = h + 1;
+  else
+    z = true;
+  end
 }
 
-func int notmyfunc(int: a, float: b, int: c)
+func int notmyfunc(int: a)
 {
   VARS
-  int : v, n, e, i;
-  float: l, m, o;
+  int : v;
 }
 
 main()

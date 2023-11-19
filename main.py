@@ -33,7 +33,7 @@ class EmilParser(Parser):
   fltlcl = 1000
   charlcl = 2000
   boollcl = 3000
-
+  
   intglb = 4000
   fltglb = 5000
   charglb = 6000
@@ -58,24 +58,25 @@ class EmilParser(Parser):
     op = self.stackOperadores.pop()
 
     checkOp = checkOperator(rightType, leftType, op)
-    if (checkOp == 'int'):
-      typeaddr = self.inttemp
-      self.inttemp += 1
-    elif (checkOp == 'float'):
-      typeaddr = self.flttemp
-      self.flttemp += 1
-    elif (checkOp == 'char'):
-      typeaddr = self.chartemp
-      self.chartemp += 1
-    elif (checkOp == 'bool'):
-      typeaddr = self.booltemp
-      self.booltemp += 1
     
     if (op == '='):
       self.quadList.append(Quadruple(leftOp, rightOp, op, ''))
       self.stackTypes.append(checkOp)
       self.quadCont += 1
     else:
+      if (checkOp == 'int'):
+        typeaddr = self.inttemp
+        self.inttemp += 1
+      elif (checkOp == 'float'):
+        typeaddr = self.flttemp
+        self.flttemp += 1
+      elif (checkOp == 'char'):
+        typeaddr = self.chartemp
+        self.chartemp += 1
+      elif (checkOp == 'bool'):
+        typeaddr = self.booltemp
+        self.booltemp += 1
+    
       self.quadList.append(Quadruple(leftOp, rightOp, op, typeaddr))
       self.quadCont += 1
       self.stackOperandos.append(typeaddr)
@@ -101,13 +102,15 @@ class EmilParser(Parser):
   def program(self, p):
     for idx, quad in enumerate(self.quadList, 1):
       print(idx, quad)
-    self.directorioProcedimientos.print()
+    print(self.directorioProcedimientos)
     print(self.cteDir)
     return 69
 
   @_('')
   def prog1(self, p):
     self.directorioProcedimientos = FuncDir()
+    self.quadList.append(Quadruple('', '', 'GOTO', ''))
+    self.quadCont +=  1
 
   @_('')
   def prog2(self, p):
@@ -150,8 +153,7 @@ class EmilParser(Parser):
         self.charglb += 1
       elif(self.currType == 'bool'):
         self.currVar.add_var(p[-1], self.boolglb, self.currType)
-        self.boolgbl += 1
-      self.varlclCont += 1
+        self.boolglb += 1
     else:
       if (self.currType == 'int'):
         self.currVar.add_var(p[-1], self.intlcl, self.currType)
@@ -165,7 +167,6 @@ class EmilParser(Parser):
       elif(self.currType == 'bool'):
         self.currVar.add_var(p[-1], self.boollcl, self.currType)
         self.boollcl += 1
-      self.varlclCont += 1  
 
   @_('COMMA ID prog5 arr multid', 'empty')
   def multid(self, p):
@@ -179,7 +180,7 @@ class EmilParser(Parser):
   def arr(self, p):
     return 0
 
-  @_('FUNC tipofunc func1 ID func2 LPAREN param RPAREN func3 LCURLY varsdecl func4 stmnt resetvarcont RCURLY funcdecl',
+  @_('FUNC tipofunc func1 ID func2 LPAREN param RPAREN func3 LCURLY varsdecl func4 stmnt RCURLY resetvarcont funcdecl',
      'empty')
   def funcdecl(self, p):
     return 0
@@ -199,11 +200,16 @@ class EmilParser(Parser):
 
   @_('')
   def func4(self, p):
-    self.directorioProcedimientos.set_varcont(self.scopeName, self.varlclCont)
+    self.directorioProcedimientos.set_varcont(self.scopeName)
     self.directorioProcedimientos.set_quadcont(self.scopeName, self.quadCont)
 
   @_('')
   def resetvarcont(self, p):
+    self.paramCont = 0
+    #self.directorioProcedimientos.set_vardir(self.scopeName, None)
+    vartemps = [self.inttemp - 8000, self.flttemp - 9000, self.chartemp - 10000, self.booltemp - 11000]  
+    self.directorioProcedimientos.set_vart(self.scopeName, vartemps)
+
     self.intlcl = 0
     self.fltlcl = 1000
     self.charlcl = 2000
@@ -247,9 +253,15 @@ class EmilParser(Parser):
   def multiparam(self, p):
     return 0
 
-  @_('MAIN LPAREN RPAREN stmnt')
+  @_('MAIN scopemain LPAREN RPAREN stmnt')
   def main(self, p):
     return 0
+  
+  @_('')
+  def scopemain(self, p):
+    self.scopeName = 'main'
+    self.directorioProcedimientos.add_func(name = 'main', ret = 'main', var = VarDir())
+    self.quadList[0].res = self.quadCont
 
   @_('ass_stmnt stmnt', 'func_stmnt stmnt', 'ret_stmnt stmnt',
      'read_stmnt stmnt', 'write_stmnt stmnt', 'if_stmnt stmnt',

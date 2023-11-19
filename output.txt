@@ -1,0 +1,168 @@
+exp 2
+rel z
+exp h
+term 1
+rel x
+term 1
+term 1
+1 GOTO   13
+2 = 0 12000 
+3 + 12001 0 8000
+4 = 1 8000 
+5 = 3000 15000 
+6 = 2000 14000 
+7 == 3000 15001 11000
+8 GOTOF 11000  12
+9 + 0 12000 8001
+10 = 4 8001 
+11 GOTO   13
+12 = 3000 15001 
+13 * 12000 13000 9000
+14 = 4000 9000 
+15 > 4000 12000 11000
+16 GOTOF 11000  20
+17 * 12000 13001 9001
+18 = 4001 9001 
+19 GOTO 15  
+20 * 12000 12001 8000
+21 = 4000 8000 
+[
+  {
+    "myprogram": {
+      "ret": null,
+      "varc": null,
+      "paramcount": null,
+      "params": "null",
+      "vart": null,
+      "addr": null,
+      "quad": null,
+      "var": [
+        {
+          "name": "x",
+          "addr": 4000,
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "addr": 4001,
+          "type": "int"
+        },
+        {
+          "name": "n",
+          "addr": 4002,
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "addr": 4003,
+          "type": "int"
+        },
+        {
+          "name": "o",
+          "addr": 4004,
+          "type": "int"
+        },
+        {
+          "name": "p",
+          "addr": 4005,
+          "type": "int"
+        }
+      ]
+    }
+  },
+  {
+    "myfunc": {
+      "ret": "void",
+      "varc": 7,
+      "paramcount": 0,
+      "params": "null",
+      "vart": [
+        2,
+        0,
+        0,
+        1
+      ],
+      "addr": null,
+      "quad": 2,
+      "var": [
+        {
+          "name": "h",
+          "addr": 0,
+          "type": "int"
+        },
+        {
+          "name": "i",
+          "addr": 1,
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "addr": 2,
+          "type": "int"
+        },
+        {
+          "name": "k",
+          "addr": 3,
+          "type": "int"
+        },
+        {
+          "name": "l",
+          "addr": 4,
+          "type": "int"
+        },
+        {
+          "name": "z",
+          "addr": 3000,
+          "type": "bool"
+        },
+        {
+          "name": "a",
+          "addr": 2000,
+          "type": "char"
+        }
+      ]
+    }
+  },
+  {
+    "notmyfunc": {
+      "ret": "int",
+      "varc": 1,
+      "paramcount": 1,
+      "params": "null",
+      "vart": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "addr": null,
+      "quad": 13,
+      "var": [
+        {
+          "name": "a",
+          "addr": 0,
+          "type": "int"
+        },
+        {
+          "name": "v",
+          "addr": 1,
+          "type": "int"
+        }
+      ]
+    }
+  },
+  {
+    "main": {
+      "ret": "main",
+      "varc": null,
+      "paramcount": null,
+      "params": "null",
+      "vart": null,
+      "addr": null,
+      "quad": null,
+      "var": []
+    }
+  }
+]
+[{"name": "1", "addr": 12000, "vartype": "int"}, {"name": "2", "addr": 12001, "vartype": "int"}, {"name": "false", "addr": 15000, "vartype": "bool"}, {"name": "\"z\"", "addr": 14000, "vartype": "char"}, {"name": "true", "addr": 15001, "vartype": "bool"}, {"name": "1.1", "addr": 13000, "vartype": "float"}, {"name": "2.1", "addr": 13001, "vartype": "float"}]
+69
