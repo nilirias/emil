@@ -2,8 +2,9 @@ program myprogram;
 
 VARS
 int : x, y, n, i, o, p;
+float: a, b, c;
 
-func void myfunc()
+func void myfunc(int: llll, float: abc, char: xyz, int:aaaaa, int: bbbb)
 {
   VARS
   int : h, i, j, k, l;
@@ -22,16 +23,5 @@ func void myfunc()
   end
 }
 
-func int notmyfunc(int: a)
-{
-  VARS
-  int : v;
-}
-
 main()
-    x = 1 * 1.1;
-    while (x > 1)
-      y = 1 * 2.1 ;
-    end
-
-    x = 1 * 2;
+  myfunc(1, 2.0, "a", 5, 2);

@@ -20,11 +20,13 @@ class EmilParser(Parser):
   quadCont = 1
   paramCont = 0
   varlclCont = 0
+  argCont = 0
   debugfile = 'debug.txt'
   directorioProcedimientos = None
   scopeName = None
   currType = None
   currVar = None
+  currFunc = None
   programName = None
   funcType = None
   cteDir = CteDir()
@@ -191,7 +193,7 @@ class EmilParser(Parser):
     
   @_('')
   def func2(self, p):
-    self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir())
+    self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir(), params=[])
     self.scopeName = p[-1]
 
   @_('')
@@ -237,15 +239,19 @@ class EmilParser(Parser):
     self.currVar = self.directorioProcedimientos.get_vardir(self.scopeName)
     if (self.currType == 'int'):
       self.currVar.add_var(p[-1], self.intlcl, self.currType)
+      self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'int')
       self.intlcl += 1
     elif(self.currType == 'float'):
       self.currVar.add_var(p[-1], self.fltlcl, self.currType)
+      self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'float')
       self.fltlcl += 1
     elif(self.currType == 'char'):
       self.currVar.add_var(p[-1], self.charlcl, self.currType)
+      self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'char')
       self.charlcl += 1
     elif(self.currType == 'bool'):
       self.currVar.add_var(p[-1], self.boollcl, self.currType)
+      self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'bool')
       self.boollcl += 1
     self.paramCont += 1
 
@@ -288,13 +294,51 @@ class EmilParser(Parser):
   def ass3(self, p):
     self.genQuad()
 
-  @_('ID LPAREN arg RPAREN SEMICLN')
+  @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5 SEMICLN')
   def func_stmnt(self, p):
     return 0
-
-  @_('logic multiarg', 'empty')
+  
+  @_('')
+  def fc1(self, p):
+    self.currFunc = p[-1]
+    if(self.directorioProcedimientos.check_if_func_exists(p[-1])):
+      pass
+    else:
+      raise Exception('ERROR - Función no declarada')
+    
+  @_('')
+  def fc2(self, p):
+    era = self.directorioProcedimientos.get_size(self.currFunc)
+    self.quadList.append(Quadruple('', '', 'ERA', era))
+    
+  @_('logic fc3 multiarg', 'empty')
   def arg(self, p):
     return 0
+  
+  @_('')
+  def fc3(self, p):
+    if(self.argCont >= self.directorioProcedimientos.get_paramcount(self.currFunc)):
+        raise Exception('ERROR - Too many arguments')
+    
+    argumento = self.stackOperandos.pop()
+    argtype = self.stackTypes.pop()
+
+    if(self.directorioProcedimientos.check_arg_type(self.currFunc, argtype, self.argCont)):
+      self.quadList.append(Quadruple('', self.argCont, 'PARAMETER', argumento))
+      self.argCont += 1
+    else:
+      raise Exception('ERROR - Argument mismatch')
+  
+  @_('') 
+  def fc4(self, p):
+    if(self.directorioProcedimientos.check_param_count(self.currFunc, self.argCont)):
+      pass
+    else:
+      raise Exception('ERROR - Arguments missing')
+    
+  @_('')
+  def fc5(self, p):
+    self.quadList.append(Quadruple('', self.currFunc, 'GOSUB', self.directorioProcedimientos.get_func_quad(self.currFunc)))
 
   @_('COMMA arg multiarg', 'empty')
   def multiarg(self, p):
@@ -362,7 +406,6 @@ class EmilParser(Parser):
   @_('exp rel2', 'exp rel2 relop rel1 rel')
   def rel(self, p):
     if(hasattr(p,'rel1')):
-      print('rel', p.rel2)
       return p.rel2
     else:
       return p.rel2
@@ -383,7 +426,6 @@ class EmilParser(Parser):
   @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
   def exp(self, p):
     if(hasattr(p,'exp1')):
-      print('exp', p.exp2)
       return p.exp2
     else:
       return p.exp2
@@ -405,7 +447,6 @@ class EmilParser(Parser):
      'factor term2 DIV term1 term')
   def term(self, p):
     if(hasattr(p,'term1')):
-      print('term', p.term2)
       return p.term2
     else:
       return p.term2

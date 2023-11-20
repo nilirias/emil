@@ -1,38 +1,29 @@
-exp 2
-rel z
-exp h
-term 1
-rel x
-term 1
-term 1
 1 GOTO   13
-2 = 0 12000 
-3 + 12001 0 8000
-4 = 1 8000 
+2 = 3 12000 
+3 + 12001 3 8000
+4 = 4 8000 
 5 = 3000 15000 
-6 = 2000 14000 
+6 = 2001 14000 
 7 == 3000 15001 11000
 8 GOTOF 11000  12
-9 + 0 12000 8001
-10 = 4 8001 
+9 + 3 12000 8001
+10 = 7 8001 
 11 GOTO   13
 12 = 3000 15001 
-13 * 12000 13000 9000
-14 = 4000 9000 
-15 > 4000 12000 11000
-16 GOTOF 11000  20
-17 * 12000 13001 9001
-18 = 4001 9001 
-19 GOTO 15  
-20 * 12000 12001 8000
-21 = 4000 8000 
+13 ERA   15
+14 PARAMETER  0 12000
+15 PARAMETER  1 13000
+16 PARAMETER  2 14001
+17 PARAMETER  3 12002
+18 PARAMETER  4 12001
+19 GOSUB  myfunc 2
 [
   {
     "myprogram": {
       "ret": null,
       "varc": null,
       "paramcount": null,
-      "params": "null",
+      "params": null,
       "vart": null,
       "addr": null,
       "quad": null,
@@ -66,6 +57,21 @@ term 1
           "name": "p",
           "addr": 4005,
           "type": "int"
+        },
+        {
+          "name": "a",
+          "addr": 5000,
+          "type": "float"
+        },
+        {
+          "name": "b",
+          "addr": 5001,
+          "type": "float"
+        },
+        {
+          "name": "c",
+          "addr": 5002,
+          "type": "float"
         }
       ]
     }
@@ -74,8 +80,14 @@ term 1
     "myfunc": {
       "ret": "void",
       "varc": 7,
-      "paramcount": 0,
-      "params": "null",
+      "paramcount": 5,
+      "params": [
+        "int",
+        "float",
+        "char",
+        "int",
+        "int"
+      ],
       "vart": [
         2,
         0,
@@ -86,28 +98,53 @@ term 1
       "quad": 2,
       "var": [
         {
-          "name": "h",
+          "name": "llll",
           "addr": 0,
           "type": "int"
         },
         {
-          "name": "i",
+          "name": "abc",
+          "addr": 1000,
+          "type": "float"
+        },
+        {
+          "name": "xyz",
+          "addr": 2000,
+          "type": "char"
+        },
+        {
+          "name": "aaaaa",
           "addr": 1,
           "type": "int"
         },
         {
-          "name": "j",
+          "name": "bbbb",
           "addr": 2,
           "type": "int"
         },
         {
-          "name": "k",
+          "name": "h",
           "addr": 3,
           "type": "int"
         },
         {
-          "name": "l",
+          "name": "i",
           "addr": 4,
+          "type": "int"
+        },
+        {
+          "name": "j",
+          "addr": 5,
+          "type": "int"
+        },
+        {
+          "name": "k",
+          "addr": 6,
+          "type": "int"
+        },
+        {
+          "name": "l",
+          "addr": 7,
           "type": "int"
         },
         {
@@ -117,36 +154,8 @@ term 1
         },
         {
           "name": "a",
-          "addr": 2000,
+          "addr": 2001,
           "type": "char"
-        }
-      ]
-    }
-  },
-  {
-    "notmyfunc": {
-      "ret": "int",
-      "varc": 1,
-      "paramcount": 1,
-      "params": "null",
-      "vart": [
-        0,
-        0,
-        0,
-        0
-      ],
-      "addr": null,
-      "quad": 13,
-      "var": [
-        {
-          "name": "a",
-          "addr": 0,
-          "type": "int"
-        },
-        {
-          "name": "v",
-          "addr": 1,
-          "type": "int"
         }
       ]
     }
@@ -156,7 +165,7 @@ term 1
       "ret": "main",
       "varc": null,
       "paramcount": null,
-      "params": "null",
+      "params": null,
       "vart": null,
       "addr": null,
       "quad": null,
@@ -164,5 +173,5 @@ term 1
     }
   }
 ]
-[{"name": "1", "addr": 12000, "vartype": "int"}, {"name": "2", "addr": 12001, "vartype": "int"}, {"name": "false", "addr": 15000, "vartype": "bool"}, {"name": "\"z\"", "addr": 14000, "vartype": "char"}, {"name": "true", "addr": 15001, "vartype": "bool"}, {"name": "1.1", "addr": 13000, "vartype": "float"}, {"name": "2.1", "addr": 13001, "vartype": "float"}]
+[{"name": "1", "addr": 12000, "vartype": "int"}, {"name": "2", "addr": 12001, "vartype": "int"}, {"name": "false", "addr": 15000, "vartype": "bool"}, {"name": "\"z\"", "addr": 14000, "vartype": "char"}, {"name": "true", "addr": 15001, "vartype": "bool"}, {"name": "2.0", "addr": 13000, "vartype": "float"}, {"name": "\"a\"", "addr": 14001, "vartype": "char"}, {"name": "5", "addr": 12002, "vartype": "int"}]
 69

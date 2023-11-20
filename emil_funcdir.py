@@ -15,7 +15,10 @@ class FuncDir:
 
     def get_func_addr(self, name):
         return self.funcs[name].addr
-
+    
+    def check_if_func_exists(self, name):
+        return name in self.funcs
+    
     def get_func_quad(self, name):
         return self.funcs[name].quad
     
@@ -28,6 +31,20 @@ class FuncDir:
     def set_paramcont(self, name, cont):
         self.funcs[name].paramcount = cont
 
+    def check_arg_type(self, name, tipo, pos):
+        if(pos > self.funcs[name].paramcount):
+            raise Exception("ERROR - Too many arguments")
+        return self.funcs[name].params[pos] == tipo
+    
+    def get_paramcount(self, name):
+        return self.funcs[name].paramcount
+    
+    def check_param_count(self,name,kant):
+        return self.funcs[name].paramcount == kant
+    
+    def incrementar_param_cont(self, name, tipo):
+        self.funcs[name].params.append(tipo)
+        
     def get_vardir(self, name):
         return self.funcs[name].var
     
@@ -39,6 +56,9 @@ class FuncDir:
 
     def set_vart(self, name, cont):
         self.funcs[name].vart = cont
+
+    def get_size(self, name):
+       return sum(self.funcs[name].vart) + self.funcs[name].varc + self.funcs[name].paramcount
     
     def print(self):
         for func in self.funcs:
@@ -52,7 +72,7 @@ class FuncDirEntry:
     def __init__(self, ret, varc, paramcount, params, vart, addr, quad,
                  var):
         self.ret = ret  #return type | 0 for main | 1 for void | 2 for number | 3 for word | 4 for bool
-        self.varc = varc  #count of variables (how many variables it has) [numbers, words, bools]
+        self.varc = varc  #count of variables (how many variables it has)
         self.paramcount = paramcount  #count of parameters
         self.params = params  #list of parameters
         self.vart = vart  #count of temporary variables
@@ -61,18 +81,18 @@ class FuncDirEntry:
         self.var = var  #pointer to the variable directory
 
     def __str__(self):
-        params = None
+        # params = None
         
-        try:
-            params = [json.loads(str(i)) for i in self.params]
-        except:
-            pass
+        # try:
+        #     params = [json.loads(str(i)) for i in self.params]
+        # except:
+        #     pass
         
         return json.dumps({
             'ret': self.ret,
             'varc': self.varc,
             'paramcount': self.paramcount,
-            'params': json.dumps(params),
+            'params': self.params,
             'vart': self.vart,
             'addr': self.addr,
             'quad': self.quad,
