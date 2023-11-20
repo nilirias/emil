@@ -1,4 +1,4 @@
-1 GOTO   13
+1 GOTO   14
 2 = 3 12000 
 3 + 12001 3 8000
 4 = 4 8000 
@@ -10,13 +10,17 @@
 10 = 7 8001 
 11 GOTO   13
 12 = 3000 15001 
-13 ERA   15
-14 PARAMETER  0 12000
-15 PARAMETER  1 13000
-16 PARAMETER  2 14001
-17 PARAMETER  3 12002
-18 PARAMETER  4 12001
-19 GOSUB  myfunc 2
+13 ENDFUNC   
+14 ERA   15
+15 + 12000 12001 8000
+16 PARAMETER  0 8000
+17 / 13000 12002 9000
+18 * 9000 13001 9001
+19 PARAMETER  1 9001
+20 PARAMETER  2 14001
+21 PARAMETER  3 12003
+22 PARAMETER  4 12001
+23 GOSUB  myfunc 2
 [
   {
     "myprogram": {
@@ -72,13 +76,18 @@
           "name": "c",
           "addr": 5002,
           "type": "float"
+        },
+        {
+          "name": "myfunc",
+          "addr": 4006,
+          "type": "int"
         }
       ]
     }
   },
   {
     "myfunc": {
-      "ret": "void",
+      "ret": "int",
       "varc": 7,
       "paramcount": 5,
       "params": [
@@ -94,7 +103,7 @@
         0,
         1
       ],
-      "addr": null,
+      "addr": 4006,
       "quad": 2,
       "var": [
         {
@@ -173,5 +182,5 @@
     }
   }
 ]
-[{"name": "1", "addr": 12000, "vartype": "int"}, {"name": "2", "addr": 12001, "vartype": "int"}, {"name": "false", "addr": 15000, "vartype": "bool"}, {"name": "\"z\"", "addr": 14000, "vartype": "char"}, {"name": "true", "addr": 15001, "vartype": "bool"}, {"name": "2.0", "addr": 13000, "vartype": "float"}, {"name": "\"a\"", "addr": 14001, "vartype": "char"}, {"name": "5", "addr": 12002, "vartype": "int"}]
+[{"name": "1", "addr": 12000, "vartype": "int"}, {"name": "2", "addr": 12001, "vartype": "int"}, {"name": "false", "addr": 15000, "vartype": "bool"}, {"name": "\"z\"", "addr": 14000, "vartype": "char"}, {"name": "true", "addr": 15001, "vartype": "bool"}, {"name": "2.0", "addr": 13000, "vartype": "float"}, {"name": "4", "addr": 12002, "vartype": "int"}, {"name": "3.1", "addr": 13001, "vartype": "float"}, {"name": "\"a\"", "addr": 14001, "vartype": "char"}, {"name": "5", "addr": 12003, "vartype": "int"}]
 69

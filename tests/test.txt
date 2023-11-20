@@ -4,7 +4,7 @@ VARS
 int : x, y, n, i, o, p;
 float: a, b, c;
 
-func void myfunc(int: llll, float: abc, char: xyz, int:aaaaa, int: bbbb)
+func int myfunc(int: llll, float: abc, char: xyz, int:aaaaa, int: bbbb)
 {
   VARS
   int : h, i, j, k, l;
@@ -21,7 +21,9 @@ func void myfunc(int: llll, float: abc, char: xyz, int:aaaaa, int: bbbb)
   else
     z = true;
   end
+
+  return (h);
 }
 
 main()
-  myfunc(1, 2.0, "a", 5, 2);
+  myfunc(1 + 2, 2.0 / 4 * 3.1, "a", 5, 2);

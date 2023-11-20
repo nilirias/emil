@@ -21,6 +21,7 @@ class EmilParser(Parser):
   paramCont = 0
   varlclCont = 0
   argCont = 0
+  nonVoidRet = False
   debugfile = 'debug.txt'
   directorioProcedimientos = None
   scopeName = None
@@ -90,15 +91,20 @@ class EmilParser(Parser):
 
   def checkVarExists(self, x):
     aux = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(x)
+
+    if(self.directorioProcedimientos.check_if_func_exists(x)):
+      raise Exception ('ERROR - Cannot use functions as variables')
+
     #Check de variables locales
     if (aux != None):
       return aux
-    #Check de variables locales
+    #Check de variables globales
     aux = self.directorioProcedimientos.get_vardir(self.programName).get_var(x)
     if (aux != None):
       return aux
     else:
       raise Exception("ERROR - Variable no declarada")
+    
 
   @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main')
   def program(self, p):
@@ -193,8 +199,25 @@ class EmilParser(Parser):
     
   @_('')
   def func2(self, p):
-    self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir(), params=[])
+    if(self.directorioProcedimientos.get_vardir(self.programName).check_if_var_exists(p[-1])):
+      raise Exception("ERROR - Cannot name a function after a variable ")
+    
     self.scopeName = p[-1]
+    addr = None
+    if(self.funcType == 'int'):
+      addr = self.intglb 
+      self.intglb += 1
+    elif(self.funcType == 'float'):
+      addr = self.fltglb
+      self.fltglb += 1
+    elif(self.funcType == 'char'):
+      addr = self.charglb
+      self.charglb += 1
+    elif(self.funcType == 'bool'):
+      addr = self.boolglb
+      self.boolglb += 1
+    self.directorioProcedimientos.get_vardir(self.programName).add_var(self.scopeName, addr, self.funcType)
+    self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir(), params=[], addr=addr)
 
   @_('')
   def func3(self,p):
@@ -221,6 +244,14 @@ class EmilParser(Parser):
     self.flttemp = 9000
     self.chartemp = 10000
     self.booltemp = 11000
+
+    self.quadList.append(Quadruple('', '', 'ENDFUNC', ''))
+    self.quadCont += 1
+
+    if(self.directorioProcedimientos.get_func_type(self.scopeName) != 'void' and self.nonVoidRet == False):
+      raise Exception("ERROR - Non-Void Functions must have a return")
+    
+    self.nonVoidRet = False
 
   @_('VOID', 'tipo')
   def tipofunc(self, p):
@@ -310,6 +341,7 @@ class EmilParser(Parser):
   def fc2(self, p):
     era = self.directorioProcedimientos.get_size(self.currFunc)
     self.quadList.append(Quadruple('', '', 'ERA', era))
+    self.quadCont += 1
     
   @_('logic fc3 multiarg', 'empty')
   def arg(self, p):
@@ -339,14 +371,19 @@ class EmilParser(Parser):
   @_('')
   def fc5(self, p):
     self.quadList.append(Quadruple('', self.currFunc, 'GOSUB', self.directorioProcedimientos.get_func_quad(self.currFunc)))
+    self.quadCont += 1
 
   @_('COMMA arg multiarg', 'empty')
   def multiarg(self, p):
     return 0
 
-  @_('RETURN LPAREN logic RPAREN SEMICLN')
+  @_('RETURN LPAREN logic RPAREN rettrue SEMICLN')
   def ret_stmnt(self, p):
     return 0
+  
+  @_('')
+  def rettrue(self, p):
+    self.nonVoidRet = True
 
   @_('READ io1 LPAREN logic multio io2 RPAREN io3 SEMICLN')
   def read_stmnt(self, p):
