@@ -145,6 +145,7 @@ class EmilParser(Parser):
       lclflt = 0
       lclchar = 0
       lclbool = 0
+      print('uwuwuwu', data.vart)
       if (func == self.programName):
         continue
       for i in data.var.vars:
@@ -156,7 +157,7 @@ class EmilParser(Parser):
           lclchar+=1
         elif(i.type == 'bool'):
           lclbool +=1
-      f.write(func + '~' + str(lclint) + '~' + str(lclflt) + '~' + str(lclbool) + '~' + str(lclbool) + '\n')
+      f.write(func + '~' + str(lclint) + '~' + str(lclflt) + '~' + str(lclbool) + '~' + str(lclbool) + '~' + '~'.join(map(str, data.vart)) + '\n')
     
     for quad in self.quadList:
               f.write(str(quad) + '\n')
@@ -344,7 +345,7 @@ class EmilParser(Parser):
   def multiparam(self, p):
     return 0
 
-  @_('MAIN scopemain LPAREN RPAREN stmnt')
+  @_('MAIN scopemain LPAREN RPAREN stmnt maintemp')
   def main(self, p):
     return 0
   
@@ -352,7 +353,12 @@ class EmilParser(Parser):
   def scopemain(self, p):
     self.scopeName = 'main'
     self.directorioProcedimientos.add_func(name = 'main', ret = 'main', var = VarDir())
-    self.quadList[0].res = self.quadCont
+    self.quadList[0].res = self.quadCont - 1
+  
+  @_('')
+  def maintemp(self, p):
+    vartemps = [self.inttemp - 8000, self.flttemp - 9000, self.chartemp - 10000, self.booltemp - 11000]  
+    self.directorioProcedimientos.set_vart(self.scopeName, vartemps)
 
   @_('ass_stmnt stmnt', 'func_stmnt stmnt', 'ret_stmnt stmnt',
      'read_stmnt stmnt', 'write_stmnt stmnt', 'if_stmnt stmnt',
@@ -394,7 +400,7 @@ class EmilParser(Parser):
   @_('')
   def fc2(self, p):
     era = self.directorioProcedimientos.get_size(self.currFunc)
-    self.quadList.append(Quadruple('-1', '-1', 'ERA', era))
+    self.quadList.append(Quadruple(self.currFunc, '-1', 'ERA', era))
     self.quadCont += 1
     
   @_('logic fc3 multiarg', 'empty')
@@ -410,7 +416,7 @@ class EmilParser(Parser):
     argtype = self.stackTypes.pop()
 
     if(self.directorioProcedimientos.check_arg_type(self.currFunc, argtype, self.argCont)):
-      self.quadList.append(Quadruple('', self.argCont, 'PARAMETER', argumento))
+      self.quadList.append(Quadruple('-1', self.argCont, 'PARAMETER', argumento))
       self.argCont += 1
     else:
       raise Exception('ERROR - Argument mismatch')
@@ -424,7 +430,7 @@ class EmilParser(Parser):
     
   @_('')
   def fc5(self, p):
-    self.quadList.append(Quadruple('', self.currFunc, 'GOSUB', self.directorioProcedimientos.get_func_quad(self.currFunc)))
+    self.quadList.append(Quadruple('-1', self.currFunc, 'GOSUB', self.directorioProcedimientos.get_func_quad(self.currFunc)))
     self.quadCont += 1
 
   @_('COMMA arg multiarg', 'empty')
