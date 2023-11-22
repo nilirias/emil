@@ -6,6 +6,8 @@ intglb~7
 fltglb~3
 charglb~0
 boolglb~0
+myfunc~8~1~1~1
+main~0~0~0~0
 GOTO -1 -1 14
 = 3 12000 -1
 + 12001 3 8000

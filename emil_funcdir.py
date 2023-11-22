@@ -71,7 +71,7 @@ class FuncDir:
 class FuncDirEntry:
     def __init__(self, ret, varc, paramcount, params, vart, addr, quad,
                  var):
-        self.ret = ret  #return type | 0 for main | 1 for void | 2 for number | 3 for word | 4 for bool
+        self.ret = ret  #return type
         self.varc = varc  #count of variables (how many variables it has)
         self.paramcount = paramcount  #count of parameters
         self.params = params  #list of parameters

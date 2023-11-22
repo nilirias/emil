@@ -110,6 +110,8 @@ class EmilParser(Parser):
   def program(self, p):
     f = open(self.programName + ".9s", "w")
 
+
+    # generar constantes para vm
     intlist=[]
     fltlist=[]
     charlist=[]
@@ -130,15 +132,36 @@ class EmilParser(Parser):
     f.write('char~' + '~'.join(charlist) + '\n')
     f.write('bool~' + '~'.join(boolist) + '\n')
 
+    #mandar var globales
     f.write('intglb~' + str(self.intglb - 4000) + '\n')
     f.write('fltglb~' + str(self.fltglb - 5000) + '\n')
     f.write('charglb~' + str(self.charglb - 6000) + '\n')
     f.write('boolglb~' + str(self.boolglb - 7000) + '\n')
 
+    #mandar var locales de funciones
+
+    for func, data in self.directorioProcedimientos.funcs.items():
+      lclint = 0
+      lclflt = 0
+      lclchar = 0
+      lclbool = 0
+      if (func == self.programName):
+        continue
+      for i in data.var.vars:
+        if(i.type == 'int'):
+          lclint+=1
+        elif(i.type == 'float'):
+          lclflt+=1
+        elif(i.type == 'char'):
+          lclchar+=1
+        elif(i.type == 'bool'):
+          lclbool +=1
+      f.write(func + '~' + str(lclint) + '~' + str(lclflt) + '~' + str(lclbool) + '~' + str(lclbool) + '\n')
+    
     for quad in self.quadList:
               f.write(str(quad) + '\n')
+    
 
-    print(self.intglb)
     return 69
 
   @_('')

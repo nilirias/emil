@@ -60,7 +60,6 @@ def init_cte_mem(file):
     constants_mem.insert_chars(chars)
     constants_mem.insert_bools(bools)
 
-    #print(constants_mem.ints, constants_mem.floats, constants_mem.chars, constants_mem.bools)
     return constants_mem
 
 def init_glb_mem(file):
@@ -75,29 +74,86 @@ def init_glb_mem(file):
     global_mem = Memory(int(ints), int(
         floats), int(chars), int(bools))
 
-    print(len(global_mem.ints), len(global_mem.floats), len(global_mem.chars), len(global_mem.bools))
     return global_mem
 
-# operations = {
-#     '+': do_sum,
-#     '-': do_sub,
-#     '*': do_mult,
-#     '/': do_div,
-#     '<': less_than,
-#     '>': more_than,
-#     '<=': less_eq_than,
-#     '>=': more_eq_than,
-#     '==': is_eq,
-#     '<>': is_not_eq,
-#     '=': do_ass,
-#     'GOTO': do_goto,
-#     'GOTOF': do_gotof,
-#     'PARAM': do_param,
-#     'ERA': do_era,
-#     'GOSUB': do_gosub,
-#     'ENDFUNC': do_endfunc,
-#     'ENDPROG': do_endprog
-# }
+
+def do_sum():
+    return
+
+def do_sub():
+    return
+
+def do_mult():
+    return
+
+def do_div():
+    return
+
+def less_than():
+    return
+
+def more_than():
+    return
+
+def less_eq_than():
+    return
+
+def more_eq_than():
+    return
+
+def is_eq():
+    return
+
+def is_not_eq():
+    return
+
+def do_ass():
+    return
+
+def do_goto():
+    return
+
+def do_gotof():
+    return
+
+def do_param():
+    return
+
+def do_era():
+    return
+
+def do_gosub():
+    return
+
+def do_endfunc():
+    return
+
+def do_endprog():
+    exit(0)
+
+
+lcl_vars ={}
+
+operations = {
+    '+': do_sum,
+    '-': do_sub,
+    '*': do_mult,
+    '/': do_div,
+    '<': less_than,
+    '>': more_than,
+    '<=': less_eq_than,
+    '>=': more_eq_than,
+    '==': is_eq,
+    '<>': is_not_eq,
+    '=': do_ass,
+    'GOTO': do_goto,
+    'GOTOF': do_gotof,
+    'PARAM': do_param,
+    'ERA': do_era,
+    'GOSUB': do_gosub,
+    'ENDFUNC': do_endfunc,
+    'ENDPROG': do_endprog
+}
 
 if __name__ == '__main__':
     filename = sys.argv[1]
@@ -106,6 +162,12 @@ if __name__ == '__main__':
     with open(filename) as file:
         init_cte_mem(file)
         init_glb_mem(file)
+        while (True):
+            funcname, *values = file.readline().rstrip('\n').split('~')
+            lcl_vars[funcname] = [int(val) for val in values] 
+            if(funcname == 'main'):
+                break
         quads = file.readlines()
-        
-        print((quads))
+        while(instptr < len(quads)):
+            op, lo, ro, res = quads[instptr].rstrip('\n').split(' ')
+            instptr += 1
