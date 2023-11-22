@@ -125,15 +125,20 @@ class EmilParser(Parser):
       elif(cte.get_type() == 'bool'):
         boolist.append(cte.get_value())
 
-    f.write('int ' + '~'.join(intlist) + '\n')
-    f.write('float ' + '~'.join(fltlist) + '\n')
-    f.write('char ' + '~'.join(charlist) + '\n')
-    f.write('bool ' + '~'.join(boolist) + '\n')
+    f.write('int~' + '~'.join(intlist) + '\n')
+    f.write('float~' + '~'.join(fltlist) + '\n')
+    f.write('char~' + '~'.join(charlist) + '\n')
+    f.write('bool~' + '~'.join(boolist) + '\n')
+
+    f.write('intglb~' + str(self.intglb - 4000) + '\n')
+    f.write('fltglb~' + str(self.fltglb - 5000) + '\n')
+    f.write('charglb~' + str(self.charglb - 6000) + '\n')
+    f.write('boolglb~' + str(self.boolglb - 7000) + '\n')
 
     for quad in self.quadList:
               f.write(str(quad) + '\n')
-    # print(self.directorioProcedimientos)
-    print(self.cteDir)
+
+    print(self.intglb)
     return 69
 
   @_('')

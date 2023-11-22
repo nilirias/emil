@@ -1,7 +1,11 @@
-int 1~2~4~5
-float 2.0~3.1
-char "z"~"a"
-bool false~true
+int~1~2~4~5
+float~2.0~3.1
+char~"z"~"a"
+bool~false~true
+intglb~7
+fltglb~3
+charglb~0
+boolglb~0
 GOTO -1 -1 14
 = 3 12000 -1
 + 12001 3 8000

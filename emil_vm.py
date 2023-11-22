@@ -44,7 +44,39 @@ class Memory:
         else:
             self.bools[address % 1000] = value
 
+def init_cte_mem(file):
+    _, *values = file.readline().rstrip('\n').split('~')
+    ints = values
+    _, *values = file.readline().rstrip('\n').split('~')
+    floats = values
+    _, *values = file.readline().rstrip('\n').split('~')
+    chars = values
+    _, *values = file.readline().rstrip('\n').split('~')
+    bools = values
+    constants_mem = Memory(len(ints), len(
+        floats), len(chars), len(bools))
+    constants_mem.insert_ints(ints)
+    constants_mem.insert_floats(floats)
+    constants_mem.insert_chars(chars)
+    constants_mem.insert_bools(bools)
 
+    #print(constants_mem.ints, constants_mem.floats, constants_mem.chars, constants_mem.bools)
+    return constants_mem
+
+def init_glb_mem(file):
+    _, values = file.readline().rstrip('\n').split('~')
+    ints = values
+    _, values = file.readline().rstrip('\n').split('~')
+    floats = values
+    _, values = file.readline().rstrip('\n').split('~')
+    chars = values
+    _, values = file.readline().rstrip('\n').split('~')
+    bools = values
+    global_mem = Memory(int(ints), int(
+        floats), int(chars), int(bools))
+
+    print(len(global_mem.ints), len(global_mem.floats), len(global_mem.chars), len(global_mem.bools))
+    return global_mem
 
 # operations = {
 #     '+': do_sum,
@@ -72,5 +104,8 @@ if __name__ == '__main__':
     instptr = 0
 
     with open(filename) as file:
+        init_cte_mem(file)
+        init_glb_mem(file)
         quads = file.readlines()
-        print(trim(quads))
+        
+        print((quads))
