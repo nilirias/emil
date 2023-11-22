@@ -63,7 +63,7 @@ class EmilParser(Parser):
     checkOp = checkOperator(rightType, leftType, op)
     
     if (op == '='):
-      self.quadList.append(Quadruple(leftOp, rightOp, op, ''))
+      self.quadList.append(Quadruple(leftOp, rightOp, op, -1))
       self.stackTypes.append(checkOp)
       self.quadCont += 1
     else:
@@ -106,19 +106,45 @@ class EmilParser(Parser):
       raise Exception("ERROR - Variable no declarada")
     
 
-  @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main')
+  @_('PROGRAM prog1 ID prog2 SEMICLN varsdecl funcdecl main lastquad')
   def program(self, p):
-    for idx, quad in enumerate(self.quadList, 1):
-      print(idx, quad)
-    print(self.directorioProcedimientos)
+    f = open(self.programName + ".9s", "w")
+
+    intlist=[]
+    fltlist=[]
+    charlist=[]
+    boolist=[]
+
+    for cte in self.cteDir.cte:
+      if(cte.get_type() == 'int'):
+        intlist.append(cte.get_value())
+      elif(cte.get_type() == 'float'):
+        fltlist.append(cte.get_value())
+      elif(cte.get_type() == 'char'):
+        charlist.append(cte.get_value())
+      elif(cte.get_type() == 'bool'):
+        boolist.append(cte.get_value())
+
+    f.write('int ' + '~'.join(intlist) + '\n')
+    f.write('float ' + '~'.join(fltlist) + '\n')
+    f.write('char ' + '~'.join(charlist) + '\n')
+    f.write('bool ' + '~'.join(boolist) + '\n')
+
+    for quad in self.quadList:
+              f.write(str(quad) + '\n')
+    # print(self.directorioProcedimientos)
     print(self.cteDir)
     return 69
 
   @_('')
+  def lastquad(self, p):
+    self.quadList.append(Quadruple(-1, -1, 'ENDPROG', -1))
+
+  @_('')
   def prog1(self, p):
     self.directorioProcedimientos = FuncDir()
-    self.quadList.append(Quadruple('', '', 'GOTO', ''))
-    self.quadCont +=  1
+    self.quadList.append(Quadruple(-1, -1, 'GOTO', -1))
+    self.quadCont += 1
 
   @_('')
   def prog2(self, p):
@@ -245,7 +271,7 @@ class EmilParser(Parser):
     self.chartemp = 10000
     self.booltemp = 11000
 
-    self.quadList.append(Quadruple('', '', 'ENDFUNC', ''))
+    self.quadList.append(Quadruple(-1, -1, 'ENDFUNC', -1))
     self.quadCont += 1
 
     if(self.directorioProcedimientos.get_func_type(self.scopeName) != 'void' and self.nonVoidRet == False):
@@ -340,7 +366,7 @@ class EmilParser(Parser):
   @_('')
   def fc2(self, p):
     era = self.directorioProcedimientos.get_size(self.currFunc)
-    self.quadList.append(Quadruple('', '', 'ERA', era))
+    self.quadList.append(Quadruple('-1', '-1', 'ERA', era))
     self.quadCont += 1
     
   @_('logic fc3 multiarg', 'empty')
@@ -578,7 +604,7 @@ class EmilParser(Parser):
       raise Exception("ERROR - Not a boolean expression")
     else:
       result = self.stackOperandos.pop()
-      self.quadList.append(Quadruple(result, '', 'GOTOF', ''))
+      self.quadList.append(Quadruple(result, -1, 'GOTOF', -1))
       self.stackJumps.append(self.quadCont)
       self.quadCont += 1
 
@@ -593,7 +619,7 @@ class EmilParser(Parser):
 
   @_('')
   def else1(self, p):
-    self.quadList.append(Quadruple('', '', 'GOTO', ''))
+    self.quadList.append(Quadruple(-1, -1, 'GOTO', -1))
     falso = self.stackJumps.pop()
     self.stackJumps.append(self.quadCont)
     self.quadCont += 1
@@ -614,7 +640,7 @@ class EmilParser(Parser):
       raise Exception("ERROR - Not a boolean expression")
     else:
       result = self.stackOperandos.pop()
-      self.quadList.append(Quadruple(result, '', 'GOTOF', ''))
+      self.quadList.append(Quadruple(result, -1, 'GOTOF', -1))
       self.stackJumps.append(self.quadCont)
       self.quadCont += 1
 
@@ -622,7 +648,7 @@ class EmilParser(Parser):
   def while3(self, p):
     end = self.stackJumps.pop()
     retorno = self.stackJumps.pop()
-    self.quadList.append(Quadruple(retorno, '', 'GOTO', ''))
+    self.quadList.append(Quadruple(retorno, -1, 'GOTO', -1))
     self.quadCont += 1
     self.quadList[end - 1].res = self.quadCont
 

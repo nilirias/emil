@@ -22,9 +22,12 @@ class CteDirEntry:
         self.value = value  #variable name
         self.addr = addr  #address
         self.vartype = vartype #vartype
+    
+    def get_value(self):
+        return self.value
 
     def get_type(self):
-        return self.type
+        return self.vartype
 
     def __str__(self):
         return json.dumps({'name': self.value, 'addr': self.addr, 'vartype': self.vartype})
