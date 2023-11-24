@@ -26,11 +26,12 @@ class Memory:
 
     def get_value_of_address(self, address):
         if address < 1000:
+            #print('address', address, self.ints)
             return int(self.ints[address])
         elif address < 2000:
             return self.floats[address % 1000]
         elif address < 3000:
-            return self.strings[address % 1000]
+            return self.chars[address % 1000]
         else:
             return self.bools[address % 1000]
 
@@ -40,9 +41,28 @@ class Memory:
         elif address < 2000:
             self.floats[address % 1000] = value
         elif address < 3000:
-            self.strings[address % 1000] = value
+            print('chars', self.chars, address, value)
+            self.chars[address % 1000] = value
         else:
             self.bools[address % 1000] = value
+
+    def set_param_value_in_address(self, value, type):
+        if type == 'int':
+            idx = next(idx for idx, item in enumerate(
+                self.ints) if item is None)
+            self.ints[idx] = value
+        elif type == 'float':
+            idx = next(idx for idx, item in enumerate(
+                self.floats) if item is None)
+            self.floats[idx] = value
+        elif type == 'char':
+            idx = next(idx for idx, item in enumerate(
+                self.chars) if item is None)
+            self.chars[idx] = value
+        else:
+            idx = next(idx for idx, item in enumerate(
+                self.bools) if item is None)
+            self.bools[idx] = value
 
 
 def init_cte_mem(file):
@@ -81,6 +101,8 @@ local_mem = None
 global_mem = None
 temp_mem = None
 cte_mem = None
+aux_local = None
+aux_temp = None
 instptr = 0
 
 bloques_mem = {}
@@ -100,7 +122,8 @@ bloques_mem = {}
 # 3 bools
 #
 
-def do_sum(lo,ro,res):
+#get value of left operand
+def get_values(operando):
     bloques_mem = {
     '0' : local_mem,
     '1' : global_mem,
@@ -108,53 +131,101 @@ def do_sum(lo,ro,res):
     '3' : cte_mem
     }
     
-    #get value of left operand
-    bloquelo, addrlo = divmod(int(lo), 4000)
-    print(lo, bloquelo, bloques_mem[str(bloquelo)])
-    x = bloques_mem[str(bloquelo)].get_value_of_address(addrlo)
-
-    #get value of right operand
-    bloquero, addrro = divmod(int(ro), 4000)
-    print(ro, bloquero, bloques_mem[str(bloquero)])
-    y = bloques_mem[str(bloquero)].get_value_of_address(addrro)
+    bloquelo, addrlo = divmod(int(operando), 4000)
+    #print(operando, bloquelo, bloques_mem[str(bloquelo)])
+    return bloques_mem[str(bloquelo)].get_value_of_address(addrlo)
 
     #get result addr
-    bloqueres, addrres = divmod(int(res), 4000)
-    z = x + y
 
-    bloques_mem[str(bloqueres)].set_value_in_address(addrres, z) 
+def set_val(res, z):
+    bloques_mem = {
+    '0' : local_mem,
+    '1' : global_mem,
+    '2' : temp_mem,
+    '3' : cte_mem
+    }
 
-    print(x, y)
-    return
+    bloque, addr = divmod(int(res), 4000)
+    return bloques_mem[str(bloque)].set_value_in_address(addr, z) 
+
+def do_sum(lo,ro,res):
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x+y)
 
 def do_sub(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x-y)
 
 def do_mult(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x*y)
 
 def do_div(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x/y)
 
 def less_than(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x<y)
 
 def more_than(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x>y)
 
 def less_eq_than(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x<=y)
 
 def more_eq_than(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x>=y)
 
 def is_eq(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x==y)
 
 def is_not_eq(lo,ro,res):
-    return
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x!=y)
+
+def do_and(lo,ro,res):
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x and y)
+
+def do_or(lo,ro,res):
+    x = get_values(lo)
+    y = get_values(ro)
+
+    set_val(res, x or y)
 
 def do_ass(lo,ro,res):
+    #lo direccion a asignar
+    #ro valor
+    a = get_values(ro)
+
+    set_val(lo,a)
     return
 
 def do_goto(lo,ro,res):
@@ -162,28 +233,66 @@ def do_goto(lo,ro,res):
     instptr = int(res) - 1
 
 def do_gotof(lo,ro,res):
+    global instptr
+    result = get_values(lo)
+
+    if(result == False):
+        instptr = int(res) - 1
     return
 
 def do_param(lo,ro,res):
+    tipo = param_vars[funcname][int(ro)]
+    value = get_values(res)
+
+    aux_local.set_param_value_in_address(value, tipo)
     return
 
 def do_era(lo,ro,res):
-    global local_mem, temp_mem
-    local_stack.append(local_mem)
-    temp_stack.append(temp_mem)
+    global aux_local, aux_temp, funcname
 
-    local_mem = Memory(lcl_vars[lo][0], lcl_vars[lo][1], lcl_vars[lo][2], lcl_vars[lo][3])
-    temp_mem = Memory(temp_vars[lo][0], temp_vars[lo][1], temp_vars[lo][2], temp_vars[lo][3])
+    funcname = lo
+    
+    aux_local = Memory(lcl_vars[lo][0], lcl_vars[lo][1], lcl_vars[lo][2], lcl_vars[lo][3])
+    aux_temp =  Memory(temp_vars[lo][0], temp_vars[lo][1], temp_vars[lo][2], temp_vars[lo][3])
     return
 
 def do_gosub(lo,ro,res):
+    global local_mem, temp_mem, instptr
+    local_stack.append(local_mem)
+    temp_stack.append(temp_mem)
+    
+    local_mem = aux_local
+    temp_mem = aux_temp
+    
+    ptr_stack.append(instptr)
+    instptr = int(res) - 1
+    return
+
+def do_return(lo, ro, res):
+    global local_mem, temp_mem, instptr
+    parche = get_values(res)
+    
+    local_mem = local_stack.pop()
+    temp_mem = temp_stack.pop()
+    instptr = ptr_stack.pop()
+
     return
 
 def do_endfunc(lo,ro,res):
-    global local_mem, temp_mem
+    global local_mem, temp_mem, instptr
     local_mem = local_stack.pop()
     temp_mem = temp_stack.pop()
+    instptr = ptr_stack.pop()
     return
+
+def do_write(lo,ro,res):
+    sys.stdout.write(get_values(res))
+    return
+
+def do_read(lo,ro,res):
+    x = sys.stdin.readline().rstrip()
+    
+    set_val(res, x)
 
 def do_endprog(lo,ro,res):
     exit(0)
@@ -194,8 +303,12 @@ def init_temp_mem(funcname):
 
 lcl_vars = {}
 temp_vars = {}
+param_vars = {}
+func_addr = {}
 local_stack = []
 temp_stack = []
+ptr_stack = []
+currFunc = None
 
 operations = {
     '+': do_sum,
@@ -209,11 +322,16 @@ operations = {
     '==': is_eq,
     '<>': is_not_eq,
     '=': do_ass,
+    'READ': do_read,
+    'WRITE': do_write,
+    'AND': do_and,
+    'OR': do_or,
     'GOTO': do_goto,
     'GOTOF': do_gotof,
     'PARAMETER': do_param,
     'ERA': do_era,
     'GOSUB': do_gosub,
+    'RETURN' :do_return,
     'ENDFUNC': do_endfunc,
     'ENDPROG': do_endprog
 }
@@ -227,8 +345,11 @@ if __name__ == '__main__':
 
         while (True):
             funcname, *values = file.readline().rstrip('\n').split('~')
-            lcl_vars[funcname] = [int(val) for val in values][0:4]
-            temp_vars[funcname] =[int(val) for val in values][4:8]
+            func_addr[funcname] = int(values[0])
+            lcl_vars[funcname] = [int(val) for val in values[1:5]]
+            temp_vars[funcname] = [int(val) for val in values[5:9]]
+            param_vars[funcname] = values[9:]
+
             if(funcname == 'main'):
                 break
         quads = file.readlines()
@@ -241,3 +362,4 @@ if __name__ == '__main__':
             operations[op](lo,ro,res) 
 
             instptr += 1
+    

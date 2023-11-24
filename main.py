@@ -30,6 +30,7 @@ class EmilParser(Parser):
   currFunc = None
   programName = None
   funcType = None
+  parcheGuadalupano = None
   cteDir = CteDir()
 
   intlcl = 0
@@ -110,7 +111,6 @@ class EmilParser(Parser):
   def program(self, p):
     f = open(self.programName + ".9s", "w")
 
-
     # generar constantes para vm
     intlist=[]
     fltlist=[]
@@ -145,7 +145,6 @@ class EmilParser(Parser):
       lclflt = 0
       lclchar = 0
       lclbool = 0
-      print('uwuwuwu', data.vart)
       if (func == self.programName):
         continue
       for i in data.var.vars:
@@ -157,10 +156,13 @@ class EmilParser(Parser):
           lclchar+=1
         elif(i.type == 'bool'):
           lclbool +=1
-      f.write(func + '~' + str(lclint) + '~' + str(lclflt) + '~' + str(lclbool) + '~' + str(lclbool) + '~' + '~'.join(map(str, data.vart)) + '\n')
+      f.write(func + '~'+ str(data.addr or -1)+'~' + str(lclint) + '~' + str(lclflt) + '~' + str(lclchar) + '~' + str(lclbool) + '~' + '~'.join(map(str, data.vart)) + '~'+'~'.join((data.params or [])) + '\n')
     
     for quad in self.quadList:
               f.write(str(quad) + '\n')
+
+    for idx, quad in enumerate(self.quadList):
+      print(idx, str(quad))
     
 
     return 69
@@ -281,7 +283,7 @@ class EmilParser(Parser):
   @_('')
   def func4(self, p):
     self.directorioProcedimientos.set_varcont(self.scopeName)
-    self.directorioProcedimientos.set_quadcont(self.scopeName, self.quadCont)
+    self.directorioProcedimientos.set_quadcont(self.scopeName, self.quadCont-1)
 
   @_('')
   def resetvarcont(self, p):
@@ -300,11 +302,12 @@ class EmilParser(Parser):
     self.chartemp = 10000
     self.booltemp = 11000
 
-    self.quadList.append(Quadruple(-1, -1, 'ENDFUNC', -1))
-    self.quadCont += 1
 
     if(self.directorioProcedimientos.get_func_type(self.scopeName) != 'void' and self.nonVoidRet == False):
       raise Exception("ERROR - Non-Void Functions must have a return")
+    
+    self.quadList.append(Quadruple(-1, -1, 'ENDFUNC', -1))
+    self.quadCont += 1
     
     self.nonVoidRet = False
 
@@ -437,13 +440,19 @@ class EmilParser(Parser):
   def multiarg(self, p):
     return 0
 
-  @_('RETURN LPAREN logic RPAREN rettrue SEMICLN')
+  @_('RETURN LPAREN logic retval RPAREN rettrue SEMICLN')
   def ret_stmnt(self, p):
     return 0
   
   @_('')
   def rettrue(self, p):
     self.nonVoidRet = True
+    self.quadList.append(Quadruple(-1,-1,'RETURN',self.parcheGuadalupano))
+    self.quadCont+=1
+
+  @_('')
+  def retval(self, p):
+    self.parcheGuadalupano = self.stackOperandos.pop()
 
   @_('READ io1 LPAREN logic multio io2 RPAREN io3 SEMICLN')
   def read_stmnt(self, p):
@@ -655,9 +664,9 @@ class EmilParser(Parser):
   def else1(self, p):
     self.quadList.append(Quadruple(-1, -1, 'GOTO', -1))
     falso = self.stackJumps.pop()
-    self.stackJumps.append(self.quadCont)
+    self.stackJumps.append(self.quadCont-1)
     self.quadCont += 1
-    self.quadList[falso - 1].res = self.quadCont
+    self.quadList[falso - 1].res = self.quadCont-1
 
   @_('WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END')
   def while_stmnt(self, p):
