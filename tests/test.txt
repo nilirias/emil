@@ -1,29 +1,21 @@
 program myprogram;
 
 VARS
-int : x, y, n, i, o, p;
-float: a, b, c;
+int : sum, num, itr, x;
 
-func int myfunc(int: llll, float: abc, char: xyz, int:aaaaa, int: bbbb)
-{
-  VARS
-  int : h, i, j, k, l;
-  bool: z;
-  char: a;
+func int nombredefuncion(int: n){
 
-  h = 1;
-  i = 2 + h;
-  z = false;
-  a = "z";
-
-  if(z == true)
-    l = h + 1;
-  else
-    z = true;
+  if (n == 0 or n == 1)
+  return(1);
   end
 
-  return (h);
+  return(n * nombredefuncion(n));
 }
 
+
 main()
-  myfunc(1 + 2, 2.0 / 4 * 3.1, "a", 5, 2);
+  sum = 1;
+  num = 3;
+  itr = 2;
+
+  nombredefuncion(num);

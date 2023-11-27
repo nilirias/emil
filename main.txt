@@ -71,7 +71,6 @@ log2
 logic
 logic
 log n
-paren
 if1
 ctes1
 factor 1
@@ -82,7 +81,6 @@ rel2
 rel
 log2
 logic
-paren
 retval
 rettrye
 ret stmnt
@@ -96,27 +94,30 @@ arr
 factor n
 term2 n
 term1
-fc1 nombredefuncion
+fc1 fact
 f2 1
-fc2 nombredefuncion {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": null, "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
+fc2 fact {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": null, "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
 era 1
-nombredefuncion
+fact
 7
 fact1
 arr
 factor n
 term2 n
 exp2
+exp1
+ctes1
+factor 1
+term2 1
+exp2
+exp
 exp
 rel2
 rel
 log2
 logic
-paren
-fc3 0 nombredefuncion 1
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa None
-asdfghj 8000 int
-multiargggggggggggggggg None
+fc3 0 fact 1
+multiarg
 arg 1
 fc4
 fc5
@@ -130,7 +131,6 @@ rel2
 rel
 log2
 logic
-paren
 retval
 rettrye
 ret stmnt
@@ -153,7 +153,6 @@ rel2
 rel
 log2
 logic
-paren
 ass3
 ass stmnt
 ass1
@@ -168,7 +167,6 @@ rel2
 rel
 log2
 logic
-paren
 ass3
 ass stmnt
 ass1
@@ -183,15 +181,14 @@ rel2
 rel
 log2
 logic
-paren
 ass3
 ass stmnt
-fc1 nombredefuncion
+fc1 fact
 f2 0
-fc2 nombredefuncion {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [1, 0, 0, 3], "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
-era 5
-nombredefuncion
-15
+fc2 fact {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [2, 0, 0, 3], "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
+era 6
+fact
+16
 fact1
 arr
 factor num
@@ -202,11 +199,8 @@ rel2
 rel
 log2
 logic
-paren
-fc3 0 nombredefuncion 1
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa None
-asdfghj 4001 int
-multiargggggggggggggggg None
+fc3 0 fact 1
+multiarg
 arg 1
 fc4
 fc5
@@ -220,23 +214,24 @@ maintemp
 main
 lastquad
 program
-0 GOTO -1 -1 12
+0 GOTO -1 -1 13
 1 == 0 12000 11000
 2 == 0 12001 11001
 3 or 11000 11001 11002
 4 GOTOF 11002 -1 6
 5 RETURN -1 -1 12001
-6 ERA nombredefuncion -1 1
-7 * 4004 0 8000
-8 PARAMETER -1 0 8000
-9 GOSUB -1 nombredefuncion 1
-10 RETURN -1 -1 4004
-11 ENDFUNC -1 -1 -1
-12 = 4000 12001 -1
-13 = 4001 12002 -1
-14 = 4002 12003 -1
-15 ERA nombredefuncion -1 5
-16 PARAMETER -1 0 4001
-17 GOSUB -1 nombredefuncion 1
-18 ENDPROG -1 -1 -1
+6 ERA fact -1 1
+7 * 0 0 8000
+8 - 8000 12001 8001
+9 PARAMETER -1 0 8001
+10 GOSUB -1 fact 1
+11 RETURN -1 -1 4004
+12 ENDFUNC -1 -1 -1
+13 = 4000 12001 -1
+14 = 4001 12002 -1
+15 = 4002 12003 -1
+16 ERA fact -1 6
+17 PARAMETER -1 0 4001
+18 GOSUB -1 fact 1
+19 ENDPROG -1 -1 -1
 69

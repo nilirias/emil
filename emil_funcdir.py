@@ -58,7 +58,7 @@ class FuncDir:
         self.funcs[name].vart = cont
 
     def get_size(self, name):
-       return sum(self.funcs[name].vart) + self.funcs[name].varc + self.funcs[name].paramcount
+       return sum(self.funcs[name].vart or []) + self.funcs[name].varc + self.funcs[name].paramcount
     
     def print(self):
         for func in self.funcs:

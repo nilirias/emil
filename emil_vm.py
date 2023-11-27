@@ -66,20 +66,24 @@ class Memory:
 
 
 def init_cte_mem(file):
-    _, *values = file.readline().rstrip('\n').split('~')
+    _, *values = file.readline().rstrip().split('~')
     ints = values
-    _, *values = file.readline().rstrip('\n').split('~')
+    _, *values = file.readline().rstrip().split('~')
     floats = values
-    _, *values = file.readline().rstrip('\n').split('~')
+    _, *values = file.readline().rstrip().split('~')
     chars = values
-    _, *values = file.readline().rstrip('\n').split('~')
+    _, *values = file.readline().rstrip().split('~')
     bools = values
     constants_mem = Memory(len(ints), len(
         floats), len(chars), len(bools))
-    constants_mem.insert_ints(ints)
-    constants_mem.insert_floats(floats)
-    constants_mem.insert_chars(chars)
-    constants_mem.insert_bools(bools)
+    if (ints[0] != ''):
+        constants_mem.insert_ints(ints)
+    if (floats[0] != ''):
+        constants_mem.insert_floats(floats)
+    if (chars[0] != ''):
+        constants_mem.insert_chars(chars)
+    if (bools[0] != ''):
+        constants_mem.insert_bools(bools)
 
     return constants_mem
 
@@ -324,8 +328,8 @@ operations = {
     '=': do_ass,
     'READ': do_read,
     'WRITE': do_write,
-    'AND': do_and,
-    'OR': do_or,
+    'and': do_and,
+    'or': do_or,
     'GOTO': do_goto,
     'GOTOF': do_gotof,
     'PARAMETER': do_param,

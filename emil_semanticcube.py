@@ -52,7 +52,7 @@ def checkAss(type1, type2, operator):
   if type1 == 'int' and type2 == 'float':
     return 'float'
   if type1 == 'float' and type2 == 'int':
-    return 'int'
+    return 'float'
   if type1 == type2:
     return type1
   raise TypeError(f'{operator} cannot operate between {type1} and {type2}')
