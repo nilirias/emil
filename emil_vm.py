@@ -27,7 +27,8 @@ class Memory:
     def get_value_of_address(self, address):
         if address < 1000:
             #print('address', address, self.ints)
-            return int(self.ints[address])
+            #castear a int
+            return self.ints[address]
         elif address < 2000:
             return self.floats[address % 1000]
         elif address < 3000:
@@ -41,7 +42,7 @@ class Memory:
         elif address < 2000:
             self.floats[address % 1000] = value
         elif address < 3000:
-            print('chars', self.chars, address, value)
+            #print('chars', self.chars, address, value)
             self.chars[address % 1000] = value
         else:
             self.bools[address % 1000] = value
@@ -136,7 +137,7 @@ def get_values(operando):
     }
     
     bloquelo, addrlo = divmod(int(operando), 4000)
-    #print(operando, bloquelo, bloques_mem[str(bloquelo)])
+    print(operando, bloquelo, addrlo)
     return bloques_mem[str(bloquelo)].get_value_of_address(addrlo)
 
     #get result addr
@@ -150,11 +151,15 @@ def set_val(res, z):
     }
 
     bloque, addr = divmod(int(res), 4000)
+
+    #print('aaaaaaaaa',bloques_mem[str(bloque)].get_value_of_address(addr))
     return bloques_mem[str(bloque)].set_value_in_address(addr, z) 
 
 def do_sum(lo,ro,res):
+    #print(lo, ro)
     x = get_values(lo)
     y = get_values(ro)
+    #print(x,y)
 
     set_val(res, x+y)
 
@@ -227,9 +232,12 @@ def do_or(lo,ro,res):
 def do_ass(lo,ro,res):
     #lo direccion a asignar
     #ro valor
+    
+    #print('do ass', lo, ro, res)
     a = get_values(ro)
-
+    #print('ass',lo, ro, res)
     set_val(lo,a)
+    #print(lo, a)
     return
 
 def do_goto(lo,ro,res):
@@ -275,10 +283,15 @@ def do_gosub(lo,ro,res):
 def do_return(lo, ro, res):
     global local_mem, temp_mem, instptr
     parche = get_values(res)
+    #print('return', lo, ro, res)
     
-    local_mem = local_stack.pop()
-    temp_mem = temp_stack.pop()
-    instptr = ptr_stack.pop()
+    do_ass(ro,res,-1)
+    # print(funcname)
+    # print(lo, ro)
+    # print(local_stack, temp_stack)
+    # local_mem = local_stack.pop()
+    # temp_mem = temp_stack.pop()
+    # instptr = ptr_stack.pop()
 
     return
 
@@ -290,7 +303,10 @@ def do_endfunc(lo,ro,res):
     return
 
 def do_write(lo,ro,res):
-    sys.stdout.write(get_values(res))
+    #print('do write', get_values(res))
+    #sys.stdout.write(get_values(res))
+
+    print(get_values(res))
     return
 
 def do_read(lo,ro,res):
@@ -327,7 +343,7 @@ operations = {
     '<>': is_not_eq,
     '=': do_ass,
     'READ': do_read,
-    'WRITE': do_write,
+    'write': do_write,
     'and': do_and,
     'or': do_or,
     'GOTO': do_goto,
@@ -362,8 +378,7 @@ if __name__ == '__main__':
 
         while(instptr < len(quads)):
             op, lo, ro, res = quads[instptr].rstrip('\n').split(' ')
-            print(op, lo, ro, res)
+            #print(op, lo, ro, res)
             operations[op](lo,ro,res) 
 
             instptr += 1
-    

@@ -1,21 +1,21 @@
 program myprogram;
 
 VARS
-int : sum, num, itr, x;
+int : a, b, c, x;
 
-func int nombredefuncion(int: n){
-
-  if (n == 0 or n == 1)
-  return(1);
-  end
-
-  return(n * nombredefuncion(n));
+func int myfunc(int : a){
+  a = a * 2;
+  return(a);
 }
 
-
 main()
-  sum = 1;
-  num = 3;
-  itr = 2;
+  a = 1;
+  b = 2;
+  c = a + b * 3;
 
-  nombredefuncion(num);
+  if(c > 5)
+    write(c);
+  else
+    x = myfunc(b);
+    write(x);
+  end

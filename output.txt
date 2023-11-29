@@ -31,96 +31,188 @@ param
 func3 1
 varsdecl
 func4
+ass1 0
+arr
+ass2
 fact1
 arr
-factor n
-term2 n
-exp2
-exp
-rel2
-relop
-rel1
+factor a
+term2 a
+term1
 ctes1
-factor 0
-term2 0
+factor 2
+term2 2
+???? 8000
 exp2
 exp
 rel2
-rel
 rel
 log2
-log1
+logic
+ass3
+[0, 8000]
+if op = 0 8000 =
+= 0 8000 -1
+???? -1
+ass stmnt
 fact1
 arr
-factor n
-term2 n
-exp2
-exp
-rel2
-relop
-rel1
-ctes1
-factor 1
-term2 1
-exp2
-exp
-rel2
-rel
-rel
-log2
-logic
-logic
-log n
-paren
-if1
-ctes1
-factor 1
-term2 1
+factor a
+term2 a
 exp2
 exp
 rel2
 rel
 log2
 logic
-paren
 retval
 rettrye
+506
+ttttttttt 0
+ffffffffffffffffffffffffffff 4004
+RETURN -1 4004 0
 ret stmnt
 stmnt
 stmnt
-else stmnt
-if2
-if stmnt
-fact1
+stmnt
+resetvarcont
+funcdecl
+funcdecl
+scopename
+ass1 4000
 arr
-factor n
-term2 n
-term1
-fc1 nombredefuncion
-f2 1
-fc2 nombredefuncion {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": null, "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
-era 1
-nombredefuncion
-7
-fact1
-arr
-factor n
-term2 n
+ass2
+ctes1
+factor 1
+term2 1
 exp2
 exp
 rel2
 rel
 log2
 logic
-paren
-fc3 0 nombredefuncion 1
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa None
-asdfghj 8000 int
+ass3
+[4000, 12001]
+if op = 4000 12001 =
+= 4000 12001 -1
+???? -1
+ass stmnt
+ass1 4001
+arr
+ass2
+ctes1
+ctes1 12000
+factor 2
+term2 2
+exp2
+exp
+rel2
+rel
+log2
+logic
+ass3
+[4001, 12000]
+if op = 4001 12000 =
+= 4001 12000 -1
+???? -1
+ass stmnt
+ass1 4002
+arr
+ass2
+fact1
+arr
+factor a
+term2 a
+exp2
+exp1
+fact1
+arr
+factor b
+term2 b
+term1
+ctes1
+factor 3
+term2 3
+???? 8000
+exp2
+???? 8001
+exp
+exp
+rel2
+rel
+log2
+logic
+ass3
+[4002, 8001]
+if op = 4002 8001 =
+= 4002 8001 -1
+???? -1
+ass stmnt
+fact1
+arr
+factor c
+term2 c
+exp2
+exp
+rel2
+relop
+rel1
+ctes1
+factor 5
+term2 5
+exp2
+exp
+rel2
+???? 11000
+rel
+rel
+log2
+logic
+if1
+io1
+fact1
+arr
+factor c
+term2 c
+exp2
+exp
+rel2
+rel
+log2
+logic
+io2 write 4002
+write -1 -1 4002
+io3
+write
+stmnt
+stmnt
+else1
+ass1 4003
+arr
+ass2
+fc1 myfunc
+f2 0
+fc2 myfunc {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [1, 0, 0, 0], "addr": 4004, "quad": 1, "var": [{"name": "a", "addr": 0, "type": "int"}]}
+era 2
+myfunc
+15
+fact1
+arr
+factor b
+term2 b
+exp2
+exp
+rel2
+rel
+log2
+logic
+fc3 0 myfunc 1
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa b
+asdfghj 4001 int
 multiargggggggggggggggg None
 arg 1
 fc4
 fc5
-fexp 4004
 func exp
 factor 0
 term2 0
@@ -130,87 +222,33 @@ rel2
 rel
 log2
 logic
-paren
-retval
-rettrye
-ret stmnt
-stmnt
-stmnt
-stmnt
-resetvarcont
-funcdecl
-funcdecl
-scopename
-ass1
-arr
-ass2
-ctes1
-factor 1
-term2 1
-exp2
-exp
-rel2
-rel
-log2
-logic
-paren
 ass3
+[4002, 4003, 4004]
+if op = 4003 4004 =
+= 4003 4004 -1
+???? -1
 ass stmnt
-ass1
-arr
-ass2
-ctes1
-factor 3
-term2 3
-exp2
-exp
-rel2
-rel
-log2
-logic
-paren
-ass3
-ass stmnt
-ass1
-arr
-ass2
-ctes1
-factor 2
-term2 2
-exp2
-exp
-rel2
-rel
-log2
-logic
-paren
-ass3
-ass stmnt
-fc1 nombredefuncion
-f2 0
-fc2 nombredefuncion {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [1, 0, 0, 3], "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
-era 5
-nombredefuncion
-15
+io1
 fact1
 arr
-factor num
-term2 num
+factor x
+term2 x
 exp2
 exp
 rel2
 rel
 log2
 logic
-paren
-fc3 0 nombredefuncion 1
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa None
-asdfghj 4001 int
-multiargggggggggggggggg None
-arg 1
-fc4
-fc5
-func stmnt
+io2 write 4003
+write -1 -1 4003
+io3
+write
+stmnt
+stmnt
+stmnt
+else stmnt
+if2
+if stmnt
 stmnt
 stmnt
 stmnt
@@ -220,23 +258,24 @@ maintemp
 main
 lastquad
 program
-0 GOTO -1 -1 12
-1 == 0 12000 11000
-2 == 0 12001 11001
-3 or 11000 11001 11002
-4 GOTOF 11002 -1 6
-5 RETURN -1 -1 12001
-6 ERA nombredefuncion -1 1
-7 * 4004 0 8000
-8 PARAMETER -1 0 8000
-9 GOSUB -1 nombredefuncion 1
-10 RETURN -1 -1 4004
-11 ENDFUNC -1 -1 -1
-12 = 4000 12001 -1
-13 = 4001 12002 -1
-14 = 4002 12003 -1
-15 ERA nombredefuncion -1 5
-16 PARAMETER -1 0 4001
-17 GOSUB -1 nombredefuncion 1
-18 ENDPROG -1 -1 -1
+0 GOTO -1 -1 5
+1 * 0 12000 8000
+2 = 0 8000 -1
+3 RETURN -1 4004 0
+4 ENDFUNC -1 -1 -1
+5 = 4000 12001 -1
+6 = 4001 12000 -1
+7 * 4001 12002 8000
+8 + 4000 8000 8001
+9 = 4002 8001 -1
+10 > 4002 12003 11000
+11 GOTOF 11000 -1 14
+12 write -1 -1 18
+13 GOTO -1 -1 -1
+14 ERA myfunc -1 2
+15 PARAMETER -1 0 4001
+16 GOSUB -1 myfunc 1
+17 = 4003 4004 -1
+18 write -1 -1 4003
+19 ENDPROG -1 -1 -1
 69

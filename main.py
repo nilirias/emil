@@ -66,7 +66,9 @@ class EmilParser(Parser):
     checkOp = checkOperator(rightType, leftType, op)
     
     if (op == '='):
+      print('if op =', leftOp, rightOp, op)
       self.quadList.append(Quadruple(leftOp, rightOp, op, -1))
+      print(self.quadList[-1])
       self.stackTypes.append(checkOp)
       self.quadCont += 1
     else:
@@ -89,6 +91,7 @@ class EmilParser(Parser):
       self.stackTypes.append(checkOp)
       self.tempCont += 1
 
+    print('????',self.quadList[-1].res)
     return self.quadList[-1].res
     #print(checkOp)
 
@@ -383,7 +386,7 @@ class EmilParser(Parser):
     print('scopename')
     self.scopeName = 'main'
     self.directorioProcedimientos.add_func(name = 'main', ret = 'main', var = VarDir())
-    self.quadList[0].res = self.quadCont
+    self.quadList[0].res = self.quadCont - 1
   
   @_('')
   def maintemp(self, p):
@@ -398,7 +401,7 @@ class EmilParser(Parser):
     print('stmnt')
     return 0
 
-  @_('ID ass1 arr ASS ass2 paren ass3 SEMICLN',
+  @_('ID ass1 arr ASS ass2 logic ass3 SEMICLN',
      'ID arr ASS func_stmnt SEMICLN')
   def ass_stmnt(self, p):
     print('ass stmnt')
@@ -406,8 +409,8 @@ class EmilParser(Parser):
 
   @_('')
   def ass1(self, p):
-    print('ass1')
     aux = self.checkVarExists(p[-1])
+    print('ass1', aux.addr)
     self.stackOperandos.append(aux.addr)
     self.stackTypes.append(aux.get_type())
 
@@ -419,16 +422,17 @@ class EmilParser(Parser):
   @_('')
   def ass3(self, p):
     print('ass3')
+    print(self.stackOperandos)
     self.genQuad()
-
+  
+  @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5')
+  def func_exp(self, p):
+    print('func exp')
+    return 0
+  
   @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5 SEMICLN')
   def func_stmnt(self, p):
     print('func stmnt')
-    return 0
-  
-  @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5 fexp')
-  def func_exp(self, p):
-    print('func exp')
     return 0
   
   @_('')
@@ -451,7 +455,7 @@ class EmilParser(Parser):
     print(self.quadCont)
     self.quadCont += 1
     
-  @_('paren fc3 multiarg', 'empty')
+  @_('logic fc3 multiarg', 'empty')
   def arg(self, p):
     print('arg', self.argCont)
     return 0
@@ -494,7 +498,7 @@ class EmilParser(Parser):
     print('multiargggggggggggggggg', p[-1])
     return 0
 
-  @_('RETURN LPAREN paren retval RPAREN rettrue SEMICLN')
+  @_('RETURN LPAREN logic retval RPAREN rettrue SEMICLN')
   def ret_stmnt(self, p):
     print('ret stmnt')
     return 0
@@ -503,7 +507,11 @@ class EmilParser(Parser):
   def rettrue(self, p):
     print('rettrye')
     self.nonVoidRet = True
-    self.quadList.append(Quadruple(-1,-1,'RETURN',self.parcheGuadalupano))
+    print('506')
+    print('ttttttttt',self.parcheGuadalupano)
+    print('ffffffffffffffffffffffffffff', self.directorioProcedimientos.get_func(self.scopeName).addr)
+    self.quadList.append(Quadruple(-1, self.directorioProcedimientos.get_func(self.scopeName).addr,'RETURN',self.parcheGuadalupano))
+    print(self.quadList[-1])
     self.quadCont+=1
 
   @_('')
@@ -511,33 +519,30 @@ class EmilParser(Parser):
     print('retval')
     self.parcheGuadalupano = self.stackOperandos.pop()
 
-  @_('READ io1 LPAREN paren multio io2 RPAREN io3 SEMICLN')
+  @_('READ io1 LPAREN logic io2 RPAREN io3 SEMICLN')
   def read_stmnt(self, p):
     print('read')
     return 0
 
-  @_('WRITE io1 LPAREN paren io2 multio RPAREN io3 SEMICLN')
+  @_('WRITE io1 LPAREN logic io2 RPAREN io3 SEMICLN')
   def write_stmnt(self, p):
     print('write')
     return 0
   
-  @_('COMMA paren io2 multio', '')
-  def multio(self, p):
-    print('multio')
-    pass
-  
   @_('')
   def io1(self, p):
     print('io1')
-    #self.stackOperadores.append(p[-1])
+    self.stackOperadores.append(p[-1])
     pass
 
   @_('')
   def io2(self, p):
-    print('io2')
-    # resultado = self.stackOperadores[-1]
-    # self.quadList.append(Quadruple('', '', resultado, p[-1]))
-    # self.quadCont += 1
+    aux = self.checkVarExists(p[-1])
+    resultado = self.stackOperadores[-1]
+    print('io2', resultado, aux.addr)
+    self.quadList.append(Quadruple(-1, -1, resultado, aux.addr))
+    print(self.quadList[-1])
+    self.quadCont += 1
     pass
 
   @_('')
@@ -546,21 +551,23 @@ class EmilParser(Parser):
     #self.stackOperadores.pop()
     pass
 
-  @_('LPAREN paren1 logic paren2 RPAREN paren3 logic', 'logic')
-  def paren(self, p):
-    print('paren')
+  # @_('LPAREN paren1 logic paren2 RPAREN paren3 logic', 'logic')
+  # def paren(self, p):
+  #   print('paren')
 
-  @_('')
-  def paren1(self, p):
-    self.stackOperadores.append(p[-1])
+  # @_('')
+  # def paren1(self, p):
+  #   self.stackOperadores.append(p[-1])
+  #   print('paren1', self.stackOperadores)
 
-  @_('')
-  def paren2(self, p):
-    self.stackOperandos.append(p[-1])
+  # @_('')
+  # def paren2(self, p):
+  #   self.stackOperandos.append(p[-1])
+  #   print('paren2', self.stackOperandos)
     
-  @_('')
-  def paren3(self, p):
-    print(p[0])
+  # @_('')
+  # def paren3(self, p):
+  #   print(p[0])
 
   @_('rel log2', 'rel log2 AND log1 logic', 'rel log2 OR log1 logic')
   def logic(self, p):
@@ -661,11 +668,11 @@ class EmilParser(Parser):
       return self.genQuad()
     return p[-1]
   
-  @_('')
-  def fexp(self, p):
-    print('fexp', self.directorioProcedimientos.get_func_addr(self.currFunc))
-    self.stackOperandos.append(self.directorioProcedimientos.get_func_addr(self.currFunc))
-    return 0
+  # @_('')
+  # def fexp(self, p):
+  #   print('fexp', self.directorioProcedimientos.get_func_addr(self.currFunc))
+  #   self.stackOperandos.append(self.directorioProcedimientos.get_func_addr(self.currFunc))
+  #   return 0
   
   @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM ctes1',
      'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4', 'func_exp')
@@ -682,6 +689,7 @@ class EmilParser(Parser):
       self.intcte += 1
     else:
       addr = self.cteDir.get_entry(p[-1]).addr
+      print('ctes1', addr)
       self.stackOperandos.append(addr)
       # address = dicrectorioconstantes.get entry(p[-1]).addr
     self.stackTypes.append('int')
@@ -696,6 +704,7 @@ class EmilParser(Parser):
       self.fltcte += 1
     else:
       addr = self.cteDir.get_entry(p[-1]).addr
+      print('ctes2', addr)
       self.stackOperandos.append(addr)
     self.stackTypes.append('float')
     return p[-1]
@@ -709,6 +718,7 @@ class EmilParser(Parser):
       self.charcte += 1
     else:
       addr = self.cteDir.get_entry(p[-1]).addr
+      print('ctes3', addr)
       self.stackOperandos.append(addr)
     self.stackTypes.append('char')
     return p[-1]
@@ -722,6 +732,7 @@ class EmilParser(Parser):
       self.boolcte += 1
     else:
       addr = self.cteDir.get_entry(p[-1]).addr
+      print('ctes4', addr)
       self.stackOperandos.append(addr)
     self.stackTypes.append('bool')
     return p[-1]
@@ -733,12 +744,12 @@ class EmilParser(Parser):
     self.stackOperandos.append(aux.get_addr())
     self.stackTypes.append(aux.get_type())
 
-  @_('COMMA paren multiexp', 'empty')
+  @_('COMMA logic multiexp', 'empty')
   def multiexp(self, p):
     print('multiexp')
     pass
 
-  @_('IF LPAREN paren if1 RPAREN stmnt else_stmnt END if2')
+  @_('IF LPAREN logic if1 RPAREN stmnt else_stmnt END if2')
   def if_stmnt(self, p):
     print('if stmnt')
     pass
@@ -775,7 +786,7 @@ class EmilParser(Parser):
     self.quadCont += 1
     self.quadList[falso - 1].res = self.quadCont-1
 
-  @_('WHILE while1 LPAREN paren while2 RPAREN stmnt while3 END')
+  @_('WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END')
   def while_stmnt(self, p):
     print('while stmnt')
     pass
