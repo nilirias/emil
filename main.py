@@ -418,6 +418,7 @@ class EmilParser(Parser):
   def ass2(self, p):
     print('ass2')
     self.stackOperadores.append(p[-1])
+    print
 
   @_('')
   def ass3(self, p):
@@ -551,23 +552,23 @@ class EmilParser(Parser):
     #self.stackOperadores.pop()
     pass
 
-  # @_('LPAREN paren1 logic paren2 RPAREN paren3 logic', 'logic')
-  # def paren(self, p):
-  #   print('paren')
+  @_('LPAREN paren1 logic paren2 RPAREN paren3 logic', 'logic')
+  def paren(self, p):
+    print('paren')
 
-  # @_('')
-  # def paren1(self, p):
-  #   self.stackOperadores.append(p[-1])
-  #   print('paren1', self.stackOperadores)
+  @_('')
+  def paren1(self, p):
+    self.stackOperadores.append(p[-1])
+    print('paren1', self.stackOperadores)
 
-  # @_('')
-  # def paren2(self, p):
-  #   self.stackOperandos.append(p[-1])
-  #   print('paren2', self.stackOperandos)
+  @_('')
+  def paren2(self, p):
+    self.stackOperandos.append(p[-1])
+    print('paren2', self.stackOperandos)
     
-  # @_('')
-  # def paren3(self, p):
-  #   print(p[0])
+  @_('')
+  def paren3(self, p):
+    print(p[0])
 
   @_('rel log2', 'rel log2 AND log1 logic', 'rel log2 OR log1 logic')
   def logic(self, p):
@@ -762,15 +763,18 @@ class EmilParser(Parser):
       raise Exception("ERROR - Not a boolean expression")
     else:
       result = self.stackOperandos.pop()
+      print("iiifffifififi", result, self.quadCont)
       self.quadList.append(Quadruple(result, -1, 'GOTOF', -1))
       self.stackJumps.append(self.quadCont)
+      print('if jump', self.stackJumps)
       self.quadCont += 1
 
   @_('')
   def if2(self, p):
     print('if2')
     end = self.stackJumps.pop()
-    self.quadList[end - 1].res = self.quadCont - 1
+    self.quadList[end].res = self.quadCont - 1
+    print('if2 ? ',end, self.quadCont, self.quadList[-1])
 
   @_('ELSE else1 stmnt', 'empty')
   def else_stmnt(self, p):
@@ -782,9 +786,11 @@ class EmilParser(Parser):
     print('else1')
     self.quadList.append(Quadruple(-1, -1, 'GOTO', -1))
     falso = self.stackJumps.pop()
+    print('falso', falso, self.quadCont)
     self.stackJumps.append(self.quadCont-1)
     self.quadCont += 1
     self.quadList[falso - 1].res = self.quadCont-1
+    print('eo', falso - 1, self.quadList[falso - 1])
 
   @_('WHILE while1 LPAREN logic while2 RPAREN stmnt while3 END')
   def while_stmnt(self, p):

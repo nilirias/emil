@@ -9,11 +9,11 @@ func int myfunc(int : a){
 }
 
 main()
-  a = 1;
+  read(a);
   b = 2;
   c = a + b * 3;
 
-  if(c > 5)
+  if(c > 6)
     write(c);
   else
     x = myfunc(b);

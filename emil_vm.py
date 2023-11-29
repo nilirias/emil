@@ -1,5 +1,6 @@
 import sys
 import json
+import math
 
 class Memory:
     def __init__(self, i, f, s, b):
@@ -137,7 +138,7 @@ def get_values(operando):
     }
     
     bloquelo, addrlo = divmod(int(operando), 4000)
-    print(operando, bloquelo, addrlo)
+    #print(operando, bloquelo, addrlo)
     return bloques_mem[str(bloquelo)].get_value_of_address(addrlo)
 
     #get result addr
@@ -310,8 +311,16 @@ def do_write(lo,ro,res):
     return
 
 def do_read(lo,ro,res):
+    #print('do read', res)
+    bloque, addr = divmod(int(res), 4000)
+    #print('do read a', bloque, addr)
     x = sys.stdin.readline().rstrip()
-    
+    if(addr == 0):
+        x = int(round(float(x)))
+    elif(addr == 1):
+        x = float(x)
+    elif(addr == 3):
+        x = bool(x)
     set_val(res, x)
 
 def do_endprog(lo,ro,res):
@@ -342,7 +351,7 @@ operations = {
     '==': is_eq,
     '<>': is_not_eq,
     '=': do_ass,
-    'READ': do_read,
+    'read': do_read,
     'write': do_write,
     'and': do_and,
     'or': do_or,
