@@ -4,9 +4,9 @@ class VarDir:
     def __init__(self):
         self.vars = []
 
-    def add_var(self, name, addr, type):
+    def add_var(self, name, addr, type, dim):
         if all(entry.name != name for entry in self.vars):
-            self.vars.append(VarDirEntry(name, addr, type))
+            self.vars.append(VarDirEntry(name, addr, type, dim))
 
     def get_var(self, name):
         x = [var for var in self.vars if var.name == name]
@@ -27,10 +27,11 @@ class VarDir:
 
 class VarDirEntry:
 
-    def __init__(self, name, addr, type):
+    def __init__(self, name, addr, tipo, dim):
         self.name = name  #variable name
         self.addr = addr  #address
-        self.type = type
+        self.type = tipo
+        self.dim = dim
 
     def get_addr(self):
         return self.addr
@@ -42,5 +43,6 @@ class VarDirEntry:
         return json.dumps({
             'name': self.name,
             'addr': self.addr,
-            'type': self.type
+            'type': self.type,
+            'dim': self.dim
         })

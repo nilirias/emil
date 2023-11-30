@@ -11,288 +11,99 @@ prog5
 arr
 prog5
 arr
-multid
-multid
-multid
-multid
-multivd
-multivd
-multid
-varsdecl
-tipo
-tipofunc
-func1
-func2
-tipo
-param1
-param2
-multiparam
-param
-func3 1
-varsdecl
-func4
-io1
-fact1
-fact1 {"name": "x", "addr": 0, "type": "int"}
+prog5
 arr
-factor x
-term2 x
-exp2
-exp x
-rel2
-rel
-log2
-logic
-io2 write 0
-write -1 -1 0
-io3
-write
-fact1
-fact1 {"name": "x", "addr": 0, "type": "int"}
-arr
-factor x
-term2 x
-exp2
-exp x
-rel2
-relop
-rel1
+prog5
 ctes1
-factor 1
-term2 1
+factor 3
+term2 3
 exp2
-exp 1
-rel2
-???? 11000
-rel
-rel
-log2
-logic
-if1
-iiifffifififi 11000 4
-if jump [4] 4
-ctes1
-ctes1 12000
-factor 1
-term2 1
-exp2
-exp 1
-rel2
-rel
-log2
-logic
-retval [0, 12000]
-rettrye myfunc
-RETURN -1 4004 12000
-ret stmnt
-stmnt
-stmnt
-else stmnt
-if2
-if2 ?  4 6 RETURN -1 4004 12000
-if stmnt
-fc1 myfunc
-f2 1
-fc2 myfunc {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": null, "addr": 4004, "quad": 1, "var": [{"name": "x", "addr": 0, "type": "int"}]}
-era 1
-myfunc
-6
-fact1
-fact1 {"name": "x", "addr": 0, "type": "int"}
+exp 3
+arr1 f 3 myprogram int
 arr
-factor x
-term2 x
-exp2
-exp1
-ctes1
-ctes1 12000
-factor 1
-term2 1
-exp2
-???? 8000
-exp 8000
-exp 8000
-rel2
-rel
-log2
-logic
-fc3 0 myfunc 1
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa x
-asdfghj 8000 int
-multiargggggggggggggggg None
-arg 1
-fc4
-fc5
-func exp
-factor 0
-term2 0
-exp2
-exp 0
-rel2
-rel
-log2
-logic
-retval [0, 4004]
-rettrye myfunc
-RETURN -1 4004 4004
-ret stmnt
-stmnt
-stmnt
-stmnt
-stmnt
-resetvarcont
-funcdecl
-funcdecl
-scopename
-scopmain1 main
-scopemain2 GOTO -1 -1 11
-ass1 4000
-arr
-ass2
+prog5
 ctes1
 factor 5
 term2 5
 exp2
 exp 5
-rel2
-rel
-log2
-logic
-ass3
-[0, 4000, 12001]
-if op = 4000 12001 =
-= 4000 12001 -1
-???? -1
-ass stmnt
-ass1 4001
+arr1 x 5 myprogram int
 arr
+multid
+multid
+multid
+multid
+multid
+multid
+multid
+multivd
+multivd
+multid
+varsdecl
+funcdecl
+scopename
+scopmain1 main
+scopemain2 GOTO -1 -1 2
+ass1 4000 1
+arracess None
 ass2
-ctes1
-factor 2
-term2 2
-exp2
-exp1
-ctes1
-factor 3
-term2 3
-exp2
-???? 8000
-exp 8000
-exp 8000
-rel2
-rel
-log2
-logic
-factor (
-term2 (
-term1
-fact1
-fact1 {"name": "a", "addr": 4000, "type": "int"}
-arr
-factor a
-term2 a
-???? 8001
-exp2
-exp1
-ctes1
-factor 9
-term2 9
-exp2
-???? 8002
-exp1
-fact1
-fact1 {"name": "a", "addr": 4000, "type": "int"}
-arr
-factor a
-term2 a
-term1
 ctes1
 factor 7
 term2 7
-???? 8003
 exp2
-???? 8004
-exp 8004
+exp 7
 rel2
 rel
 log2
 logic
-factor (
-term2 (
-exp2
-exp (
-exp (
-exp 8002
-rel2
-rel
-log2
-logic
-ass3
-[0, 4001, 8004]
-if op = 4001 8004 =
-= 4001 8004 -1
+ass3 7
+[12000, 12001, 4000, 12002]
+if op = 4000 12002 =
+= 4000 12002 -1
 ???? -1
 ass stmnt
-ass1 4002
-arr
-ass2
-fc1 myfunc
-f2 0
-fc2 myfunc {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [1, 0, 0, 1], "addr": 4004, "quad": 1, "var": [{"name": "x", "addr": 0, "type": "int"}]}
-era 3
-myfunc
-18
+ass1 4008 5
+ctes1
+ctes1 12000
+factor 3
+term2 3
+exp2
+exp1
+ctes1
+ctes1 12001
+factor 5
+term2 5
+exp2
+???? 8000
+exp1
 fact1
-fact1 {"name": "a", "addr": 4000, "type": "int"}
+fact1 {"name": "a", "addr": 4000, "type": "int", "dim": 1}
 arr
 factor a
 term2 a
 exp2
-exp a
-rel2
-rel
-log2
-logic
-fc3 0 myfunc 1
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a
-asdfghj 4000 int
-multiargggggggggggggggg None
-arg 1
-fc4
-fc5
-func exp
-factor 0
-term2 0
+???? 8001
+exp 8001
+exp 8001
+exp 8000
+tam 3 5
+arracess ]
+ass2
+ctes1
+factor 1
+term2 1
 exp2
-exp 0
+exp 1
 rel2
 rel
 log2
 logic
-ass3
-[0, 4002, 4004]
-if op = 4002 4004 =
-= 4002 4004 -1
+ass3 1
+[12000, 12001, 4008, '&8002', 12003]
+if op = &8002 12003 =
+= &8002 12003 -1
 ???? -1
 ass stmnt
-io1
-fact1
-fact1 {"name": "c", "addr": 4002, "type": "int"}
-arr
-factor c
-term2 c
-exp2
-exp c
-rel2
-rel
-log2
-logic
-io2 write 4002
-write -1 -1 4002
-io3
-write
-stmnt
-stmnt
 stmnt
 stmnt
 stmnt
@@ -300,28 +111,11 @@ maintemp
 main
 lastquad
 program
-0 GOTO -1 -1 11
-1 write -1 -1 0
-2 == 0 12000 11000
-3 GOTOF 11000 -1 5
-4 RETURN -1 4004 12000
-5 ERA myfunc -1 1
-6 - 0 12000 8000
-7 PARAMETER -1 0 8000
-8 GOSUB -1 myfunc 1
-9 RETURN -1 4004 4004
-10 ENDFUNC -1 -1 -1
-11 = 4000 12001 -1
-12 + 12002 12003 8000
-13 * 8000 4000 8001
-14 - 8001 12004 8002
-15 * 4000 12005 8003
-16 + 8002 8003 8004
-17 = 4001 8004 -1
-18 ERA myfunc -1 3
-19 PARAMETER -1 0 4000
-20 GOSUB -1 myfunc 1
-21 = 4002 4004 -1
-22 write -1 -1 4002
-23 ENDPROG -1 -1 -1
+0 GOTO -1 -1 2
+1 = 4000 12002 -1
+2 + 12000 12001 8000
+3 - 8000 4000 8001
+4 + 4008 8001 8002
+5 = &8002 12003 -1
+6 ENDPROG -1 -1 -1
 69
