@@ -385,8 +385,10 @@ class EmilParser(Parser):
   def scopemain(self, p):
     print('scopename')
     self.scopeName = 'main'
+    print('scopmain1', self.scopeName)
     self.directorioProcedimientos.add_func(name = 'main', ret = 'main', var = VarDir())
     self.quadList[0].res = self.quadCont - 1
+    print('scopemain2', self.quadList[0])
   
   @_('')
   def maintemp(self, p):
@@ -508,9 +510,6 @@ class EmilParser(Parser):
   def rettrue(self, p):
     print('rettrye')
     self.nonVoidRet = True
-    print('506')
-    print('ttttttttt',self.parcheGuadalupano)
-    print('ffffffffffffffffffffffffffff', self.directorioProcedimientos.get_func(self.scopeName).addr)
     self.quadList.append(Quadruple(-1, self.directorioProcedimientos.get_func(self.scopeName).addr,'RETURN',self.parcheGuadalupano))
     print(self.quadList[-1])
     self.quadCont+=1
@@ -552,23 +551,23 @@ class EmilParser(Parser):
     #self.stackOperadores.pop()
     pass
 
-  @_('LPAREN paren1 logic paren2 RPAREN paren3 logic', 'logic')
-  def paren(self, p):
-    print('paren')
+  # @_('LPAREN paren1 logic paren2 RPAREN paren3 logic', 'logic')
+  # def paren(self, p):
+  #   print('paren')
 
-  @_('')
-  def paren1(self, p):
-    self.stackOperadores.append(p[-1])
-    print('paren1', self.stackOperadores)
+  # @_('')
+  # def paren1(self, p):
+  #   self.stackOperadores.append(p[-1])
+  #   print('paren1', self.stackOperadores)
 
-  @_('')
-  def paren2(self, p):
-    self.stackOperandos.append(p[-1])
-    print('paren2', self.stackOperandos)
+  # @_('')
+  # def paren2(self, p):
+  #   self.stackOperandos.append(p[-1])
+  #   print('paren2', self.stackOperandos)
     
-  @_('')
-  def paren3(self, p):
-    print(p[0])
+  # @_('')
+  # def paren3(self, p):
+  #   print(p[0])
 
   @_('rel log2', 'rel log2 AND log1 logic', 'rel log2 OR log1 logic')
   def logic(self, p):
@@ -580,7 +579,7 @@ class EmilParser(Parser):
       return p.log2
 
   @_('')
-  def log1(self, p):
+  def log1(self, p): 
     print('log1')
     self.stackOperadores.append(p[-1])
 
@@ -600,7 +599,7 @@ class EmilParser(Parser):
     print('relop')
     return p[0]
 
-  @_('exp rel2', 'exp rel2 relop rel1 rel')
+  @_('exp rel2', 'exp rel2 relop rel1 rel', 'LPAREN exp RPAREN')
   def rel(self, p):
     print('rel')
     if(hasattr(p,'rel1')):
@@ -625,7 +624,7 @@ class EmilParser(Parser):
 
   @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
   def exp(self, p):
-    print('exp')
+    print('exp', p[-1])
     if(hasattr(p,'exp1')):
       return p.exp2
     else:
@@ -674,9 +673,11 @@ class EmilParser(Parser):
   #   print('fexp', self.directorioProcedimientos.get_func_addr(self.currFunc))
   #   self.stackOperandos.append(self.directorioProcedimientos.get_func_addr(self.currFunc))
   #   return 0
+
+  #'ID fact1 LPAREN logic multiexp RPAREN',
   
-  @_('ID fact1 arr', 'ID fact1 LPAREN logic multiexp RPAREN', 'CTE_NUM ctes1',
-     'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4', 'func_exp')
+  @_('ID fact1 arr',  'CTE_NUM ctes1', 'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4', 'func_exp', 
+'LPAREN logic RPAREN')
   def factor(self, p):
     print('factor', p[0])
     return p[0]
