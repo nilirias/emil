@@ -1,11 +1,17 @@
-sum 12000 12001 8000
-12000
-12001
-sum get val 3 5
-8000
-4000
-8000 4000 8001
-sum 4008 8001 8002
-4008
-8001
-sum get val None None
+set_val 8000 8
+do ass 4000 8000 -1 8
+set_val 4000 8
+set_val 8001 5
+set_val 8002 40
+set_val 8003 31
+set_val 8004 56
+set_val 8005 87
+do ass 4002 12001 -1 1
+set_val 4002 1
+set_val 11000 False
+set_val 11000 True
+do ass 4004 12001 -1 1
+set_val 4004 1
+do ass 4002 4004 -1 1
+set_val 4002 1
+1

@@ -475,7 +475,6 @@ class EmilParser(Parser):
   @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5')
   def func_exp(self, p):
     print('func exp')
-    return 0
   
   @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5 SEMICLN')
   def func_stmnt(self, p):
@@ -668,13 +667,17 @@ class EmilParser(Parser):
       return self.genQuad()
     return p[-1]
 
-  @_('term exp2', 'term exp2 SUM exp1 exp', 'term exp2 SUB exp1 exp')
+  @_('term exp2', 'term exp2 sumaresta exp1 exp', 'term exp2 sumaresta exp1 LPAREN term RPAREN')
   def exp(self, p):
     print('exp', p[-1])
     if(hasattr(p,'exp1')):
       return p.exp2
     else:
       return p.exp2
+    
+  @_('SUM', 'SUB')
+  def sumaresta(self,p):
+    return p[0]
 
   @_('')
   def exp2(self, p):
@@ -691,13 +694,16 @@ class EmilParser(Parser):
     print('exp1')
     self.stackOperadores.append(p[-1])
 
-  @_('factor term2', 'factor term2 MULT term1 term',
-     'factor term2 DIV term1 term')
+  @_('factor term2', 'factor term2 multidiv term1 term', 'factor term2 multidiv term1 LPAREN factor RPAREN')
   def term(self, p):
     if(hasattr(p,'term1')):
       return p.term2
     else:
       return p.term2
+    
+  @_('MULT', 'DIV')
+  def multidiv(self, p):
+    return p[0]
 
   @_('')
   def term1(self, p):
@@ -722,11 +728,15 @@ class EmilParser(Parser):
 
   #'ID fact1 LPAREN logic multiexp RPAREN',
   
-  @_('ID fact1 arr',  'CTE_NUM ctes1', 'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4', 'func_exp', 
+  @_('ID fact1 arr',  'CTE_NUM ctes1', 'CTE_FLT ctes2', 'CTE_STR ctes3', 'TRUE ctes4', 'FALSE ctes4', 'func_exp a1', 
 'LPAREN logic RPAREN')
   def factor(self, p):
     print('factor', p[0])
     return p[0]
+  
+  @_('')
+  def a1(self, p):
+    print('aaaaaaaaa a1', p[-1])
 
   @_('')
   def ctes1(self, p):

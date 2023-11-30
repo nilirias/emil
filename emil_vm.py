@@ -140,17 +140,17 @@ def get_values(operando):
     '3' : cte_mem
     }
     
-    print(operando)
+  #  print(operando)
 
-    if (operando[0] == '&'):
-        operando = operando[1:]
-        print(operando)
-        #hacer un get value del numero apartir dle ampersand
-        #ese get value divmod ok
-        print('xd')
+    # if (operando[0] == '&'):
+    #     operando = operando[1:]
+    #     print(operando)
+    #     #hacer un get value del numero apartir dle ampersand
+    #     #ese get value divmod ok
+    #     print('xd')
 
     bloquelo, addrlo = divmod(int(operando), 4000)
-    #print(operando, bloquelo, addrlo)
+    # print('aaaaaaaaaaaaaaaaaa get val',operando, bloquelo, addrlo)
     return bloques_mem[str(bloquelo)].get_value_of_address(addrlo)
 
     #get result addr
@@ -162,23 +162,23 @@ def set_val(res, z):
     '2' : temp_mem,
     '3' : cte_mem
     }
-
-    print('set_val',res, z)
+    
+    # print('set_val',res, z)
 
 
 
     bloque, addr = divmod(int(res), 4000)
-
+    # print('aaaaaaaaaaaaaaaaaa set val', bloque, addr, z)
     #print('aaaaaaaaa',bloques_mem[str(bloque)].get_value_of_address(addr))
     return bloques_mem[str(bloque)].set_value_in_address(addr, z) 
 
 def do_sum(lo,ro,res):
-    print('sum', lo,ro,res)
+    #print('sum', lo,ro,res)
 
     #print(lo, ro)
     x = get_values(lo)
     y = get_values(ro)
-    print('sum get val', x, y)
+    # print('sum get val', x, y)
     #print(x,y)
 
     set_val(res, x+y)
@@ -187,9 +187,9 @@ def do_sub(lo,ro,res):
     x = get_values(lo)
     y = get_values(ro)
 
-    print(lo,ro,res)
+    # print('sub', lo,ro,res)
 
-    #set_val(res, x-y)
+    set_val(res, x-y)
 
 def do_mult(lo,ro,res):
     x = get_values(lo)
@@ -210,8 +210,8 @@ def less_than(lo,ro,res):
     set_val(res, x<y)
 
 def more_than(lo,ro,res):
-    print('more than', lo, ro ,res)
-    print(get_values(lo))
+    # print('more than', lo, ro ,res)
+  #  print(get_values(lo))
     x = get_values(lo)
     y = get_values(ro)
 
@@ -257,7 +257,7 @@ def do_ass(lo,ro,res):
     #lo direccion a asignar
     #ro valor
     
-    #print('do ass', lo, ro, res)
+    # print('do ass', lo, ro, res, get_values(ro))
     a = get_values(ro)
     #print('ass',lo, ro, res)
     set_val(lo,a)
@@ -306,17 +306,18 @@ def do_gosub(lo,ro,res):
 
 def do_return(lo, ro, res):
     global local_mem, temp_mem, instptr
-    #print('return', lo, ro, res)
-    
+    # print('return', lo, ro, res)
+    # print('return', get_values(res))
     do_ass(ro,res,-1)
+    # print('return do ass', lo, ro, res)
     # print(funcname)
     # print(lo, ro)
     # print(local_stack, temp_stack)
 
-    print('memoria de funcion')
-    local_mem.print_mem()
-    temp_mem.print_mem()
-    cte_mem.print_mem()
+    # print('memoria de funcion')
+    # local_mem.print_mem()
+    # temp_mem.print_mem()
+    # cte_mem.print_mem()
     
     local_mem = local_stack.pop()
     temp_mem = temp_stack.pop()
@@ -335,7 +336,7 @@ def do_endfunc(lo,ro,res):
 def do_write(lo,ro,res):
     #print('do write', get_values(res))
     #sys.stdout.write(get_values(res))
-
+ #   print('aaaaaaaaaaaaa', res)
     print(get_values(res))
     return
 
@@ -353,11 +354,10 @@ def do_read(lo,ro,res):
     set_val(res, x)
 
 def do_endprog(lo,ro,res):
-    
-    #local_mem.print_mem()
-    global_mem.print_mem()
-    temp_mem.print_mem()
-    cte_mem.print_mem()
+    # print('ENDPROG')
+    # global_mem.print_mem()
+    # temp_mem.print_mem()
+    # cte_mem.print_mem()
     exit(0)
 
 def init_temp_mem(funcname):
