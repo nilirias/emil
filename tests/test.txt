@@ -1,19 +1,9 @@
 program myprogram;
 
 VARS
-int : a, b, c, x;
+int : a, b, c, d, e, f[3], x[5];
 
-func int myfunc(int: x){
-  write(x);
-  if (x == 1)
-    return(1);
-  end
-  return(myfunc(x - 1));
-}
 
 main()
-  a = 5;
-  b = (2 + 3) * a - 9 + (a * 7);
-
-  c = myfunc(a);
-  write(c);
+  a = 7;
+  x[3 + 5 - a] = 1;

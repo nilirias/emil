@@ -18,6 +18,7 @@ class EmilParser(Parser):
   stackAuxOperadores =[]
   stackTypes = []
   stackJumps = []
+  stackDims = []
   tempCont = 1
   quadCont = 1
   paramCont = 0
@@ -33,6 +34,8 @@ class EmilParser(Parser):
   programName = None
   funcType = None
   parcheGuadalupano = None
+  idaux = None
+  idarr = None
   cteDir = CteDir()
 
   intlcl = 0
@@ -97,7 +100,6 @@ class EmilParser(Parser):
 
   def checkVarExists(self, x):
     aux = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(x)
-
     if(self.directorioProcedimientos.check_if_func_exists(x)):
       raise Exception ('ERROR - Cannot use functions as variables')
 
@@ -217,34 +219,35 @@ class EmilParser(Parser):
   @_('')
   def prog5(self, p):
     print('prog5')
+    self.idaux = p[-1]
     self.currVar = self.directorioProcedimientos.get_vardir(self.scopeName)
     if (self.currVar.get_var(p[-1]) != None):
       raise Exception("ERROR - Variable already declared")
     if(self.scopeName == self.programName): #variable global
       if (self.currType == 'int'):
-        self.currVar.add_var(p[-1], self.intglb, self.currType)
+        self.currVar.add_var(p[-1], self.intglb, self.currType, 1)
         self.intglb += 1
       elif(self.currType == 'float'):
-        self.currVar.add_var(p[-1], self.fltglb, self.currType)
+        self.currVar.add_var(p[-1], self.fltglb, self.currType, 1)
         self.fltglb += 1
       elif(self.currType == 'char'):
-        self.currVar.add_var(p[-1], self.charglb, self.currType)
+        self.currVar.add_var(p[-1], self.charglb, self.currType, 1)
         self.charglb += 1
       elif(self.currType == 'bool'):
-        self.currVar.add_var(p[-1], self.boolglb, self.currType)
+        self.currVar.add_var(p[-1], self.boolglb, self.currType, 1)
         self.boolglb += 1
     else:
       if (self.currType == 'int'):
-        self.currVar.add_var(p[-1], self.intlcl, self.currType)
+        self.currVar.add_var(p[-1], self.intlcl, self.currType, 1)
         self.intlcl += 1
       elif(self.currType == 'float'):
-        self.currVar.add_var(p[-1], self.fltlcl, self.currType)
+        self.currVar.add_var(p[-1], self.fltlcl, self.currType, 1)
         self.fltlcl += 1
       elif(self.currType == 'char'):
-        self.currVar.add_var(p[-1], self.charlcl, self.currType)
+        self.currVar.add_var(p[-1], self.charlcl, self.currType, 1)
         self.charlcl += 1
       elif(self.currType == 'bool'):
-        self.currVar.add_var(p[-1], self.boollcl, self.currType)
+        self.currVar.add_var(p[-1], self.boollcl, self.currType, 1)
         self.boollcl += 1
 
   @_('COMMA ID prog5 arr multid', 'empty')
@@ -257,10 +260,35 @@ class EmilParser(Parser):
     print('tipo')
     return p[0]
 
-  @_('LSQUARE exp RSQUARE', 'empty')
+  @_('LSQUARE exp arr1 RSQUARE', 'empty')
   def arr(self, p):
     print('arr')
     return 0
+  
+  @_('')
+  def arr1(self, p):
+    print('arr1', self.idaux, p[-1], self.scopeName, self.currType)
+    self.directorioProcedimientos.get_vardir(self.scopeName).get_var(self.idaux).dim = p[-1]
+    tam = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(self.idaux).dim
+    tipo = self.directorioProcedimientos.get_vardir(self.scopeName).get_var(self.idaux).type
+    if(self.scopeName == self.programName):
+      if(tipo == 'int'):
+        self.intglb += int(tam) - 1
+      elif(tipo == 'float'):
+        self.fltglb += int(tam) - 1
+      elif(tipo == 'char'):
+        self.charglb += int(tam) - 1
+      elif(tipo == 'bool'):
+        self.boolglb += int(tam) - 1
+    else:
+      if(self.currType == 'int'):
+        self.intlcl += int(tam) - 1
+      elif(self.currType == 'float'):
+        self.fltlcl += int(tam) - 1
+      elif(self.currType == 'char'):
+        self.charlcl += int(tam) - 1
+      elif(self.currType == 'bool'):
+        self.boollcl += int(tam) - 1
 
   @_('FUNC tipofunc func1 ID func2 LPAREN param RPAREN func3 LCURLY varsdecl func4 stmnt RCURLY resetvarcont funcdecl',
      'empty')
@@ -293,7 +321,7 @@ class EmilParser(Parser):
     elif(self.funcType == 'bool'):
       addr = self.boolglb
       self.boolglb += 1
-    self.directorioProcedimientos.get_vardir(self.programName).add_var(self.scopeName, addr, self.funcType)
+    self.directorioProcedimientos.get_vardir(self.programName).add_var(self.scopeName, addr, self.funcType, 1)
     self.directorioProcedimientos.add_func(name = p[-1], ret = self.funcType, var = VarDir(), params=[], addr=addr)
 
   @_('')
@@ -325,7 +353,6 @@ class EmilParser(Parser):
     self.chartemp = 10000
     self.booltemp = 11000
 
-
     if(self.directorioProcedimientos.get_func_type(self.scopeName) != 'void' and self.nonVoidRet == False):
       raise Exception("ERROR - Non-Void Functions must have a return")
     
@@ -354,19 +381,19 @@ class EmilParser(Parser):
     print('param2')
     self.currVar = self.directorioProcedimientos.get_vardir(self.scopeName)
     if (self.currType == 'int'):
-      self.currVar.add_var(p[-1], self.intlcl, self.currType)
+      self.currVar.add_var(p[-1], self.intlcl, self.currType, 1)
       self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'int')
       self.intlcl += 1
     elif(self.currType == 'float'):
-      self.currVar.add_var(p[-1], self.fltlcl, self.currType)
+      self.currVar.add_var(p[-1], self.fltlcl, self.currType, 1)
       self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'float')
       self.fltlcl += 1
     elif(self.currType == 'char'):
-      self.currVar.add_var(p[-1], self.charlcl, self.currType)
+      self.currVar.add_var(p[-1], self.charlcl, self.currType, 1)
       self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'char')
       self.charlcl += 1
     elif(self.currType == 'bool'):
-      self.currVar.add_var(p[-1], self.boollcl, self.currType)
+      self.currVar.add_var(p[-1], self.boollcl, self.currType, 1)
       self.directorioProcedimientos.incrementar_param_cont(self.scopeName, 'bool')
       self.boollcl += 1
     self.paramCont += 1
@@ -403,18 +430,34 @@ class EmilParser(Parser):
     print('stmnt')
     return 0
 
-  @_('ID ass1 arr ASS ass2 logic ass3 SEMICLN',
-     'ID arr ASS func_stmnt SEMICLN')
+  @_('ID ass1 arraccess ASS ass2 logic ass3 SEMICLN')
   def ass_stmnt(self, p):
     print('ass stmnt')
     return 0
+  
+  @_('LSQUARE exp tam RSQUARE', 'empty')
+  def arraccess(self, p):
+    print('arracess', p[-1])
+    return
+  
+  @_('')
+  def tam(self, p):
+    print('tam', p[-1], self.stackDims[-1] )
+    if (p[-1] > self.stackDims[-1]):
+      raise Exception("Las dimensiones exceden el tamaño declarado")
+    else:
+      self.quadList.append(Quadruple(self.idarr.addr, self.stackOperandos.pop(), '+', self.inttemp))
+      self.stackOperandos.append(f'&{self.inttemp}')
+      self.inttemp += 1
 
   @_('')
   def ass1(self, p):
-    aux = self.checkVarExists(p[-1])
-    print('ass1', aux.addr)
-    self.stackOperandos.append(aux.addr)
-    self.stackTypes.append(aux.get_type())
+    self.idarr = self.checkVarExists(p[-1])
+    print('ass1',self.idarr.addr, self.idarr.dim)
+    self.stackOperandos.append(self.idarr.addr)
+    self.stackTypes.append(self.idarr.get_type())
+    self.stackDims.append(self.idarr.dim)
+    return self.idarr
 
   @_('')
   def ass2(self, p):
@@ -424,8 +467,9 @@ class EmilParser(Parser):
 
   @_('')
   def ass3(self, p):
-    print('ass3')
+    print('ass3', p[-1])
     print(self.stackOperandos)
+
     self.genQuad()
   
   @_('ID fc1 LPAREN fc2 arg fc4 RPAREN fc5')

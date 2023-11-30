@@ -66,6 +66,9 @@ class Memory:
                 self.bools) if item is None)
             self.bools[idx] = value
 
+    def print_mem(self):
+        print(self.ints, self.floats, self.chars, self.bools)
+
 
 def init_cte_mem(file):
     _, *values = file.readline().rstrip().split('~')
@@ -137,6 +140,15 @@ def get_values(operando):
     '3' : cte_mem
     }
     
+    print(operando)
+
+    if (operando[0] == '&'):
+        operando = operando[1:]
+        print(operando)
+        #hacer un get value del numero apartir dle ampersand
+        #ese get value divmod ok
+        print('xd')
+
     bloquelo, addrlo = divmod(int(operando), 4000)
     #print(operando, bloquelo, addrlo)
     return bloques_mem[str(bloquelo)].get_value_of_address(addrlo)
@@ -151,15 +163,25 @@ def set_val(res, z):
     '3' : cte_mem
     }
 
+    if (res[0] == '&'):
+        res = res[1:]
+        print(res)
+        #hacer un get value del numero apartir dle ampersand
+        #ese get value divmod ok
+        print('xd')
+
     bloque, addr = divmod(int(res), 4000)
 
     #print('aaaaaaaaa',bloques_mem[str(bloque)].get_value_of_address(addr))
     return bloques_mem[str(bloque)].set_value_in_address(addr, z) 
 
 def do_sum(lo,ro,res):
+    print('sum', lo,ro,res)
+
     #print(lo, ro)
     x = get_values(lo)
     y = get_values(ro)
+    print('sum get val', x, y)
     #print(x,y)
 
     set_val(res, x+y)
@@ -168,7 +190,9 @@ def do_sub(lo,ro,res):
     x = get_values(lo)
     y = get_values(ro)
 
-    set_val(res, x-y)
+    print(lo,ro,res)
+
+    #set_val(res, x-y)
 
 def do_mult(lo,ro,res):
     x = get_values(lo)
@@ -289,6 +313,12 @@ def do_return(lo, ro, res):
     # print(funcname)
     # print(lo, ro)
     # print(local_stack, temp_stack)
+
+    print('memoria de funcion')
+    local_mem.print_mem()
+    temp_mem.print_mem()
+    cte_mem.print_mem()
+    
     local_mem = local_stack.pop()
     temp_mem = temp_stack.pop()
     instptr = ptr_stack.pop()
@@ -297,6 +327,7 @@ def do_return(lo, ro, res):
 
 def do_endfunc(lo,ro,res):
     global local_mem, temp_mem, instptr
+    
     local_mem = local_stack.pop()
     temp_mem = temp_stack.pop()
     instptr = ptr_stack.pop()
@@ -323,6 +354,11 @@ def do_read(lo,ro,res):
     set_val(res, x)
 
 def do_endprog(lo,ro,res):
+    
+    #local_mem.print_mem()
+    global_mem.print_mem()
+    temp_mem.print_mem()
+    cte_mem.print_mem()
     exit(0)
 
 def init_temp_mem(funcname):
@@ -369,6 +405,7 @@ if __name__ == '__main__':
 
     with open(filename) as file:
         cte_mem = init_cte_mem(file)
+        
         global_mem = init_glb_mem(file)
 
         while (True):
@@ -390,3 +427,6 @@ if __name__ == '__main__':
             operations[op](lo,ro,res) 
 
             instptr += 1
+            
+            
+    
