@@ -32,30 +32,12 @@ func3 1
 varsdecl
 func4
 fact1
+fact1 {"name": "p", "addr": 0, "type": "int"}
 arr
-factor n
-term2 n
+factor p
+term2 p
 exp2
-exp
-rel2
-relop
-rel1
-ctes1
-factor 0
-term2 0
-exp2
-exp
-rel2
-rel
-rel
-log2
-log1
-fact1
-arr
-factor n
-term2 n
-exp2
-exp
+exp p
 rel2
 relop
 rel1
@@ -63,149 +45,245 @@ ctes1
 factor 1
 term2 1
 exp2
-exp
+exp 1
 rel2
+???? 11000
 rel
 rel
 log2
 logic
-logic
-log n
 if1
-ctes1
-factor 1
-term2 1
+iiifffifififi 11000 3
+if jump [3] 3
+io1
+fact1
+fact1 {"name": "p", "addr": 0, "type": "int"}
+arr
+factor p
+term2 p
 exp2
-exp
+exp p
 rel2
 rel
 log2
 logic
-retval
-rettrye
+io2 write 0
+write -1 -1 0
+io3
+write
+fact1
+fact1 {"name": "p", "addr": 0, "type": "int"}
+arr
+factor p
+term2 p
+exp2
+exp p
+rel2
+rel
+log2
+logic
+retval [0, 0]
+rettrye myfunc
+RETURN -1 4004 0
 ret stmnt
+stmnt
+stmnt
+stmnt
+else1
+falso 3 6
+eo 2 GOTOF 11000 -1 6
+io1
+fact1
+fact1 {"name": "p", "addr": 0, "type": "int"}
+arr
+factor p
+term2 p
+exp2
+exp p
+rel2
+rel
+log2
+logic
+io2 write 0
+write -1 -1 0
+io3
+write
+fc1 myfunc
+f2 1
+fc2 myfunc {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": null, "addr": 4004, "quad": 1, "var": [{"name": "p", "addr": 0, "type": "int"}]}
+era 1
+myfunc
+8
+fact1
+fact1 {"name": "p", "addr": 0, "type": "int"}
+arr
+factor p
+term2 p
+exp2
+exp1
+ctes1
+ctes1 12000
+factor 1
+term2 1
+exp2
+???? 8000
+exp 8000
+exp 8000
+rel2
+rel
+log2
+logic
+fc3 0 myfunc 1
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa p
+asdfghj 8000 int
+multiargggggggggggggggg None
+arg 1
+fc4
+fc5
+func stmnt
+stmnt
 stmnt
 stmnt
 else stmnt
 if2
+if2 ?  top stackjumps 5 quadcont 12 GOTO -1 -1 11
 if stmnt
-fact1
-arr
-factor n
-term2 n
-term1
-fc1 fact
-f2 1
-fc2 fact {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": null, "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
-era 1
-fact
-7
-fact1
-arr
-factor n
-term2 n
-exp2
-exp1
-ctes1
-factor 1
-term2 1
-exp2
-exp
-exp
-rel2
-rel
-log2
-logic
-fc3 0 fact 1
-multiarg
-arg 1
-fc4
-fc5
-fexp 4004
-func exp
-factor 0
-term2 0
-exp2
-exp
-rel2
-rel
-log2
-logic
-retval
-rettrye
-ret stmnt
-stmnt
 stmnt
 stmnt
 resetvarcont
 funcdecl
 funcdecl
 scopename
-ass1
+scopmain1 main 13
+scopemain2 GOTO -1 -1 12
+ass1 4000
 arr
 ass2
 ctes1
-factor 1
-term2 1
+factor 5
+term2 5
 exp2
-exp
+exp 5
 rel2
 rel
 log2
 logic
 ass3
+[0, 0, 4004, 4000, 12001]
+if op = 4000 12001 =
+= 4000 12001 -1
+???? -1
 ass stmnt
-ass1
+ass1 4001
 arr
 ass2
 ctes1
-factor 3
-term2 3
+factor 7
+term2 7
 exp2
-exp
+exp 7
 rel2
 rel
 log2
 logic
 ass3
+[0, 0, 4004, 4001, 12002]
+if op = 4001 12002 =
+= 4001 12002 -1
+???? -1
 ass stmnt
-ass1
-arr
-ass2
-ctes1
-factor 2
-term2 2
-exp2
-exp
-rel2
-rel
-log2
-logic
-ass3
-ass stmnt
-fc1 fact
-f2 0
-fc2 fact {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [2, 0, 0, 3], "addr": 4004, "quad": 1, "var": [{"name": "n", "addr": 0, "type": "int"}]}
-era 6
-fact
-16
 fact1
+fact1 {"name": "a", "addr": 4000, "type": "int"}
 arr
-factor num
-term2 num
+factor a
+term2 a
 exp2
-exp
+exp a
+rel2
+relop
+rel1
+ctes1
+ctes1 12001
+factor 5
+term2 5
+exp2
+exp 5
+rel2
+???? 11000
+rel
+rel
+log2
+logic
+if1
+iiifffifififi 11000 16
+if jump [16] 16
+io1
+fact1
+fact1 {"name": "a", "addr": 4000, "type": "int"}
+arr
+factor a
+term2 a
+exp2
+exp a
 rel2
 rel
 log2
 logic
-fc3 0 fact 1
-multiarg
+io2 write 4000
+write -1 -1 4000
+io3
+write
+stmnt
+stmnt
+else1
+falso 16 18
+eo 15 GOTOF 11000 -1 18
+io1
+fact1
+fact1 {"name": "b", "addr": 4001, "type": "int"}
+arr
+factor b
+term2 b
+exp2
+exp b
+rel2
+rel
+log2
+logic
+io2 write 4001
+write -1 -1 4001
+io3
+write
+fc1 myfunc
+f2 0
+fc2 myfunc {"ret": "int", "varc": 0, "paramcount": 1, "params": ["int"], "vart": [1, 0, 0, 1], "addr": 4004, "quad": 1, "var": [{"name": "p", "addr": 0, "type": "int"}]}
+era 3
+myfunc
+20
+ctes1
+factor 8
+term2 8
+exp2
+exp 8
+rel2
+rel
+log2
+logic
+fc3 0 myfunc 1
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 8
+asdfghj 12003 int
+multiargggggggggggggggg None
 arg 1
 fc4
 fc5
 func stmnt
 stmnt
+stmnt
+stmnt
+else stmnt
+if2
+if2 ?  top stackjumps 17 quadcont 23 GOTO -1 -1 22
+if stmnt
 stmnt
 stmnt
 stmnt
@@ -214,24 +292,27 @@ maintemp
 main
 lastquad
 program
-0 GOTO -1 -1 13
+0 GOTO -1 -1 12
 1 == 0 12000 11000
-2 == 0 12001 11001
-3 or 11000 11001 11002
-4 GOTOF 11002 -1 6
-5 RETURN -1 -1 12001
-6 ERA fact -1 1
-7 * 0 0 8000
-8 - 8000 12001 8001
-9 PARAMETER -1 0 8001
-10 GOSUB -1 fact 1
-11 RETURN -1 -1 4004
-12 ENDFUNC -1 -1 -1
-13 = 4000 12001 -1
-14 = 4001 12002 -1
-15 = 4002 12003 -1
-16 ERA fact -1 6
-17 PARAMETER -1 0 4001
-18 GOSUB -1 fact 1
-19 ENDPROG -1 -1 -1
+2 GOTOF 11000 -1 6
+3 write -1 -1 0
+4 RETURN -1 4004 0
+5 GOTO -1 -1 11
+6 write -1 -1 0
+7 ERA myfunc -1 1
+8 - 0 12000 8000
+9 PARAMETER -1 0 8000
+10 GOSUB -1 myfunc 1
+11 ENDFUNC -1 -1 -1
+12 = 4000 12001 -1
+13 = 4001 12002 -1
+14 > 4000 12001 11000
+15 GOTOF 11000 -1 18
+16 write -1 -1 4000
+17 GOTO -1 -1 22
+18 write -1 -1 4001
+19 ERA myfunc -1 3
+20 PARAMETER -1 0 12003
+21 GOSUB -1 myfunc 1
+22 ENDPROG -1 -1 -1
 69

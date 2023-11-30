@@ -1,6 +1,30 @@
+set_val 4000 5
+set_val 4001 7
+more than 4000 12001 11000
 5
+set_val 11000 False
+7
+set_val 11000 False
+8
+set_val 8000 7
+set_val 11000 False
+7
+set_val 8000 6
+set_val 11000 False
+6
+set_val 8000 5
+set_val 11000 False
+5
+set_val 8000 4
+set_val 11000 False
 4
+set_val 8000 3
+set_val 11000 False
 3
+set_val 8000 2
+set_val 11000 False
 2
+set_val 8000 1
+set_val 11000 True
 1
-1
+set_val 4004 1

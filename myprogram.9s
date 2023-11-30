@@ -1,4 +1,4 @@
-int~1~5~2~3~9~7
+int~1~5~7~8
 float~
 char~
 bool~
@@ -7,28 +7,27 @@ fltglb~0
 charglb~0
 boolglb~0
 myfunc~4004~1~0~0~0~1~0~0~1~int
-main~-1~0~0~0~0~5~0~0~0~
+main~-1~0~0~0~0~0~0~0~1~
+GOTO -1 -1 12
+== 0 12000 11000
+GOTOF 11000 -1 6
+write -1 -1 0
+RETURN -1 4004 0
 GOTO -1 -1 11
 write -1 -1 0
-== 0 12000 11000
-GOTOF 11000 -1 5
-RETURN -1 4004 12000
 ERA myfunc -1 1
 - 0 12000 8000
 PARAMETER -1 0 8000
 GOSUB -1 myfunc 1
-RETURN -1 4004 4004
 ENDFUNC -1 -1 -1
 = 4000 12001 -1
-+ 12002 12003 8000
-* 8000 4000 8001
-- 8001 12004 8002
-* 4000 12005 8003
-+ 8002 8003 8004
-= 4001 8004 -1
+= 4001 12002 -1
+> 4000 12001 11000
+GOTOF 11000 -1 18
+write -1 -1 4000
+GOTO -1 -1 22
+write -1 -1 4001
 ERA myfunc -1 3
-PARAMETER -1 0 4000
+PARAMETER -1 0 12003
 GOSUB -1 myfunc 1
-= 4002 4004 -1
-write -1 -1 4002
 ENDPROG -1 -1 -1

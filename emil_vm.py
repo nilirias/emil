@@ -151,6 +151,8 @@ def set_val(res, z):
     '3' : cte_mem
     }
 
+    print('set_val',res, z)
+
     bloque, addr = divmod(int(res), 4000)
 
     #print('aaaaaaaaa',bloques_mem[str(bloque)].get_value_of_address(addr))
@@ -189,6 +191,8 @@ def less_than(lo,ro,res):
     set_val(res, x<y)
 
 def more_than(lo,ro,res):
+    print('more than', lo, ro ,res)
+    print(get_values(lo))
     x = get_values(lo)
     y = get_values(ro)
 

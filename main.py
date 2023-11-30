@@ -385,9 +385,9 @@ class EmilParser(Parser):
   def scopemain(self, p):
     print('scopename')
     self.scopeName = 'main'
-    print('scopmain1', self.scopeName)
+    print('scopmain1', self.scopeName, self.quadCont)
     self.directorioProcedimientos.add_func(name = 'main', ret = 'main', var = VarDir())
-    self.quadList[0].res = self.quadCont 
+    self.quadList[0].res = self.quadCont - 1
     print('scopemain2', self.quadList[0])
   
   @_('')
@@ -478,6 +478,7 @@ class EmilParser(Parser):
     if(self.directorioProcedimientos.check_arg_type(self.currFunc, argtype, self.argCont)):
       self.quadList.append(Quadruple('-1', self.argCont, 'PARAMETER', argumento))
       self.argCont += 1
+      self.quadCont += 1
     else:
       raise Exception('ERROR - Argument mismatch')
   
@@ -774,10 +775,10 @@ class EmilParser(Parser):
 
   @_('')
   def if2(self, p):
-    print('if2')
+    print('if2',)
     end = self.stackJumps.pop()
-    self.quadList[end - 1].res = self.quadCont - 1
-    print('if2 ? ',end, self.quadCont, self.quadList[-1])
+    self.quadList[end].res = self.quadCont - 1
+    print('if2 ? ','top stackjumps', end, 'quadcont', self.quadCont, self.quadList[end])
 
   @_('ELSE else1 stmnt', 'empty')
   def else_stmnt(self, p):
