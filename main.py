@@ -387,7 +387,7 @@ class EmilParser(Parser):
     self.scopeName = 'main'
     print('scopmain1', self.scopeName)
     self.directorioProcedimientos.add_func(name = 'main', ret = 'main', var = VarDir())
-    self.quadList[0].res = self.quadCont - 1
+    self.quadList[0].res = self.quadCont 
     print('scopemain2', self.quadList[0])
   
   @_('')
@@ -508,7 +508,7 @@ class EmilParser(Parser):
   
   @_('')
   def rettrue(self, p):
-    print('rettrye')
+    print('rettrye', self.scopeName)
     self.nonVoidRet = True
     self.quadList.append(Quadruple(-1, self.directorioProcedimientos.get_func(self.scopeName).addr,'RETURN',self.parcheGuadalupano))
     print(self.quadList[-1])
@@ -516,8 +516,9 @@ class EmilParser(Parser):
 
   @_('')
   def retval(self, p):
-    print('retval')
+    print('retval', self.stackOperandos)
     self.parcheGuadalupano = self.stackOperandos.pop()
+    
 
   @_('READ io1 LPAREN logic io2 RPAREN io3 SEMICLN')
   def read_stmnt(self, p):
@@ -599,7 +600,7 @@ class EmilParser(Parser):
     print('relop')
     return p[0]
 
-  @_('exp rel2', 'exp rel2 relop rel1 rel', 'LPAREN exp RPAREN')
+  @_('exp rel2', 'exp rel2 relop rel1 rel', 'exp rel2 relop rel1 LPAREN rel RPAREN')
   def rel(self, p):
     print('rel')
     if(hasattr(p,'rel1')):
@@ -743,6 +744,7 @@ class EmilParser(Parser):
   def fact1(self, p):
     print('fact1')
     aux = self.checkVarExists(p[-1])
+    print('fact1', aux)
     self.stackOperandos.append(aux.get_addr())
     self.stackTypes.append(aux.get_type())
 
@@ -767,14 +769,14 @@ class EmilParser(Parser):
       print("iiifffifififi", result, self.quadCont)
       self.quadList.append(Quadruple(result, -1, 'GOTOF', -1))
       self.stackJumps.append(self.quadCont)
-      print('if jump', self.stackJumps)
+      print('if jump', self.stackJumps, self.quadCont)
       self.quadCont += 1
 
   @_('')
   def if2(self, p):
     print('if2')
     end = self.stackJumps.pop()
-    self.quadList[end].res = self.quadCont - 1
+    self.quadList[end - 1].res = self.quadCont - 1
     print('if2 ? ',end, self.quadCont, self.quadList[-1])
 
   @_('ELSE else1 stmnt', 'empty')

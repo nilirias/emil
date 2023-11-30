@@ -256,7 +256,7 @@ def do_gotof(lo,ro,res):
 def do_param(lo,ro,res):
     tipo = param_vars[funcname][int(ro)]
     value = get_values(res)
-
+    #print('param', tipo, value)
     aux_local.set_param_value_in_address(value, tipo)
     return
 
@@ -283,16 +283,15 @@ def do_gosub(lo,ro,res):
 
 def do_return(lo, ro, res):
     global local_mem, temp_mem, instptr
-    parche = get_values(res)
     #print('return', lo, ro, res)
     
     do_ass(ro,res,-1)
     # print(funcname)
     # print(lo, ro)
     # print(local_stack, temp_stack)
-    # local_mem = local_stack.pop()
-    # temp_mem = temp_stack.pop()
-    # instptr = ptr_stack.pop()
+    local_mem = local_stack.pop()
+    temp_mem = temp_stack.pop()
+    instptr = ptr_stack.pop()
 
     return
 

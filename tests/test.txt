@@ -3,13 +3,17 @@ program myprogram;
 VARS
 int : a, b, c, x;
 
-func int myfunc(int : n){
-    if(n == 0 or n == 1)
-      return(1);
-    else
-      return(n * myfunc(n - 1));
-    end
+func int myfunc(int: x){
+  write(x);
+  if (x == 1)
+    return(1);
+  end
+  return(myfunc(x - 1));
 }
 
 main()
-  b = (2 * 3 + 5) - 9 * (7 + 3);
+  a = 5;
+  b = (2 + 3) * a - 9 + (a * 7);
+
+  c = myfunc(a);
+  write(c);
